@@ -15,30 +15,16 @@
     <menus>
         <Menu mnemonicParsing="false" text="File">
             <items>
-                <MenuItem fx:id="fileNew" mnemonicParsing="false" text="New" />
                 <MenuItem fx:id="fileOpen" mnemonicParsing="false" text="Open" />
                 <MenuItem fx:id="fileSave" mnemonicParsing="false" text="Save" />
-                <MenuItem fx:id="fileSaveAs" mnemonicParsing="false" text="Save as" />
-            	<MenuItem fx:id="exportPdf" mnemonicParsing="false" text="Export" />			
+                <MenuItem fx:id="fileSaveAs" mnemonicParsing="false" text="Save as" />		
                 <MenuItem fx:id="fileQuit" mnemonicParsing="false" text="Quit" />
             </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
+		        <Menu mnemonicParsing="false" text="Statistics">
             <items>
-                <MenuItem fx:id="editSemester" mnemonicParsing="false" text="Semester" />
-                <MenuItem fx:id="editCourses" mnemonicParsing="false" text="Courses" />
-                <MenuItem fx:id="editRooms" mnemonicParsing="false" text="Rooms" />
-                <MenuItem fx:id="editChairs" mnemonicParsing="false" text="Chairs" />
-                <MenuItem fx:id="editCurricula" mnemonicParsing="false" text="Curricula" />
-                <MenuItem fx:id="editGenerate" mnemonicParsing="false" text="Generate timetable" />
-                <MenuItem fx:id="manualTable" mnemonicParsing="false" text="Create Table Manually" />
-            </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="View">
-            <items>
-                <MenuItem fx:id="viewSessionSession" mnemonicParsing="false" text="Session-session conflicts" />
-                <MenuItem fx:id="viewSessionRoom" mnemonicParsing="false" text="Session-room conflicts" />
-                <MenuItem fx:id="viewTeacherPeriod" mnemonicParsing="false" text="Teacher-period conflicts" />
+                <MenuItem fx:id="statisticsControllability" mnemonicParsing="false" text="Controllability" />
+                <MenuItem fx:id="statisticsPattern" mnemonicParsing="false" text="Pattern" />
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

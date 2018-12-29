@@ -24,20 +24,9 @@ import java.util.Optional;
  */
 public class MenuBarController extends Controller {
 
-	private static String VIEW_SESSIONSESSION_FXML = "/fxml/view-session-session.fxml";
-	private static String VIEW_SESSIONROOM_FXML = "/fxml/view-session-room.fxml";
-	private static String VIEW_TEACHERPERIOD_FXML = "/fxml/view-teacher-period.fxml";
-	private static String EDIT_SEMESTER_FXML = "/fxml/edit-semester.fxml";
-	private static String EDIT_COURSES_FXML = "/fxml/edit-courses.fxml";
-	private static String EDIT_ROOMS_FXML = "/fxml/edit-rooms.fxml";
-	private static String EDIT_CHAIRS_FXML = "/fxml/edit-chairs.fxml";
-	private static String EDIT_CURRICULA_FXML = "/fxml/edit-curricula.fxml";
-	private static String EDIT_GENERATE = "/fxml/edit-generate-algorithm.fxml";
-	private static String EXPORT_PDF_FXML = "/fxml/main-menubar-pdfexport.fxml";
-	private static String MANUAL_TABLE_FXML = "/fxml/main-manual-table.fxml";
+	private static String MENU_BAR_FXML = "/resources/menubar.fxml";
+	private static String MAP_FXML = "/resources/map.fxml";
 	
-	@FXML
-	private MenuItem fileNew;
 	@FXML
 	private MenuItem fileOpen;
 	@FXML
@@ -45,31 +34,12 @@ public class MenuBarController extends Controller {
 	@FXML
 	private MenuItem fileSaveAs;
 	@FXML
-	private MenuItem exportPdf;
-	@FXML
-	private MenuItem manualTable;
-	@FXML
 	private MenuItem fileQuit;
-
+	
 	@FXML
-	private MenuItem editSemester;
+	private MenuItem statisticsControllability;
 	@FXML
-	private MenuItem editCourses;
-	@FXML
-	private MenuItem editRooms;
-	@FXML
-	private MenuItem editChairs;
-	@FXML
-	private MenuItem editCurricula;
-	@FXML
-	private MenuItem editGenerate;
-
-	@FXML
-	private MenuItem viewSessionSession;
-	@FXML
-	private MenuItem viewSessionRoom;
-	@FXML
-	private MenuItem viewTeacherPeriod;
+	private MenuItem statisticsPattern;
 
 	@FXML
 	private MenuItem helpHelp;
@@ -80,15 +50,11 @@ public class MenuBarController extends Controller {
 	@FXML
 	protected void initialize() {
 		initFileMenu();
-		initEditMenu();
-		initViewMenu();
 		initHelpMenu();
+		initStatisticsMenu();
 	}
 
 	private void initFileMenu() {
-		fileNew.setOnAction(event -> {
-
-		});
 
 		fileOpen.setOnAction(event -> {
 
@@ -103,14 +69,6 @@ public class MenuBarController extends Controller {
 		});
 
 		fileSaveAs.setOnAction(fileSaveAsAction);
-		
-		manualTable.setOnAction(event -> {
-			showFxmlWindow(MANUAL_TABLE_FXML, "Create Table Manually", 290, 200);
-		});
-		
-		exportPdf.setOnAction(event -> {
-			showFxmlWindow(EXPORT_PDF_FXML, "Export as PDF", 290, 200);
-		});
 
 		fileQuit.setOnAction(event -> {
 			getStage().getOnCloseRequest().handle(
@@ -119,42 +77,16 @@ public class MenuBarController extends Controller {
 		});
 	}
 
-	private void initEditMenu() {
-		editSemester.setOnAction(event ->
-				showFxmlWindow(EDIT_SEMESTER_FXML, "Edit semester data", 550, 510));
-
-		editCourses.setOnAction(event ->
-				showFxmlWindow(EDIT_COURSES_FXML, "Edit course data", 600, 550));
-
-		editRooms.setOnAction(event ->
-				showFxmlWindow(EDIT_ROOMS_FXML, "Edit rooms", 600, 450));
-
-		editChairs.setOnAction(event ->
-				showFxmlWindow(EDIT_CHAIRS_FXML, "Edit chairs", 600, 450));
-
-		editCurricula.setOnAction(event ->
-				showFxmlWindow(EDIT_CURRICULA_FXML, "Edit curricula", 600, 450));
-
-		editGenerate.setOnAction(event ->
-				showFxmlWindow(EDIT_GENERATE, "Generate timetable", 400, 160));
-	}
-
-	private void initViewMenu() {
-		
-		viewSessionSession.setOnAction(event ->
-		showFxmlWindow(VIEW_SESSIONSESSION_FXML, "View Session-Session conflicts", 550, 510));
-
-		viewSessionRoom.setOnAction(event ->
-		showFxmlWindow(VIEW_SESSIONROOM_FXML, "View Session-Room conflicts", 550, 510));
-
-		viewTeacherPeriod.setOnAction(event ->
-		showFxmlWindow(VIEW_TEACHERPERIOD_FXML, "View Teacher-Period conflicts", 550, 510));
-	}
-
 	private void initHelpMenu() {
 		helpHelp.setOnAction(event -> showHelpDialog());
 
 		helpAbout.setOnAction(event -> showAboutDialog());
+	}
+	
+	private void initStatisticsMenu() {
+		statisticsControllability.setOnAction(event -> showHelpDialog());
+
+		statisticsPattern.setOnAction(event -> showAboutDialog());
 	}
 
 	private void showHelpDialog() {
