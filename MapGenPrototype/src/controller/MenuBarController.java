@@ -24,8 +24,9 @@ import java.util.Optional;
  */
 public class MenuBarController extends Controller {
 
-	private static String MENU_BAR_FXML = "/resources/menubar.fxml";
+	private static String MENU_BAR_FXML = "/resources/menu-bar.fxml";
 	private static String MAP_FXML = "/resources/map.fxml";
+	private static String GENERATE_MAP_FXML = "/resources/generate-map.fxml";
 	
 	@FXML
 	private MenuItem fileOpen;
@@ -33,6 +34,8 @@ public class MenuBarController extends Controller {
 	private MenuItem fileSave;
 	@FXML
 	private MenuItem fileSaveAs;
+	@FXML
+	private MenuItem generateMap;
 	@FXML
 	private MenuItem fileQuit;
 	
@@ -46,6 +49,8 @@ public class MenuBarController extends Controller {
 	@FXML
 	private MenuItem helpAbout;
 
+	@FXML
+	private GenerationController generationController;
 
 	@FXML
 	protected void initialize() {
@@ -69,6 +74,9 @@ public class MenuBarController extends Controller {
 		});
 
 		fileSaveAs.setOnAction(fileSaveAsAction);
+		
+		generateMap.setOnAction(event ->
+		showFxmlWindow(GENERATE_MAP_FXML, "Choose settings for the map to be generated", 1020, 860));
 
 		fileQuit.setOnAction(event -> {
 			getStage().getOnCloseRequest().handle(

@@ -17,7 +17,8 @@
             <items>
                 <MenuItem fx:id="fileOpen" mnemonicParsing="false" text="Open" />
                 <MenuItem fx:id="fileSave" mnemonicParsing="false" text="Save" />
-                <MenuItem fx:id="fileSaveAs" mnemonicParsing="false" text="Save as" />		
+                <MenuItem fx:id="fileSaveAs" mnemonicParsing="false" text="Save as" />	
+				<MenuItem fx:id="generateMap" mnemonicParsing="false" text="Generate Map" />
                 <MenuItem fx:id="fileQuit" mnemonicParsing="false" text="Quit" />
             </items>
         </Menu>
