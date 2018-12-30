@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import javax.imageio.ImageIO;
 
+import model.Map;
+
 /**
  * 
  * Generates, loads, saves, fuses maps and creates images from maps created by
@@ -27,8 +29,9 @@ import javax.imageio.ImageIO;
  * 
  */
 
-public class DiamondSquare {
+public class DiamondSquare implements ProceduralAlgorithm {
 
+	String name;
 	int mapSize; // size of the map
 	int mapCount = 0;
 	int[][] map;
@@ -39,6 +42,7 @@ public class DiamondSquare {
 	 * Default constructor.
 	 */
 	public DiamondSquare() {
+		this.name = "DiamondSquare";
 	}
 
 	/**
@@ -548,6 +552,22 @@ public class DiamondSquare {
 			}
 			System.out.println("");
 		}
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public Map generate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 
 }

@@ -4,6 +4,7 @@ import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Model;
 
@@ -14,6 +15,8 @@ import model.Model;
  */
 public class MainController extends Controller {
 
+	@FXML
+	private BorderPane mainPane;
 	@FXML
 	private MenuBarController menuBarController;
 	@FXML
@@ -38,6 +41,10 @@ public class MainController extends Controller {
 
 	MapController getMapController() {
 		return mapController;
+	}
+	
+	BorderPane getMainPane() {
+		return mainPane;
 	}
 
 	private void updateStateInfo(String newValue) {

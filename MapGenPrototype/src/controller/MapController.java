@@ -3,6 +3,8 @@ package controller;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -28,9 +30,15 @@ import javax.imageio.ImageIO;
  */
 
 public class MapController extends Controller {
-
+	
 	@FXML
-	private VBox MapContainer;
+	private TabPane tabPane;
+	@FXML
+	private Tab tab1;
+	@FXML
+	private Tab tab2;
+	@FXML
+	private Tab tab3;
 	
 	private static DiamondSquare diamondSquare;
 	private static int[][] currentMap;
@@ -205,6 +213,7 @@ public class MapController extends Controller {
 	public void initialize(Stage stage, HostServices hostServices,
 	                  MainController mainController, Model model) {
 		super.initialize(stage, hostServices, mainController, model);
+		
 	}
 	
 }

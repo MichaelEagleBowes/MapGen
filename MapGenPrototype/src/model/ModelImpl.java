@@ -4,13 +4,14 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Flow;
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.SubmissionPublisher;
-
+import logic.ProceduralAlgorithm;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -34,6 +35,7 @@ public class ModelImpl implements Model {
 	public static final String SELECTED_ASSIGNMENT_PROPERTY = "selectedAssignment";
 	public static final String SELECTED_TIMETABLE_PROPERTY = "selectedTimetable";
 
+	private HashMap algorithms = new HashMap<String, ProceduralAlgorithm>();
 	private Path xmlPath;
 	private BooleanProperty changed;
 	private String semester;
@@ -176,6 +178,17 @@ public class ModelImpl implements Model {
 	public void close() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setAlgorithms() {
+	}
+
+
+	@Override
+	public HashMap<String, ProceduralAlgorithm> getAlgorithms() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
