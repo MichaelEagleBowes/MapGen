@@ -3,11 +3,16 @@ package controller;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import logic.DiamondSquare;
 import model.Model;
@@ -42,12 +47,7 @@ public class MapController extends Controller {
 	
 	private static DiamondSquare diamondSquare;
 	private static int[][] currentMap;
-	private static List<int[][]> fuser = new ArrayList<int[][]>();
-	
-	private void updateView() {
-		//drawGround();
-		//showImage();
-	}
+	private ImageView currentView;
 	
 	/**
 	 * 
@@ -59,9 +59,25 @@ public class MapController extends Controller {
 	 * 1025, 2049, 4097, 8193
 	 *
 	 */
-	private void generateDiamondSquare() {
+	public void generateDiamondSquare() {
 		diamondSquare = new DiamondSquare();
 		currentMap = diamondSquare.generateMap(129);
+		Image mapImage = drawGround(currentMap, 5000, 5000);
+		currentView = new ImageView();
+		
+        currentView.setImage(mapImage);
+        Tab tab = tabPane.getTabs().get(0);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(currentView);
+        tab.setContent(scrollPane);
+	}
+	
+	public void generateActorBased() {
+
+	}
+	
+	public void generateVoronoi() {
+
 	}
 
 	private static BufferedImage scaleImage(BufferedImage Img, int width, int height) {
@@ -73,11 +89,6 @@ public class MapController extends Controller {
 		g2.dispose();
 
 		return resizedImg;
-	}
-	
-	private void showImage(Image image) {
-		ImageView iv1 = new ImageView();
-        iv1.setImage(image);
 	}
 	
 	/**
@@ -94,7 +105,7 @@ public class MapController extends Controller {
 	 * @param height
 	 *            Height of the picture. Optimum value: 10.000; Maximum value: 18798
 	 */
-	public BufferedImage DrawGround(int[][] map, int width, int height, String name) {
+	public Image drawGround(int[][] map, int width, int height) {
 
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		
@@ -109,33 +120,20 @@ public class MapController extends Controller {
 			BufferedImage mountain = null;
 			BufferedImage beach = null;
 
-			snow = ImageIO.read(new File("resources/snow.jpg"));
-			green = ImageIO.read(new File("resources/green.jpg"));
-			darkgreen = ImageIO.read(new File("resources/darkgreen.jpg"));
-			w = ImageIO.read(new File("resources/water.jpg"));
-			dw = ImageIO.read(new File("resources/deepWater.jpg"));
-			mountain = ImageIO.read(new File("resources/mountain.jpg"));
-			beach = ImageIO.read(new File("resources/beach.jpg"));
+			snow = ImageIO.read(new File(System.getProperty("user.dir")+"/resources/snow.jpg"));
+			green = ImageIO.read(new File(System.getProperty("user.dir")+"/resources/grass.jpg"));
+			darkgreen = ImageIO.read(new File(System.getProperty("user.dir")+"/resources/grass2.jpg"));
+			w = ImageIO.read(new File(System.getProperty("user.dir")+"/resources/water.jpg"));
+			dw = ImageIO.read(new File(System.getProperty("user.dir")+"/resources/dwater.jpg"));
+			mountain = ImageIO.read(new File(System.getProperty("user.dir")+"/resources/mountain.jpg"));
+			beach = ImageIO.read(new File(System.getProperty("user.dir")+"/resources/beach.jpg"));
 
 			Graphics2D ig2 = bi.createGraphics();
 
 			// map[0].length necessary for non-square maps.
 
-			int mapHeight = 0;
-			int mapWidth = 0;
-			if (map[0].length > map.length) {
-				System.out.println("l1");
-				mapHeight = map.length;
-				mapWidth = map[0].length;
-			} else if (map[0].length < map.length) {
-				System.out.println("l2");
-				mapHeight = map.length;
-				mapWidth = map[0].length;
-			} else {
-				System.out.println("l3");
-				mapHeight = map.length;
-				mapWidth = map.length;
-			}
+			int mapHeight = map.length;
+			int mapWidth = map.length;
 			System.out.println("picL: " + mapHeight);
 			System.out.println("picW: " + mapWidth);
 			for (int i = 0; i < mapWidth; i++) {
@@ -181,8 +179,30 @@ public class MapController extends Controller {
 			ie.printStackTrace();
 		}
 		
-		return bi;
+        saveMap(bi, "map");
+		Image image = convertBufferedImage(bi);
 		
+		return image;
+		
+	}
+	
+	/**
+	 * Converts a BufferedImage to a FXImage.
+	 * @param bi
+	 * @return
+	 */
+	private Image convertBufferedImage(BufferedImage bi) {
+		WritableImage wr = null;
+        if (bi != null) {
+            wr = new WritableImage(bi.getWidth(), bi.getHeight());
+            PixelWriter pw = wr.getPixelWriter();
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    pw.setArgb(x, y, bi.getRGB(x, y));
+                }
+            }
+        }
+        return wr;
 	}
 	
 	private void saveMap(BufferedImage bi, String name) {
@@ -207,6 +227,15 @@ public class MapController extends Controller {
 			}
 			System.out.println("");
 		}
+	}
+	
+	public TabPane getTabPane() {
+		return tabPane;
+	}
+	
+	
+	public ImageView getCurrentView() {
+		return currentView;
 	}
 	
 	@Override

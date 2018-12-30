@@ -24,8 +24,8 @@ import java.util.Optional;
  */
 public class MenuBarController extends Controller {
 
-	private static String MENU_BAR_FXML = "/resources/menu-bar.fxml";
-	private static String MAP_FXML = "/resources/map.fxml";
+	private static String MENU_BAR_FXML = "/resources/fxml/menu-bar.fxml";
+	private static String MAP_FXML = "/resources/fxml/map.fxml";
 	private static String GENERATE_MAP_FXML = "/resources/generate-map.fxml";
 	
 	@FXML

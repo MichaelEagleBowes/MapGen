@@ -42,12 +42,32 @@ public class GenerationController extends Controller {
 		algorithmSelection.setItems(algorithms);
 	}
 	
+	private void initButton() {
+		generateButton.setOnAction(event -> {
+			ProceduralAlgorithm alg = algorithmSelection.getSelectionModel().getSelectedItem();
+			switch(alg.getName()) {
+			case "DiamondSquare":
+				getMainController().getMapController().generateDiamondSquare();
+				break;
+			case "ActorBased":
+				getMainController().getMapController().generateActorBased();
+				break;
+			case "Voronoi":
+				getMainController().getMapController().generateVoronoi();
+				break;
+			}
+			Stage stage = (Stage)generateButton.getScene().getWindow();
+			stage.close();
+		});
+	}
+	
 	@Override
 	public void initialize(Stage stage, HostServices hostServices,
 	                  MainController mainController, Model model) {
 		super.initialize(stage, hostServices, mainController, model);
 		generateButton.prefWidth(100);
 		initAlgorithms();
+		initButton();
 	}
 	
 }

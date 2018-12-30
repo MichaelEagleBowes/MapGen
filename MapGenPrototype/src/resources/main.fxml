@@ -15,6 +15,9 @@
    <top>
       <fx:include fx:id="menuBar" source="menu-bar.fxml" />
    </top>
+    <right>
+      <fx:include fx:id="userControls" source="user-controls.fxml" />
+   </right>
    <center>
        <fx:include fx:id="map" source="map.fxml" />
    </center>

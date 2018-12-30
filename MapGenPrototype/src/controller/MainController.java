@@ -22,6 +22,8 @@ public class MainController extends Controller {
 	@FXML
 	private MapController mapController;
 	@FXML
+	private ControlsController userControlsController;
+	@FXML
 	private Label stateInfo;
 
 
@@ -32,6 +34,7 @@ public class MainController extends Controller {
 		setCloseConfirmation();
 		menuBarController.initialize(stage, hostServices, this, model);
 		mapController.initialize(stage, hostServices, this, model);
+		userControlsController.initialize(stage, hostServices, this, model);
 		//getModel().getStateTextProperty().addListener((observable, oldValue, newValue) -> updateStateInfo(newValue));
 	}
 
@@ -41,6 +44,10 @@ public class MainController extends Controller {
 
 	MapController getMapController() {
 		return mapController;
+	}
+	
+	ControlsController getControlsController() {
+		return userControlsController;
 	}
 	
 	BorderPane getMainPane() {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ 
+-->
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane minWidth="200" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ControlsController">
+   <center>
+   <HBox spacing="10" alignment="center">
+	<Button fx:id="plus" mnemonicParsing="false" GridPane.columnIndex="5" GridPane.rowIndex="1" text="Generate" />
+	<Button fx:id="minus" mnemonicParsing="false" GridPane.columnIndex="10" GridPane.rowIndex="1" text="Generate" />
+   </HBox>
+   </center>
+</BorderPane>
