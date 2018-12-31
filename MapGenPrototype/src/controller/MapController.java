@@ -38,12 +38,6 @@ public class MapController extends Controller {
 	
 	@FXML
 	private TabPane tabPane;
-	@FXML
-	private Tab tab1;
-	@FXML
-	private Tab tab2;
-	@FXML
-	private Tab tab3;
 	
 	private static DiamondSquare diamondSquare;
 	private static int[][] currentMap;
