@@ -90,40 +90,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		 */
 		return map;
 	}
-
-	/**
-	 * Generates the extension of a map towards the East and saves the map.
-	 * 
-	 * @return
-	 */
-	public int[][] generateMapExtensionEast(int[][] leftMap, String name) {
-		DiamondSquareImpl algo = new DiamondSquareImpl(leftMap, 0);
-		mapCount += 1;
-		return algo.getMap();
-	}
-
-	/**
-	 * Generates the extension of a map towards the South and saves the map.
-	 * 
-	 * @return
-	 */
-	public int[][] generateMapExtensionSouth(int[][] northMap, String name) {
-		DiamondSquareImpl algo = new DiamondSquareImpl(northMap, 1);
-		mapCount += 1;
-		return algo.getMap();
-	}
-
-	/**
-	 * Generates the extension of a map towards the South and East and saves the
-	 * map.
-	 * 
-	 * @return
-	 */
-	public int[][] generateMapExtensionSouthEast(int[][] northMap, int[][] westMap, String name) {
-		DiamondSquareImpl algo = new DiamondSquareImpl(northMap, westMap);
-		mapCount += 1;
-		return algo.getMap();
-	}
 	
 	/**
 	 * 

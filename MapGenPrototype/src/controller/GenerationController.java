@@ -47,7 +47,7 @@ public class GenerationController extends Controller {
 			ProceduralAlgorithm alg = algorithmSelection.getSelectionModel().getSelectedItem();
 			switch(alg.getName()) {
 			case "DiamondSquare":
-				getMainController().getMapController().generateDiamondSquare();
+				//getMainController().getMapController().generateDiamondSquare();
 				break;
 			case "ActorBased":
 				getMainController().getMapController().generateActorBased();

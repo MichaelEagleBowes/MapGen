@@ -59,10 +59,12 @@ public class MapController extends Controller {
 	 * 1025, 2049, 4097, 8193
 	 *
 	 */
-	public void generateDiamondSquare() {
+	public void generateDiamondSquare(int snowParam, int mountainParam, int forestParam, int grassParam,
+			int beachParam, int coastParam, int oceanParam) {
 		diamondSquare = new DiamondSquare();
 		currentMap = diamondSquare.generateMap(129);
-		Image mapImage = drawGround(currentMap, 5000, 5000);
+		Image mapImage = drawGround(currentMap, 5000, 5000, snowParam, mountainParam, forestParam, grassParam,
+				beachParam, coastParam, oceanParam);
 		currentView = new ImageView();
 		
         currentView.setImage(mapImage);
@@ -105,7 +107,8 @@ public class MapController extends Controller {
 	 * @param height
 	 *            Height of the picture. Optimum value: 10.000; Maximum value: 18798
 	 */
-	public Image drawGround(int[][] map, int width, int height) {
+	public Image drawGround(int[][] map, int width, int height, int snowParam, int mountainParam, int beachParam,
+			int coastParam, int oceanParam, int grassParam, int forestParam) {
 
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		
@@ -136,37 +139,37 @@ public class MapController extends Controller {
 			int mapWidth = map.length;
 			System.out.println("picL: " + mapHeight);
 			System.out.println("picW: " + mapWidth);
+			
 			for (int i = 0; i < mapWidth; i++) {
 				for (int j = 0; j < mapHeight; j++) {
-					if (map[j][i] < -5) // 15% chance to turn BLUE = deep water
+					if (map[j][i] < oceanParam-10) // 15% chance to turn BLUE = deep water
 					{
 						ig2.drawImage(dw, i * 32, j * 32, null);
 					}
-
-					else if (map[j][i] < 10) // 10% chance for shallow water
+					else if (map[j][i] < (oceanParam-10)+coastParam) // chance for shallow water
 					{
 						ig2.drawImage(w, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < 15) // 15% chance for beach
+					else if (map[j][i] < (oceanParam-10)+coastParam+beachParam) // chance for beach
 					{
 						ig2.drawImage(beach, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < 25) // 15% chance for grass
+					else if (map[j][i] < (oceanParam-10)+coastParam+beachParam+grassParam) // chance for grass
 					{
 						ig2.drawImage(green, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < 40) // 20% chance for forest
+					else if (map[j][i] < (oceanParam-10)+coastParam+beachParam+grassParam+forestParam) // chance for forest
 					{
 						ig2.drawImage(darkgreen, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < 60) // 20% chance for mountain
+					else if (map[j][i] < (oceanParam-10)+coastParam+beachParam+grassParam+forestParam+mountainParam) // chance for mountain
 					{
 						ig2.drawImage(mountain, i * 32, j * 32, null);
-					} else // 20% chance for snow
+					} else if (map[j][i] < (oceanParam-10)+coastParam+beachParam+grassParam+forestParam+mountainParam+snowParam) // chance for snow
 					{
 						ig2.drawImage(snow, i * 32, j * 32, null);
 					}
