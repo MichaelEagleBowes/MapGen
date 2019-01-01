@@ -32,11 +32,9 @@ import model.Map;
 public class DiamondSquare implements ProceduralAlgorithm {
 
 	String name;
-	int mapSize; // size of the map
+	int mapSize;
 	int mapCount = 0;
 	int[][] map;
-	public int[][] normalizedMap1;
-	public int[][] normalizedMap2;
 
 	/**
 	 * Default constructor.
@@ -67,6 +65,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 *            size needs to always take a value of 2^x + 1.
 	 * @return
 	 */
+	@Override
 	public int[][] generateMap(int size) {
 		// TODO: Durchlaufe das 2D Array und ändere alle Zahlen
 		// im Bereich des Grass-Gebiets(von X bis Y) ab.
@@ -397,49 +396,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	}
 
 	/**
-	 * Takes 2 maps and normalizes their borders for a smoother transition.
-	 */
-	public void normalizeMaps(int[][] mapEast, int[][] mapWest) {
-		// Reduce maps to the 4 columns of their borders.
-		int arraySize = mapEast.length - 1;
-		int[] needNormalization = new int[mapEast.length];
-		for (int i = arraySize - 3; i <= arraySize; i += 1) {
-			for (int j = 0; j <= arraySize; j += 1) {
-
-				if (mapEast[j][i] < -4 && mapWest[j][i] > 24 && mapWest[j][i] < 40) {
-					needNormalization[j] = j;
-				}
-			}
-		}
-		// Normalize
-		for (int i = arraySize - 3; i <= arraySize; i += 1) {
-			for (int j = 0; j <= arraySize; j += 1) {
-				if (j == needNormalization[j]) {
-					mapWest[j][i] = mapWest[j][i] - 15;
-				}
-			}
-		}
-		// Normalize
-		for (int i = 0; i <= 4; i += 1) {
-			for (int j = 0; j <= arraySize; j += 1) {
-				if (j == needNormalization[j]) {
-					mapEast[j][i] = mapEast[j][i] - 15;
-				}
-			}
-		}
-
-		normalizedMap1 = mapEast;
-		normalizedMap2 = mapWest;
-		/*
-		 * for (int i = arraySize-3; i <= arraySize; i += 1) { for (int j = 0; j <=
-		 * arraySize; j += 1) { borderMapEast[j][i] = map2[j][i]; } }
-		 */
-
-		// Add normalized borders to maps again
-
-	}
-
-	/**
 	 * For testing random access of byte arrays.
 	 * @param relativePath
 	 */
@@ -523,12 +479,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public Map generate() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	@Override

@@ -2,6 +2,8 @@ package controller;
 
 import javafx.application.HostServices;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
@@ -14,6 +16,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import logic.CellularAutomaton;
 import logic.DiamondSquare;
 import model.Model;
 import java.awt.Graphics2D;
@@ -40,6 +43,7 @@ public class MapController extends Controller {
 	private TabPane tabPane;
 
 	private static DiamondSquare diamondSquare;
+	private static CellularAutomaton cellularAutomaton;
 	private static int[][] currentMap;
 	private ImageView currentView;
 	private static String SNOW_TILE = System.getProperty("user.dir") + "/resources/snow.jpg";
@@ -79,8 +83,17 @@ public class MapController extends Controller {
 
 	}
 
-	public void generateVoronoi() {
-
+	public void generateCellularAutomaton(int iterations, int birthRule, int deathRule, float survival) {
+		cellularAutomaton = new CellularAutomaton();
+		currentMap = cellularAutomaton.generateMap(129);
+		Image mapImage = drawCave(currentMap, 5000, 5000);
+		currentView = new ImageView();
+		
+		currentView.setImage(mapImage);
+		Tab tab = tabPane.getTabs().get(1);
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setContent(currentView);
+		tab.setContent(scrollPane);
 	}
 
 	private static BufferedImage scaleImage(BufferedImage Img, int width, int height) {
@@ -93,12 +106,56 @@ public class MapController extends Controller {
 
 		return resizedImg;
 	}
+	
+	/**
+	 * 
+	 * Draws the created height map for the cellular automaton onto an image.
+	 * 
+	 */
+	public Image drawCave(int[][] map, int width, int height) {
+		
+		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		
+		try {
+			BufferedImage wallSegment = null;
+			BufferedImage ground = null;
+
+			wallSegment = ImageIO.read(new File(MOUNTAIN_TILE));
+			ground = ImageIO.read(new File(BEACH_TILE));
+
+			Graphics2D ig2 = bi.createGraphics();
+
+			int mapHeight = map.length;
+			int mapWidth = map.length;
+			
+			for (int i = 0; i < mapWidth; i++) {
+				for (int j = 0; j < mapHeight; j++) {
+					if (map[j][i] == 0)
+					{
+						ig2.drawImage(ground, i * 32, j * 32, null);
+					} else if (map[j][i] == 1)
+					{
+						ig2.drawImage(wallSegment, i * 32, j * 32, null);
+					}
+				}
+			}
+
+			ig2.dispose();
+
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+
+		Image image = convertBufferedImage(bi);
+
+		return image;
+	}
 
 	/**
 	 * 
-	 * Draws the ground of the map based on the given height values in PNG format.
-	 * Each map tile is 20*20 in size in the picture. If the generated map is bigger
-	 * than the picture, the edges will be cut off in the image.
+	 * Draws the created height map for the diamond square algorithm onto an image.
+	 * If the generated map is bigger than the picture size, the image will still be created
+	 * with the edges cut off.
 	 * 
 	 * @param map    the 2D integer array representing the map.
 	 * @param width  Width of the picture. Optimum value: 10.000; Maximum value:
@@ -112,8 +169,6 @@ public class MapController extends Controller {
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
 		try {
-			// TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
-			// into integer pixels
 			BufferedImage snow = null;
 			BufferedImage green = null;
 			BufferedImage darkgreen = null;
@@ -131,8 +186,6 @@ public class MapController extends Controller {
 			beach = ImageIO.read(new File(BEACH_TILE));
 
 			Graphics2D ig2 = bi.createGraphics();
-
-			// map[0].length necessary for non-square maps.
 
 			int mapHeight = map.length;
 			int mapWidth = map.length;
@@ -206,7 +259,6 @@ public class MapController extends Controller {
 			ie.printStackTrace();
 		}
 
-		saveMap(bi, "map");
 		Image image = convertBufferedImage(bi);
 
 		return image;
@@ -268,7 +320,17 @@ public class MapController extends Controller {
 	@Override
 	public void initialize(Stage stage, HostServices hostServices, MainController mainController, Model model) {
 		super.initialize(stage, hostServices, mainController, model);
-
+		tabPane.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
+		        if((int)newValue==0) {
+		        	getMainController().getControlsController().loadDiamondSquareTab();
+		        }
+		        if((int)newValue==1) {
+		        	getMainController().getControlsController().loadCellularAutomatonTab();
+		        }
+		    }
+		}); 
 	}
 
 }

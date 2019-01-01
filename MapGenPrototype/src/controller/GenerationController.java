@@ -52,8 +52,8 @@ public class GenerationController extends Controller {
 			case "ActorBased":
 				getMainController().getMapController().generateActorBased();
 				break;
-			case "Voronoi":
-				getMainController().getMapController().generateVoronoi();
+			case "CellularAutomaton":
+				//getMainController().getMapController().generateCellularAutomaton();
 				break;
 			}
 			Stage stage = (Stage)generateButton.getScene().getWindow();

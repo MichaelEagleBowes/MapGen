@@ -20,5 +20,5 @@ public interface ProceduralAlgorithm {
 	 * Generates a new map with the given parameters.
 	 * @return
 	 */
-	Map generate();
+	int[][] generateMap(int size);
 }
