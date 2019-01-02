@@ -61,7 +61,7 @@ public class Util {
 	 * @param height the height of the output
 	 * @return the scaled BufferedImage
 	 */
-	private static BufferedImage scaleImage(BufferedImage Img, int width, int height) {
+	public static BufferedImage scaleImage(BufferedImage Img, int width, int height) {
 		BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = resizedImg.createGraphics();
 

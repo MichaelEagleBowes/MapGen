@@ -2,15 +2,10 @@ package model;
 
 import java.beans.PropertyChangeListener;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Flow;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
-import logic.ProceduralAlgorithm;
 
 public interface Model {
 	

@@ -11,8 +11,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import logic.CellularAutomaton;
 import logic.DiamondSquare;
@@ -48,6 +46,7 @@ public class MapController extends Controller {
 	private static String WATER_TILE = System.getProperty("user.dir") + "/resources/dwater.jpg";
 	private static String COAST_TILE = System.getProperty("user.dir") + "/resources/water.jpg";
 	private static String BEACH_TILE = System.getProperty("user.dir") + "/resources/beach.jpg";
+	private static String ROCKS_TILE = System.getProperty("user.dir") + "/resources/rocks.jpg";
 
 	/**
 	 * 
@@ -112,9 +111,13 @@ public class MapController extends Controller {
 		try {
 			BufferedImage wallSegment = null;
 			BufferedImage ground = null;
+			BufferedImage trees = null;
+			BufferedImage rocks = null;
 
 			wallSegment = ImageIO.read(new File(MOUNTAIN_TILE));
-			ground = ImageIO.read(new File(BEACH_TILE));
+			ground = ImageIO.read(new File(FOREST_TILE));
+			trees = ImageIO.read(new File(BEACH_TILE));
+			rocks = ImageIO.read(new File(ROCKS_TILE));
 
 			Graphics2D ig2 = bi.createGraphics();
 
@@ -129,6 +132,12 @@ public class MapController extends Controller {
 					} else if (map[j][i] == 1)
 					{
 						ig2.drawImage(wallSegment, i * 32, j * 32, null);
+					} else if (map[j][i] == 2)
+					{
+						ig2.drawImage(trees, i * 32, j * 32, null);
+					} else if (map[j][i] == 3)
+					{
+						ig2.drawImage(rocks, i * 32, j * 32, null);
 					}
 				}
 			}

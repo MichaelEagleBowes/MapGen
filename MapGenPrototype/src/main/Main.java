@@ -1,13 +1,8 @@
 package main;
 
-import logic.DiamondSquare;
 import model.Model;
 import model.ModelImpl;
 import controller.MainController;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

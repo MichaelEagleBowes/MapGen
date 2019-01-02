@@ -26,7 +26,7 @@ fx:controller="controller.MapController">
       <content>
       </content>
     </Tab>
-    <Tab text="ActorBased">
+    <Tab text="CellularAutomaton">
       <content>
       </content>
     </Tab>
