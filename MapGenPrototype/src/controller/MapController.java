@@ -84,7 +84,7 @@ public class MapController extends Controller {
 	}
 
 	public void generateCellularAutomaton(int iterations, int birthRule, int deathRule, float survival) {
-		cellularAutomaton = new CellularAutomaton();
+		cellularAutomaton = new CellularAutomaton(iterations, birthRule, deathRule, survival);
 		currentMap = cellularAutomaton.generateMap(129);
 		Image mapImage = drawCave(currentMap, 5000, 5000);
 		currentView = new ImageView();
