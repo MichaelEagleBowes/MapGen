@@ -4,16 +4,17 @@ import java.util.Random;
 
 /**
  * 
- * Implements the DiamondSquare Algorithm.
- * Can either:<br>
- * Completely randomly generate a map of the given size.<br>
- * Or semi-randomly generate a map, continuing off of the border(s) of one or several given map(s).
- * Only maps to the west and north can be used as reference for the semi-random generation.
+ * Implements the diamond square algorithm.
+ * The edge cases at the border are handled by ?
+ * @see <a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm">Diamond Square Wikipedia</a>
+ * 
+ * @author Michael Bowes
  * 
  */
 public class DiamondSquareImpl implements Runnable {
+	
 	private int arraySize;
-	private int mapArray[][]; //Note: mapArray[Y-Coord][X-Coord]
+	private int mapArray[][];
 	private int noise;
 	private Random rand;
 	private int size;
@@ -123,19 +124,6 @@ public class DiamondSquareImpl implements Runnable {
 	}
 
 	/**
-	 * Debugging method that prints the generated map to the console.
-	 */
-	private void printMap() // this prints the 2D array.
-	{
-		for (int i = 0; i < arraySize + 1; i++) {
-			for (int j = 0; j < arraySize + 1; j++) {
-				System.out.print(mapArray[j][i] + "\t");
-			}
-			System.out.println("");
-		}
-	}
-
-	/**
 	 * Generates the corners of the map at the start of the algorithm.<br>
 	 * The corner values can be adjusted here for control over the map generation on
 	 * the edges.<br>
@@ -150,41 +138,6 @@ public class DiamondSquareImpl implements Runnable {
 				// corner2: 0,1024 | bottom left
 				// corner3: 1024,0 | top right
 				// corner4: 1024,1024 | bottom right
-				/*
-				if (mapArray[i][j] < -5) // 15% chance to turn BLUE = Wasser(tief)
-				{
-					System.out.println("corner: " + "deep water");
-				}
-
-				else if (mapArray[i][j] < 10) // 10% chance to turn cyan = Wasser(seicht)
-				{
-					System.out.println("corner: " + "water");
-				}
-
-				else if (mapArray[i][j] < 15) // 15% chance Yellowish (StrandBiome)
-				{
-					System.out.println("corner: " + "beach");
-				}
-
-				else if (mapArray[i][j] < 25) // 15% chance GREEN (GrassBiome)
-				{
-					System.out.println("corner: " + "grass");
-				}
-
-				else if (mapArray[i][j] < 40) // 20% chance DarkGreen (WaldBiome)
-				{
-					System.out.println("corner: " + "darkgreen");
-				}
-
-				else if (mapArray[i][j] < 60) // 20% chance gray (Berg)
-				{
-					System.out.println("corner: " + "mountain");
-				}
-
-				else // 20% chance white (Schnee)
-				{
-					System.out.println("corner: " + "snow");
-				}*/
 			}
 		}
 	}

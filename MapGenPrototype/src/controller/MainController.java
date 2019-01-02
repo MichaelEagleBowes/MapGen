@@ -10,7 +10,9 @@ import model.Model;
 
 /**
  * 
- * Main controller that initializes other controllers and handles the logic for the main application.
+ * Main controller that initializes and manages other controllers, as well as the main scene.
+ * 
+ * @author Michael Bowes
  * 
  */
 public class MainController extends Controller {

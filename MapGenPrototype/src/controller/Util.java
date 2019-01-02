@@ -1,7 +1,9 @@
 package controller;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -9,29 +11,67 @@ import java.math.RoundingMode;
 import java.util.Optional;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import model.Model;
 
 /**
- * Bundles functionality that is used in many GUI classes, e.g., information
- * alerts and error alerts.
+ * 
+ * Utility class for functionality available to and used by controller classes.
+ * 
  */
 public class Util {
 
+
+	/**
+	 * Converts a BufferedImage to a FXImage.
+	 * 
+	 * @param bi
+	 * @return
+	 */
+	public Image convertBufferedImage(BufferedImage bi) {
+		WritableImage wr = null;
+		if (bi != null) {
+			wr = new WritableImage(bi.getWidth(), bi.getHeight());
+			PixelWriter pw = wr.getPixelWriter();
+			for (int x = 0; x < bi.getWidth(); x++) {
+				for (int y = 0; y < bi.getHeight(); y++) {
+					pw.setArgb(x, y, bi.getRGB(x, y));
+				}
+			}
+		}
+		return wr;
+	}
+	
+	/**
+	 * Scales a {@link BufferedImage} to the specified width and height.
+	 * @param Img the image in question
+	 * @param width the width of the output
+	 * @param height the height of the output
+	 * @return the scaled BufferedImage
+	 */
+	private static BufferedImage scaleImage(BufferedImage Img, int width, int height) {
+		BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = resizedImg.createGraphics();
+
+		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2.drawImage(Img, 0, 0, width, height, null);
+		g2.dispose();
+
+		return resizedImg;
+	}
+	
 	static void exceptionAlert(Throwable ex) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("Error");
@@ -122,33 +162,6 @@ public class Util {
 		dialog.setHeaderText(header);
 		dialog.setContentText(contentText);
 		return dialog.showAndWait();
-	}
-
-	static Stage loadFxml(String fxmlPath, Controller controller, Stage stage,
-	                      Model model, MainController mainController) {
-		FXMLLoader loader = new FXMLLoader(Util.class.getResource(fxmlPath));
-		if (controller != null) {
-			loader.setController(controller);
-		}
-		try {
-			Parent root = loader.load();
-			Scene scene = new Scene(root);
-			Stage actualStage;
-			if (stage == null) {
-				actualStage = new Stage();
-				actualStage.initModality(Modality.APPLICATION_MODAL);
-			} else {
-				actualStage = stage;
-			}
-			actualStage.setScene(scene);
-			Controller assignedController = loader.getController();
-			assignedController.initialize(actualStage,
-				mainController.getHostServices(), mainController, model);
-			return actualStage;
-		} catch (IOException e) {
-			throw new RuntimeException("Could not load '" + fxmlPath +
-					"'", e);
-		}
 	}
 
 	static void showStage(Stage stage, String title, int minWidth,

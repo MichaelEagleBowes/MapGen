@@ -1,11 +1,9 @@
 package controller;
 
 import javafx.application.HostServices;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -13,28 +11,23 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.VBox;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import logic.CellularAutomaton;
 import logic.DiamondSquare;
 import model.Model;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
 /**
  * 
- * Controller for the map window.
+ * Controller for the main view in form of a {@link TabPane}, which shows the generated maps.
+ * 
+ * @author Michael Bowes
+ * 
  */
 
 public class MapController extends Controller {
@@ -95,17 +88,6 @@ public class MapController extends Controller {
 		scrollPane.setContent(currentView);
 		tab.setContent(scrollPane);
 	}
-
-	private static BufferedImage scaleImage(BufferedImage Img, int width, int height) {
-		BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = resizedImg.createGraphics();
-
-		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g2.drawImage(Img, 0, 0, width, height, null);
-		g2.dispose();
-
-		return resizedImg;
-	}
 	
 	/**
 	 * 
@@ -146,7 +128,7 @@ public class MapController extends Controller {
 			ie.printStackTrace();
 		}
 
-		Image image = convertBufferedImage(bi);
+		Image image = new Util().convertBufferedImage(bi);
 
 		return image;
 	}
@@ -219,34 +201,34 @@ public class MapController extends Controller {
 					if (map[j][i] < minimum + oceanSpectrum) // 15% chance to turn BLUE = deep water
 					{
 						ig2.drawImage(dw, i * 32, j * 32, null);
-					} else if (map[j][i] < minimum + oceanSpectrum + coastParam) // chance for shallow water
+					} else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum) // chance for shallow water
 					{
 						ig2.drawImage(w, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < minimum + oceanSpectrum + coastParam + beachParam) // chance for beach
+					else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum) // chance for beach
 					{
 						ig2.drawImage(beach, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < minimum + oceanSpectrum + coastParam + beachParam + grassParam) // chance for grass
+					else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum) // chance for grass
 					{
 						ig2.drawImage(green, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < minimum + oceanSpectrum + coastParam + beachParam + grassParam + forestParam) // chance
+					else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum + forestSpectrum) // chance
 																													// for
 																													// forest
 					{
 						ig2.drawImage(darkgreen, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < minimum + oceanSpectrum + coastParam + beachParam + grassParam + forestParam
-							+ mountainParam) // chance for mountain
+					else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum + forestSpectrum
+							+ mountainSpectrum) // chance for mountain
 					{
 						ig2.drawImage(mountain, i * 32, j * 32, null);
-					} else if (map[j][i] < minimum + oceanSpectrum + coastParam + beachParam + grassParam + forestParam
-							+ mountainParam + snowParam) // chance for snow
+					} else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum + forestSpectrum
+							+ mountainSpectrum + snowSpectrum) // chance for snow
 					{
 						ig2.drawImage(snow, i * 32, j * 32, null);
 					}
@@ -259,54 +241,10 @@ public class MapController extends Controller {
 			ie.printStackTrace();
 		}
 
-		Image image = convertBufferedImage(bi);
+		Image image = new Util().convertBufferedImage(bi);
 
 		return image;
 
-	}
-
-	/**
-	 * Converts a BufferedImage to a FXImage.
-	 * 
-	 * @param bi
-	 * @return
-	 */
-	private Image convertBufferedImage(BufferedImage bi) {
-		WritableImage wr = null;
-		if (bi != null) {
-			wr = new WritableImage(bi.getWidth(), bi.getHeight());
-			PixelWriter pw = wr.getPixelWriter();
-			for (int x = 0; x < bi.getWidth(); x++) {
-				for (int y = 0; y < bi.getHeight(); y++) {
-					pw.setArgb(x, y, bi.getRGB(x, y));
-				}
-			}
-		}
-		return wr;
-	}
-
-	private void saveMap(BufferedImage bi, String name) {
-
-		try {
-
-			ImageIO.write(bi, "PNG", new File(System.getProperty("user.home") + "/Desktop" + File.separator + name));
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Debugging method that prints the generated map to the console.
-	 */
-	private static void printMap(int[][] mapArray, int arraySize) // this prints the 2D array.
-	{
-		for (int i = 0; i < arraySize; i++) {
-			for (int j = 0; j < arraySize; j++) {
-				System.out.print(mapArray[i][j] + "\t");
-			}
-			System.out.println("");
-		}
 	}
 
 	public TabPane getTabPane() {

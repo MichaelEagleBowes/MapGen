@@ -1,8 +1,5 @@
 package controller;
 
-import java.io.File;
-import java.util.Optional;
-
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,16 +14,17 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.Model;
 
-import java.util.Optional;
-
 /**
+ * 
  * Controller for the menu bar.
+ * 
+ * @author Michael Bowes
+ * 
  */
 public class MenuBarController extends Controller {
 
 	private static String MENU_BAR_FXML = "/resources/fxml/menu-bar.fxml";
 	private static String MAP_FXML = "/resources/fxml/map.fxml";
-	private static String GENERATE_MAP_FXML = "/resources/generate-map.fxml";
 	
 	@FXML
 	private MenuItem fileOpen;
@@ -34,8 +32,6 @@ public class MenuBarController extends Controller {
 	private MenuItem fileSave;
 	@FXML
 	private MenuItem fileSaveAs;
-	@FXML
-	private MenuItem generateMap;
 	@FXML
 	private MenuItem fileQuit;
 	
@@ -48,9 +44,6 @@ public class MenuBarController extends Controller {
 	private MenuItem helpHelp;
 	@FXML
 	private MenuItem helpAbout;
-
-	@FXML
-	private GenerationController generationController;
 
 	@FXML
 	protected void initialize() {
@@ -74,9 +67,6 @@ public class MenuBarController extends Controller {
 		});
 
 		fileSaveAs.setOnAction(fileSaveAsAction);
-		
-		generateMap.setOnAction(event ->
-		showFxmlWindow(GENERATE_MAP_FXML, "Choose settings for the map to be generated", 1020, 860));
 
 		fileQuit.setOnAction(event -> {
 			getStage().getOnCloseRequest().handle(
@@ -139,13 +129,6 @@ public class MenuBarController extends Controller {
 		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 		alert.getDialogPane().setPrefWidth(400);
 		alert.showAndWait();
-	}
-
-	private void showFxmlWindow(String fxmlPath, String title, int minWidth,
-	                    int minHeight) {
-		Stage stage = Util.loadFxml(fxmlPath, null, null, getModel(),
-				getMainController());
-		Util.showStage(stage, title, minWidth, minHeight);
 	}
 
 	@Override

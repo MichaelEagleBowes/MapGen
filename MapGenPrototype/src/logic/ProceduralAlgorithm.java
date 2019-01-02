@@ -1,11 +1,11 @@
 package logic;
 
-import javafx.beans.property.StringProperty;
-import model.Map;
-
 /**
  * 
  * The interface for PCG algorithms.
+ * 
+ * @author Michael Bowes
+ * 
  */
 public interface ProceduralAlgorithm {
 

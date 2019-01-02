@@ -1,24 +1,21 @@
 package controller;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import javafx.application.HostServices;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-import logic.DiamondSquare;
-import logic.ProceduralAlgorithm;
 import model.Model;
+
+/**
+ * 
+ * Controller for the user control elements at the side of the scene.
+ *
+ * @author Michael Bowes
+ *
+ */
 
 public class ControlsController extends Controller {
 
@@ -59,10 +56,10 @@ public class ControlsController extends Controller {
 		birthRuleField = new TextField();
 		iterationsField = new TextField();
 		
-		survivalField.setText("0.2");
+		survivalField.setText("0.5");
 		survivalField.setMaxWidth(50);
 		
-		deathRuleField.setText("3");
+		deathRuleField.setText("4");
 		deathRuleField.setMaxWidth(50);
 		
 		birthRuleField.setText("5");

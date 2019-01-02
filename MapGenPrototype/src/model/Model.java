@@ -12,40 +12,9 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import logic.ProceduralAlgorithm;
 
-public interface Model extends Map {
+public interface Model {
+	
 
-	void setAlgorithms();
-	
-	HashMap<String, ProceduralAlgorithm> getAlgorithms();
-	
-	/**
-	 * Getter for the currently selected {@link Timetable}.
-	 * @return
-	 */
-	String getSelectedTimetable();
-	
-	/**
-	 * Setter for the currently selected {@link Timetable}.
-	 * 
-	 * @param selectedTimetable
-	 */
-	void setSelectedTimetable(String selectedTimetable);
-	
-	/**
-	 * 	Setter for the currently selected {@link TimetableAssignment} in the currently selected
-	 * {@link Timetable}.
-	 * 
-	 * @param selectedAssignment
-	 */
-	void setSelectedAssignment(String selectedAssignment);
-	
-	/**
-	 * 	Getter for the currently selected {@link TimetableAssignment} in the currently selected
-	 * {@link Timetable}.
-	 * 
-	 * @return
-	 */
-	String getSelectedAssignment();
 	/**
 	 * Adds a change listener to the model.
 	 * 
@@ -82,40 +51,6 @@ public interface Model extends Map {
 	 * @param changed the new status of unsaved changes.
 	 */
 	void setChanged(boolean changed);
-
-	/**
-	 * Getter for the currently loaded semester.
-	 *
-	 * @return the currently loaded semester.
-	 */
-	String getSemester();
-
-	/**
-	 * Updates the display for saving changes after the timetable content was changed.
-	 */
-	void updateTimetableChange(String timetable);
-
-	/**
-	 * Setter for the loaded semester.
-	 *
-	 * @param xmlPath the path to the XML file of the new semester.
-	 * @param semester the new semester.
-	 */
-	void setSemester(Path xmlPath, String semester);
-
-	/**
-	 * Getter for the list of teachers of the semester.
-	 *
-	 * @return the list of teachers of the semester.
-	 */
-	ObservableList<String> getTeachers();
-
-	/**
-	 * Getter for the list of periods of the semester.
-	 *
-	 * @return the list of periods of the semester.
-	 */
-	List<String> getPeriods();
 
 	/**
 	 * Getter for the window title text property.

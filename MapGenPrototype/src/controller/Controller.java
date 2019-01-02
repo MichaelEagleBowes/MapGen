@@ -7,11 +7,13 @@ import model.Model;
 /**
  * 
  * An abstract controller class for all methods that controllers ought to have.
+ * 
+ * @author Michael Bowes
+ * 
  */
 public abstract class Controller {
 
 	private Stage stage;
-	private Model model;
 	private MainController mainController;
 	private HostServices hostServices;
 
@@ -27,15 +29,10 @@ public abstract class Controller {
 		return mainController;
 	}
 
-	Model getModel() {
-		return model;
-	}
-
 	public void initialize(Stage stage, HostServices hostServices,
 	                  MainController mainController, Model model) {
 		this.stage = stage;
 		this.hostServices = hostServices;
 		this.mainController = mainController;
-		this.model = model;
 	}
 }

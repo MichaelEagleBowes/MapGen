@@ -35,12 +35,9 @@ public class ModelImpl implements Model {
 	public static final String SELECTED_ASSIGNMENT_PROPERTY = "selectedAssignment";
 	public static final String SELECTED_TIMETABLE_PROPERTY = "selectedTimetable";
 
-	private HashMap algorithms = new HashMap<String, ProceduralAlgorithm>();
+	private HashMap maps = new HashMap<String, int[][]>();
 	private Path xmlPath;
 	private BooleanProperty changed;
-	private String semester;
-	private ObservableList<String> teachers =
-			FXCollections.observableList(new LinkedList<>());
 	private SubmissionPublisher<Boolean> semesterChangesNotifier =
 			new SubmissionPublisher<>();
 	private SubmissionPublisher<Boolean> timetablesChangesNotifier =
@@ -64,31 +61,6 @@ public class ModelImpl implements Model {
 			}
 		});
 		
-	}
-	
-
-	@Override
-	public String getSelectedTimetable() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setSelectedTimetable(String selectedTimetable) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setSelectedAssignment(String selectedAssignment) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getSelectedAssignment() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -122,36 +94,6 @@ public class ModelImpl implements Model {
 	}
 
 	@Override
-	public String getSemester() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateTimetableChange(String timetable) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setSemester(Path xmlPath, String semester) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public ObservableList<String> getTeachers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> getPeriods() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public StringProperty getTitleProperty() {
 		return title;
 	}
@@ -178,17 +120,6 @@ public class ModelImpl implements Model {
 	public void close() {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void setAlgorithms() {
-	}
-
-
-	@Override
-	public HashMap<String, ProceduralAlgorithm> getAlgorithms() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

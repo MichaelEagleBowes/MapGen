@@ -5,12 +5,15 @@ package logic;
  * two rules to assign binary values to each tile. Stores the map as 2D Array
  * and saves integer values for extensibility, so that the generated map can be
  * processed further.
- * 
+ * <br><br>
  * The initial step is the basic implementation of the algorithm and assigns
  * values of 1 or 0, with 0 being an open area and 1 being a cave wall.
  * 
+ * <br><br>
  * Further steps for adding objects are still to be implemented.
  *
+ *
+ * @see <a href="https://en.wikipedia.org/wiki/Cellular_automaton">Cellular Automaton Wikipedia</a>
  * @author Michael Bowes
  *
  */

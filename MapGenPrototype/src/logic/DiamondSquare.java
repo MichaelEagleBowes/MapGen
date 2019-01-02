@@ -1,39 +1,17 @@
 package logic;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import javax.imageio.ImageIO;
-
-import model.Map;
-
 /**
  * 
- * Generates, loads, saves, fuses maps and creates images from maps created by
- * the {@link DiamondSquareAlgorithm3}
+ * Header class for starting the diamond square algorithm. Runs the generation
+ * process on a separate thread, since the performance may drop for larger maps.
+ * 
+ * @author Michael Bowes
  * 
  */
 
 public class DiamondSquare implements ProceduralAlgorithm {
 
 	String name;
-	int mapSize;
-	int mapCount = 0;
 	int[][] map;
 
 	public DiamondSquare() {
@@ -41,25 +19,12 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	}
 
 	/**
-	 * Constructor lets you choose the size of the map to be generated.
-	 * 
-	 * @param size
-	 *            The square dimension for the map, e.g. 4 generates a map of size
-	 *            (2^4+1)*(2^4+1)<br>
-	 *            size needs to always take a value of 2^x + 1.
-	 */
-	public DiamondSquare(int size) {
-		this.map = generateMap(size);
-	}
-
-	/**
 	 * 
 	 * Generates a single square map with the given size and name.
 	 * 
-	 * @param size
-	 *            The square dimension for the map, e.g. 4 generates a map of size
-	 *            4*4<br>
-	 *            size needs to always take a value of 2^x + 1.
+	 * @param size The square dimension for the map, e.g. 4 generates a map of size
+	 *             4*4<br>
+	 *             size needs to always take a value of 2^x + 1.
 	 * @return
 	 */
 	@Override
@@ -76,7 +41,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			e.printStackTrace();
 		}
 		map = algo.getMap();
-		
+
 		return map;
 	}
 
@@ -84,7 +49,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;

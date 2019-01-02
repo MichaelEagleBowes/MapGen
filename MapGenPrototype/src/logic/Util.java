@@ -19,6 +19,13 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+/**
+ * 
+ * Utility class for functionality available to and used by logic classes.
+ * 
+ * @author Michael Bowes
+ *
+ */
 public class Util {
 
 	/**
