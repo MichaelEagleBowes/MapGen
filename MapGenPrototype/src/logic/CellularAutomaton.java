@@ -1,21 +1,46 @@
 package logic;
 
+/**
+ * Implementation of a Cellular Automaton that creates a tile-based map using
+ * two rules to assign binary values to each tile. Stores the map as 2D Array
+ * and saves integer values for extensibility, so that the generated map can be
+ * processed further.
+ * 
+ * The initial step is the basic implementation of the algorithm and assigns
+ * values of 1 or 0, with 0 being an open area and 1 being a cave wall.
+ * 
+ * Further steps for adding objects are still to be implemented.
+ *
+ * @author Michael Bowes
+ *
+ */
 public class CellularAutomaton implements ProceduralAlgorithm {
 
 	private String name;
 	private int[][] map;
+	/**
+	 * Chance that a tile is initialized with value 1.
+	 */
 	private float survivalChance;
+	/**
+	 * The number of alive neighbors necessary to assign the value 0 to a tile.
+	 * With 9 possible neighbors, appropriate values are between 0 and 9. 
+	 */
 	private int birthRule;
+	/**
+	 * The number of alive neighbors necessary to assign the value 0 to a tile.
+	 * With 9 possible neighbors, appropriate values are between 0 and 9.
+	 */
 	private int deathRule;
 	/**
-	 * The number of iterations for the algorithm.
+	 * The number of iterations for the algorithm's initial step.
 	 */
 	private int iterations;
 
 	public CellularAutomaton() {
 		this.name = "CellularAutomata";
 	}
-	
+
 	public CellularAutomaton(int iterations, int birthRule, int deathRule, float survival) {
 		this.iterations = iterations;
 		this.birthRule = birthRule;
@@ -110,7 +135,7 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 
 		return count;
 	}
-	
+
 	@Override
 	public String getName() {
 		return name;
