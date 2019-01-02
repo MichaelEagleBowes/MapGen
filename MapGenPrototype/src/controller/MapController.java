@@ -4,7 +4,9 @@ import javafx.application.HostServices;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
@@ -50,9 +52,10 @@ public class MapController extends Controller {
 	/**
 	 * 
 	 * Generates the ground of a map with the Diamond Square algorithm.
-	 * 
-	 * Width & Height optimum: 10000 x 10000 maximum: 18798 x 18798
-	 *
+	 * <br><br>
+	 * Image Width & Height optimum: 10000 x 10000<br>
+	 * Maximum size for image creation: 18798 x 18798
+	 *<br><br>
 	 * soliciting map sizes: 2^x+1; e.g. 5, 9, 17, 33, 65, 129, 257, 513, 1025,
 	 * 2049, 4097, 8193
 	 *
@@ -60,8 +63,11 @@ public class MapController extends Controller {
 	public void generateDiamondSquare(int snowParam, int mountainParam, int forestParam, int grassParam, int beachParam,
 			int coastParam, int oceanParam) {
 		diamondSquare = new DiamondSquare();
-		currentMap = diamondSquare.generateMap(129);
-		Image mapImage = drawGround(currentMap, 5000, 5000, snowParam, mountainParam, forestParam, grassParam,
+		int mapSize = getMainController().getControlsController().getMapSize();
+		int imgWidth = getMainController().getControlsController().getImageWidth();
+		int imgHeight = getMainController().getControlsController().getImageHeight();
+		currentMap = diamondSquare.generateMap(mapSize);
+		Image mapImage = drawGround(currentMap, imgWidth, imgHeight, snowParam, mountainParam, forestParam, grassParam,
 				beachParam, coastParam, oceanParam);
 		currentView = new ImageView();
 
@@ -78,13 +84,18 @@ public class MapController extends Controller {
 
 	public void generateCellularAutomaton(int iterations, int birthRule, int deathRule, float survival) {
 		cellularAutomaton = new CellularAutomaton(iterations, birthRule, deathRule, survival);
-		currentMap = cellularAutomaton.generateMap(129);
-		Image mapImage = drawCave(currentMap, 5000, 5000);
+		int mapSize = getMainController().getControlsController().getMapSize();
+		int imgWidth = getMainController().getControlsController().getImageWidth();
+		int imgHeight = getMainController().getControlsController().getImageHeight();
+		currentMap = cellularAutomaton.generateMap(mapSize);
+		Image mapImage = drawCave(currentMap, imgWidth, imgHeight);
 		currentView = new ImageView();
 		
 		currentView.setImage(mapImage);
 		Tab tab = tabPane.getTabs().get(1);
 		ScrollPane scrollPane = new ScrollPane();
+		final Separator sepVert2 = new Separator();
+        sepVert2.setOrientation(Orientation.VERTICAL);
 		scrollPane.setContent(currentView);
 		tab.setContent(scrollPane);
 	}

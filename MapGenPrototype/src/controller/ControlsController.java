@@ -23,6 +23,12 @@ public class ControlsController extends Controller {
 	Button plus;
 	@FXML
 	Button minus;
+	@FXML
+	TextField imageWidth;
+	@FXML
+	TextField imageHeight;
+	@FXML
+	TextField mapSize;
 	
 	TextField snowField;
 	TextField mountainField;
@@ -191,4 +197,17 @@ public class ControlsController extends Controller {
 		});
 		loadDiamondSquareTab();
 	}
+	
+	public int getImageWidth() {
+		return Integer.parseInt(imageWidth.getText());
+	}
+	
+	public int getImageHeight() {
+		return Integer.parseInt(imageHeight.getText());
+	}
+	
+	public int getMapSize() {
+		return Integer.parseInt(mapSize.getText());
+	}
+	
 }
