@@ -16,6 +16,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import logic.CellularAutomaton;
@@ -121,15 +123,16 @@ public class StatisticsController extends Controller {
 		
 		HeatMap heatMap = new HeatMap(300, 250);
         GraphicsContext gc = heatMap.getGraphicsContext2D();
-        double[] firstDim = {0,150,300};
-        double[] secondDim = {10,240,10};
-        heatMap.drawHeatMap(gc, firstDim, secondDim);
-		
+        double[] firstDim = {0,30,100};
+        double[] secondDim = {10,50,66};
+        heatMap.createColorScale();
+        ImageView imageView = heatMap.drawHeatMap(gc, firstDim, secondDim);
+        
 		double areas = ((CellularAutomaton) algorithmSelect.getSelectionModel().getSelectedItem()).calcNumberOfAreas();
 		double relativeSpace = ((CellularAutomaton) algorithmSelect.getSelectionModel().getSelectedItem())
 				.calcRelativeOpenSpace();
 		
-		centerBox.getChildren().add(heatMap);
+		centerBox.getChildren().add(imageView);
 		Separator vertSeparator = new Separator();
 		vertSeparator.setOrientation(Orientation.VERTICAL);
 		centerBox.getChildren().add(vertSeparator);
