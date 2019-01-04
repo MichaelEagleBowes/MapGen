@@ -4,6 +4,7 @@ import javafx.application.HostServices;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
@@ -76,6 +77,7 @@ public class MapController extends Controller {
 		Tab tab = tabPane.getTabs().get(0);
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setContent(currentView);
+		scrollPane.setPadding(new Insets(50));
 		tab.setContent(scrollPane);
 	}
 

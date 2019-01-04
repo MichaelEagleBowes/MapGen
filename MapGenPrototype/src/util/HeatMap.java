@@ -21,7 +21,7 @@ import javafx.scene.shape.Rectangle;
 public class HeatMap extends Canvas {
 
     private final static double MIN = 0 ;
-    private final static double MAX = 100 ;
+    private final static double MAX = 1000;
     private final static double BLUE_HUE = Color.BLUE.getHue();
     private final static double RED_HUE = Color.RED.getHue();
     Image colorScale;

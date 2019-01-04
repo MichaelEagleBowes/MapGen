@@ -271,15 +271,45 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 	 * map.
 	 */
 	public static double calcNumberOfAreas() {
+		int[][] testMap = map;
 		double areaCount = 0;
 		
-		
+	    for(int x = 0; x<testMap.length; x++){
+	        for(int y = 0; y<testMap.length; y++){
+	            if(floodfill(testMap, x,y)) {
+	            	areaCount++;
+	            };
+	        }
+	    }
 		
 		return areaCount;
 	}
 
+	public static boolean floodfill(int[][] testMap, int x, int y) {
+		boolean count = false;
+		if(x < 0 || y < 0 || x >= testMap.length || y >= testMap.length) {
+			return count;
+		} else {
+			if (testMap[x][y] == 0) {
+				testMap[x][y] = 1;
+				count = true;
+				boolean echo1 = floodfill(testMap, x - 1, y);
+				boolean echo2 = floodfill(testMap, x + 1, y);
+				boolean echo3 = floodfill(testMap, x, y - 1);
+				boolean echo4 = floodfill(testMap, x, y + 1);
+				
+				return (count || echo1 || echo2 || echo3 || echo4);
+			} else {
+				return count;
+			}
+		}
+		
+	}
+
 	/**
 	 * Calculates the number of relative open space compared to wall segments.
+	 * Ranges between 0, if no spaceCount, and the size of the map, with low
+	 * wallCount.
 	 */
 	public static double calcRelativeOpenSpace() {
 		int spaceCount = 0;
@@ -287,14 +317,16 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {
-				if(map[i][j] == 0) {
+				if (map[i][j] == 0) {
 					spaceCount++;
-				} else if(map[i][j] == 1) {
+				}
+				if (map[i][j] == 1) {
 					wallCount++;
 				}
 			}
 		}
-		
+		System.out.println(" Wallcount "+wallCount + " spaceC "+spaceCount);
+
 		return spaceCount / wallCount;
 	}
 

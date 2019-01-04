@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import logic.CellularAutomaton;
 import model.Model;
 
 /**
@@ -174,6 +175,8 @@ public class ControlsController extends Controller {
 			float survival = Float.parseFloat(survivalField.getText());
 			getMainController().getMapController().generateCellularAutomaton(
 					iterations, birthRule, deathRule, survival);
+			System.out.println("Areas: "+CellularAutomaton.calcNumberOfAreas());
+			System.out.println(" Space: "+CellularAutomaton.calcRelativeOpenSpace());
 		});
 		settingsContainer.add(generateButton, 1, 5);
 	}
