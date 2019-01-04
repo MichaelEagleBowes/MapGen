@@ -22,7 +22,9 @@ package logic;
 public class CellularAutomaton implements ProceduralAlgorithm {
 
 	private String name;
-	private int[][] map;
+	private boolean hasMap;
+	private static int[][] map;
+	private static int mapSize;
 	/**
 	 * Chance that a tile is initialized with value 1.
 	 */
@@ -47,6 +49,7 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 	}
 
 	public CellularAutomaton(int iterations, int birthRule, int deathRule, float survival) {
+		this.name = "CellularAutomata";
 		this.iterations = iterations;
 		this.birthRule = birthRule;
 		this.deathRule = deathRule;
@@ -55,6 +58,7 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 
 	@Override
 	public int[][] generateMap(int size) {
+		mapSize = size;
 		map = new int[size][size];
 
 		for (int i = 0; i < size; i++) {
@@ -71,7 +75,8 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 			map = iterate(map);
 		}
 
-		map = applyObjects(map);
+		hasMap = true;
+		// map = applyObjects(map);
 
 		return map;
 	}
@@ -118,7 +123,7 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 		int[][] newMap = new int[mapTemplate.length][mapTemplate.length];
 		int treeCount = 6;
 		int objectIterations = 20;
-		
+
 		for (int x = 0; x < mapTemplate.length; x++) {
 			for (int y = 0; y < mapTemplate[0].length; y++) {
 				int nbs2 = checkExtendedMooreNeighbors(mapTemplate, x, y, 1);
@@ -188,13 +193,13 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 				int neighbour_x = x + i;
 				int neighbour_y = y + j;
 				if ((neighbour_x < 0 || neighbour_y < 0 || neighbour_x >= map.length || neighbour_y >= map[0].length)) {
-					
+
 				} else if ((map[neighbour_x][neighbour_y] == 2) && !(i == 0 && j == 0)) {
 					count += 1;
 				}
 			}
 		}
-		
+
 		return count;
 	}
 
@@ -261,8 +266,55 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 		return count;
 	}
 
+	/**
+	 * Uses the Flood Fill Algorithm to calculate the number of separated areas in a
+	 * map.
+	 */
+	public static double calcNumberOfAreas() {
+		double areaCount = 0;
+		
+		
+		
+		return areaCount;
+	}
+
+	/**
+	 * Calculates the number of relative open space compared to wall segments.
+	 */
+	public static double calcRelativeOpenSpace() {
+		int spaceCount = 0;
+		int wallCount = 0;
+
+		for (int i = 0; i < mapSize; i++) {
+			for (int j = 0; j < mapSize; j++) {
+				if(map[i][j] == 0) {
+					spaceCount++;
+				} else if(map[i][j] == 1) {
+					wallCount++;
+				}
+			}
+		}
+		
+		return spaceCount / wallCount;
+	}
+
+	@Override
+	public boolean mapPresent() {
+		return hasMap;
+	}
+
+	@Override
+	public int[][] getMap() {
+		return map;
+	}
+
 	@Override
 	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String toString() {
 		return name;
 	}
 

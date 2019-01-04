@@ -179,8 +179,8 @@ public class ControlsController extends Controller {
 	}
 
 	@Override
-	public void initialize(Stage stage, HostServices hostServices, MainController mainController, Model model) {
-		super.initialize(stage, hostServices, mainController, model);
+	public void initialize(Stage stage, HostServices hostServices, MainController mainController) {
+		super.initialize(stage, hostServices, mainController);
 		plus.setText("+");
 		minus.setText("-");
 		plus.setOnAction(event -> {

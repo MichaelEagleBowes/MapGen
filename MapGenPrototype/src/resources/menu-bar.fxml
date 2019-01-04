@@ -23,8 +23,7 @@
         </Menu>
 		        <Menu mnemonicParsing="false" text="Statistics">
             <items>
-                <MenuItem fx:id="statisticsControllability" mnemonicParsing="false" text="Controllability" />
-                <MenuItem fx:id="statisticsPattern" mnemonicParsing="false" text="Pattern" />
+                <MenuItem fx:id="statisticsExpressivity" mnemonicParsing="false" text="Expressivity" />
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

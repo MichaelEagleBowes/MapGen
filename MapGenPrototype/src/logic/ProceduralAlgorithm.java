@@ -15,6 +15,13 @@ public interface ProceduralAlgorithm {
 	 * @return the name of the algorithm.
 	 */
 	String getName();
+	
+	/**
+	 * 
+	 */
+	int[][] getMap();
+	
+	boolean mapPresent();
 
 	/**
 	 * Generates a new map with the given parameters.

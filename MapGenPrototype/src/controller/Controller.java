@@ -30,7 +30,7 @@ public abstract class Controller {
 	}
 
 	public void initialize(Stage stage, HostServices hostServices,
-	                  MainController mainController, Model model) {
+	                  MainController mainController) {
 		this.stage = stage;
 		this.hostServices = hostServices;
 		this.mainController = mainController;

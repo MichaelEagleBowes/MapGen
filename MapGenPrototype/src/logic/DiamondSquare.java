@@ -13,6 +13,8 @@ public class DiamondSquare implements ProceduralAlgorithm {
 
 	String name;
 	int[][] map;
+	private boolean hasMap;
+	private int mapSize;
 
 	public DiamondSquare() {
 		this.name = "DiamondSquare";
@@ -42,6 +44,51 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		}
 		map = algo.getMap();
 
+		hasMap = true;
+		return map;
+	}
+
+	/**
+	 * Calculates the number of areas for each terrain type.
+	 * @return
+	 */
+	public static double calcNumberOfAreas() {
+		double areaCount = 0;
+
+		return areaCount;
+	}
+
+	/**
+	 * Calculates the average distance of a terrain type to the center of the map
+	 * and the border.
+	 * 
+	 * @return
+	 */
+	public static double calcAbsolutePositions() {
+		double areaCount = 0;
+
+		return areaCount;
+	}
+
+	/**
+	 * Calculates the distance of each area of a terrain type to other areas of the
+	 * same type.
+	 * 
+	 * @return
+	 */
+	public static double calcRelativePositions() {
+		double areaCount = 0;
+
+		return areaCount;
+	}
+
+	@Override
+	public boolean mapPresent() {
+		return hasMap;
+	}
+
+	@Override
+	public int[][] getMap() {
 		return map;
 	}
 

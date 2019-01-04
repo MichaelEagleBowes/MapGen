@@ -41,10 +41,10 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 
 		MainController controller = loader.getController();
-		Model model = new ModelImpl();
-		controller.initialize(primaryStage, getHostServices(), controller, model);
+		//Model model = new ModelImpl();
+		controller.initialize(primaryStage, getHostServices(), controller);
 
-		primaryStage.titleProperty().bind(model.getTitleProperty());
+		//primaryStage.titleProperty().bind(model.getTitleProperty());
 		primaryStage.setMinWidth(800);
 		primaryStage.setMinHeight(500);
 		primaryStage.show();

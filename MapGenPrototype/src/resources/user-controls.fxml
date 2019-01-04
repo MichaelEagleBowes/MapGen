@@ -19,7 +19,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane minWidth="200" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ControlsController">
+<BorderPane xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ControlsController">
    <top>
    <VBox>
    <padding><Insets top="10" right="10" left="10" bottom="40"/></padding>

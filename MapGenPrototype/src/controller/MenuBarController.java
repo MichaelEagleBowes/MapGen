@@ -25,7 +25,8 @@ public class MenuBarController extends Controller {
 
 	private static String MENU_BAR_FXML = "/resources/fxml/menu-bar.fxml";
 	private static String MAP_FXML = "/resources/fxml/map.fxml";
-	
+	private static String STATISTICS_FXML = "/resources/statistics.fxml";
+
 	@FXML
 	private MenuItem fileOpen;
 	@FXML
@@ -34,11 +35,9 @@ public class MenuBarController extends Controller {
 	private MenuItem fileSaveAs;
 	@FXML
 	private MenuItem fileQuit;
-	
+
 	@FXML
-	private MenuItem statisticsControllability;
-	@FXML
-	private MenuItem statisticsPattern;
+	private MenuItem statisticsExpressivity;
 
 	@FXML
 	private MenuItem helpHelp;
@@ -69,25 +68,29 @@ public class MenuBarController extends Controller {
 		fileSaveAs.setOnAction(fileSaveAsAction);
 
 		fileQuit.setOnAction(event -> {
-			getStage().getOnCloseRequest().handle(
-					new WindowEvent(getStage().getScene().getWindow(),
-							WindowEvent.WINDOW_CLOSE_REQUEST));
+			getStage().getOnCloseRequest()
+					.handle(new WindowEvent(getStage().getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
 		});
 	}
 
 	private void initHelpMenu() {
-		helpHelp.setOnAction(event -> showHelpDialog());
+		helpHelp.setOnAction(event -> openHelpDialog());
 
-		helpAbout.setOnAction(event -> showAboutDialog());
+		helpAbout.setOnAction(event -> openAboutDialog());
 	}
-	
+
 	private void initStatisticsMenu() {
-		statisticsControllability.setOnAction(event -> showHelpDialog());
-
-		statisticsPattern.setOnAction(event -> showAboutDialog());
+		statisticsExpressivity.setOnAction(
+				event -> openWindow(STATISTICS_FXML, "Statistics: Expressivity of Maps", 550, 520));
 	}
 
-	private void showHelpDialog() {
+	private void openWindow(String fxmlPath, String title, int minWidth, int minHeight) {
+		Stage stage = Util.loadFxml(fxmlPath, null, null, getMainController());
+		System.out.println(title + "stage: " + stage);
+		Util.showStage(stage, title, minWidth, minHeight);
+	}
+
+	private void openHelpDialog() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Help");
 		alert.setHeaderText("Help");
@@ -95,13 +98,11 @@ public class MenuBarController extends Controller {
 		mainVBox.setSpacing(15);
 
 		VBox thesisVBox = new VBox();
-		Text text = new Text("For more details on the prototype and the thesis, visit " +
-			"the GitHub Page.");
+		Text text = new Text("For more details on the prototype and the thesis, visit " + "the GitHub Page.");
 		text.setWrappingWidth(400);
 		thesisVBox.getChildren().add(text);
 		Hyperlink gitPage = new Hyperlink("Show GitHub Page");
-		gitPage.setOnAction(event -> getHostServices().showDocument(
-			"https://github.com/MichaelEagleBowes/MapGen"));
+		gitPage.setOnAction(event -> getHostServices().showDocument("https://github.com/MichaelEagleBowes/MapGen"));
 		thesisVBox.getChildren().add(gitPage);
 		mainVBox.getChildren().add(thesisVBox);
 
@@ -110,31 +111,27 @@ public class MenuBarController extends Controller {
 		alert.getDialogPane().setPrefWidth(400);
 		alert.showAndWait();
 	}
-	
-	private void showAboutDialog() {
+
+	private void openAboutDialog() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("About MapGen");
 		alert.setHeaderText("Controllable Procedural Map Generator");
-		alert.setContentText("MapGen is an " +
-			"application that demonstrates the different effects of various " +
-			" procedural content generation algorithms by producing user-specified maps. " +
-			" This project is a prorotype created for the bachelor thesis of Michael Bowes " +
-			" at the University of Bamberg, Germany, for the chair of Media Information Technology." +
-			System.lineSeparator() + System.lineSeparator() +
-			"Version: " + getClass().getPackage().getImplementationVersion() +
-			System.lineSeparator() + System.lineSeparator() +
-			"Copyright © 2019 Michael Bowes" + System.lineSeparator() +
-			System.lineSeparator() +
-			"See the MIT Massachusetts Institute of Technology License for details.");
+		alert.setContentText("MapGen is an " + "application that demonstrates the different effects of various "
+				+ " procedural content generation algorithms by producing user-specified maps. "
+				+ " This project is a prorotype created for the bachelor thesis of Michael Bowes "
+				+ " at the University of Bamberg, Germany, for the chair of Media Information Technology."
+				+ System.lineSeparator() + System.lineSeparator() + "Version: "
+				+ getClass().getPackage().getImplementationVersion() + System.lineSeparator() + System.lineSeparator()
+				+ "Copyright © 2019 Michael Bowes" + System.lineSeparator() + System.lineSeparator()
+				+ "See the MIT Massachusetts Institute of Technology License for details.");
 		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 		alert.getDialogPane().setPrefWidth(400);
 		alert.showAndWait();
 	}
 
 	@Override
-	public void initialize(Stage stage, HostServices hostServices,
-	                  MainController mainController, Model model) {
-		super.initialize(stage, hostServices, mainController, model);
-		//fileSave.disableProperty().bind(getModel().isChanged().not());
+	public void initialize(Stage stage, HostServices hostServices, MainController mainController) {
+		super.initialize(stage, hostServices, mainController);
+		// fileSave.disableProperty().bind(getModel().isChanged().not());
 	}
 }

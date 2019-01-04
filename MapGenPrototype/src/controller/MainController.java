@@ -31,12 +31,12 @@ public class MainController extends Controller {
 
 	@Override
 	public void initialize(Stage stage, HostServices hostServices,
-	                  MainController mainController, Model model) {
-		super.initialize(stage, hostServices, mainController, model);
+	                  MainController mainController) {
+		super.initialize(stage, hostServices, mainController);
 		setCloseConfirmation();
-		menuBarController.initialize(stage, hostServices, this, model);
-		mapController.initialize(stage, hostServices, this, model);
-		userControlsController.initialize(stage, hostServices, this, model);
+		menuBarController.initialize(stage, hostServices, this);
+		mapController.initialize(stage, hostServices, this);
+		userControlsController.initialize(stage, hostServices, this);
 		//getModel().getStateTextProperty().addListener((observable, oldValue, newValue) -> updateStateInfo(newValue));
 	}
 
