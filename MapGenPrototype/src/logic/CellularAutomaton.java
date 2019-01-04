@@ -271,7 +271,13 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 	 * map.
 	 */
 	public static double calcNumberOfAreas() {
-		int[][] testMap = map;
+		int[][] testMap = new int[map.length][map.length];
+		for(int i=0;i<testMap.length;i++) {
+			for(int j=0;j<testMap.length;j++) {
+			testMap[i][j] = map[i][j];
+			}
+		}
+				
 		double areaCount = 0;
 		
 	    for(int x = 0; x<testMap.length; x++){
@@ -327,7 +333,8 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 		}
 		System.out.println(" Wallcount "+wallCount + " spaceC "+spaceCount);
 
-		return spaceCount / wallCount;
+		double space = spaceCount / wallCount;
+		return space;
 	}
 
 	@Override

@@ -105,7 +105,7 @@ public class MapController extends Controller {
 
 	/**
 	 * 
-	 * Draws the created height map for the cellular automaton onto an image.
+	 * Draws the height map for the cellular automaton onto an image.
 	 * 
 	 */
 	public Image drawCave(int[][] map, int width, int height) {

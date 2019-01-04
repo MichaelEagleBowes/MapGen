@@ -120,6 +120,8 @@ public class StatisticsController extends Controller {
 
 	private void createHeatMap() {
 		centerBox.getChildren().clear();
+		//System.out.println("Areas: "+CellularAutomaton.calcNumberOfAreas()); 1 bis (mapSize^2)/2
+		//System.out.println(" Space: "+CellularAutomaton.calcRelativeOpenSpace()); 0 bis mapSize^2
 		
 		HeatMap heatMap = new HeatMap(300, 250);
         GraphicsContext gc = heatMap.getGraphicsContext2D();

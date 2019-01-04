@@ -175,8 +175,6 @@ public class ControlsController extends Controller {
 			float survival = Float.parseFloat(survivalField.getText());
 			getMainController().getMapController().generateCellularAutomaton(
 					iterations, birthRule, deathRule, survival);
-			System.out.println("Areas: "+CellularAutomaton.calcNumberOfAreas());
-			System.out.println(" Space: "+CellularAutomaton.calcRelativeOpenSpace());
 		});
 		settingsContainer.add(generateButton, 1, 5);
 	}
