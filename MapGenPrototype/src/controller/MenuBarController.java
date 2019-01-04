@@ -86,7 +86,6 @@ public class MenuBarController extends Controller {
 
 	private void openWindow(String fxmlPath, String title, int minWidth, int minHeight) {
 		Stage stage = Util.loadFxml(fxmlPath, null, null, getMainController());
-		System.out.println(title + "stage: " + stage);
 		Util.showStage(stage, title, minWidth, minHeight);
 	}
 

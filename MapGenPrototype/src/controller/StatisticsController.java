@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -21,6 +22,8 @@ import logic.CellularAutomaton;
 import logic.DiamondSquare;
 import logic.ProceduralAlgorithm;
 import model.MapType;
+import util.HeatMap;
+import javafx.scene.canvas.GraphicsContext;
 
 public class StatisticsController extends Controller {
 
@@ -87,8 +90,8 @@ public class StatisticsController extends Controller {
 
 	private void initComboBoxes() {
 		ObservableList<ProceduralAlgorithm> algorithmList = FXCollections.observableArrayList();
-		algorithmList.add(new CellularAutomaton());
-		algorithmList.add(new DiamondSquare());
+		algorithmList.add(getMainController().getMapController().getCellularAutomaton());
+		algorithmList.add(getMainController().getMapController().getDiamondSquare());
 		algorithmSelect.setItems(algorithmList);
 
 		ObservableList<MapType> mapList = FXCollections.observableArrayList();
@@ -116,13 +119,24 @@ public class StatisticsController extends Controller {
 	private void createHeatMap() {
 		centerBox.getChildren().clear();
 		
+		HeatMap heatMap = new HeatMap(300, 250);
+        GraphicsContext gc = heatMap.getGraphicsContext2D();
+        double[] firstDim = {0,150,300};
+        double[] secondDim = {10,240,10};
+        heatMap.drawHeatMap(gc, firstDim, secondDim);
 		
 		double areas = ((CellularAutomaton) algorithmSelect.getSelectionModel().getSelectedItem()).calcNumberOfAreas();
 		double relativeSpace = ((CellularAutomaton) algorithmSelect.getSelectionModel().getSelectedItem())
 				.calcRelativeOpenSpace();
+		
+		centerBox.getChildren().add(heatMap);
+		Separator vertSeparator = new Separator();
+		vertSeparator.setOrientation(Orientation.VERTICAL);
+		centerBox.getChildren().add(vertSeparator);
 	}
 
 	private void createExpressiveRangeChart() {
+		System.out.println(algorithmSelect.getSelectionModel().getSelectedItem().getClass());
 		if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof DiamondSquare) {
 			createHistogram();
 		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
@@ -133,6 +147,7 @@ public class StatisticsController extends Controller {
 
 	private void initButtons() {
 		expressiveRangeBtn.setOnAction(event -> {
+			System.out.println(algorithmSelect.getSelectionModel().getSelectedItem());
 			if (algorithmSelect.getSelectionModel().getSelectedItem().mapPresent()) {
 				createExpressiveRangeChart();
 			} else {
