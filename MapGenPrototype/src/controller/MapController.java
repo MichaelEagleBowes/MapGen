@@ -52,7 +52,14 @@ public class MapController extends Controller {
 	private static String BEACH_TILE = System.getProperty("user.dir") + "/resources/beach.jpg";
 	private static String ROCKS_TILE = System.getProperty("user.dir") + "/resources/rocks.jpg";
 	private static String TREE_TILE = System.getProperty("user.dir") + "/resources/tree.jpg";
-	private static List<Number> params;
+	/**
+	 * The parameters necessary for calculating the Bowes Distance.
+	 */
+	private static List<Number> spectraParams;
+	/**
+	 * The parameters as given by the user.
+	 */
+	private static List<Integer> params;
 
 	/**
 	 * 
@@ -195,7 +202,7 @@ public class MapController extends Controller {
 			int mapHeight = map.length;
 			int mapWidth = map.length;
 
-			params = new ArrayList<Number>();
+			spectraParams = new ArrayList<Number>();
 			
 			int minimum = 0;
 			int maximum = 0;
@@ -213,19 +220,28 @@ public class MapController extends Controller {
 			double oceanSpectrum = spectrum * (oceanParam * 0.01);
 			double coastSpectrum = spectrum * (coastParam * 0.01);
 			double beachSpectrum = spectrum * (beachParam * 0.01);
-			double mountainSpectrum = spectrum * (mountainParam * 0.01);
-			double snowSpectrum = spectrum * (snowParam * 0.01);
 			double grassSpectrum = spectrum * (grassParam * 0.01);
 			double forestSpectrum = spectrum * (forestParam * 0.01);
+			double mountainSpectrum = spectrum * (mountainParam * 0.01);
+			double snowSpectrum = spectrum * (snowParam * 0.01);
 			
-			params.add(0, minimum);
-			params.add(1, oceanSpectrum);
-			params.add(2, coastSpectrum);
-			params.add(3, beachSpectrum);
-			params.add(4, mountainSpectrum);
-			params.add(5, snowSpectrum);
-			params.add(6, grassSpectrum);
-			params.add(7, forestSpectrum);
+			spectraParams.add(0, minimum);
+			spectraParams.add(1, oceanSpectrum);
+			spectraParams.add(2, coastSpectrum);
+			spectraParams.add(3, beachSpectrum);
+			spectraParams.add(4, mountainSpectrum);
+			spectraParams.add(5, snowSpectrum);
+			spectraParams.add(6, grassSpectrum);
+			spectraParams.add(7, forestSpectrum);
+			
+			params = new ArrayList<Integer>();
+			params.add(oceanParam);
+			params.add(coastParam);
+			params.add(beachParam);
+			params.add(grassParam);
+			params.add(forestParam);
+			params.add(mountainParam);
+			params.add(snowParam);
 
 			for (int i = 0; i < mapWidth; i++) {
 				for (int j = 0; j < mapHeight; j++) {
@@ -303,7 +319,11 @@ public class MapController extends Controller {
 	 * each terrain.
 	 * @return
 	 */
-	public List<Number> getParameters() {
+	public List<Number> getSpectraParameters() {
+		return spectraParams;
+	}
+	
+	public List<Integer> getParameters() {
 		return params;
 	}
 

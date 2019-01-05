@@ -18,6 +18,12 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Draws a heat map and a color scale onto a canvas.
+ * 
+ * @author Michael Bowes
+ *
+ */
 public class HeatMap extends Canvas {
 
     private final static double MIN = 0 ;

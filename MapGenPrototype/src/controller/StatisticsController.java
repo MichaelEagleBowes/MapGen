@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.application.HostServices;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -36,8 +38,6 @@ public class StatisticsController extends Controller {
 	@FXML
 	private ComboBox<ProceduralAlgorithm> algorithmSelect;
 	@FXML
-	private ComboBox<MapType> genreSelect;
-	@FXML
 	private Button expressiveRangeBtn;
 	@FXML
 	private Button controllabilityBtn;
@@ -56,44 +56,83 @@ public class StatisticsController extends Controller {
 	 * Fills the BarChart with the count of appliances of the individual
 	 * neighborhood structures that were used for generating that timetable.
 	 */
-	private void fillBarChart(BarChart<String, Double> barChart) {
-		int[][] selectedMap = maps.get(algorithmSelect.getSelectionModel().getSelectedItem());
-		//double areas = DiamondSquare.calcNumberOfAreas();
-		List<Number> params = getMainController().getMapController().getParameters();
-		List<List<Integer>> absPos = DiamondSquare.calcAbsolutePositions(
-				(int)params.get(0), (double)params.get(1), (double)params.get(2),
-				(double)params.get(3), (double)params.get(4), (double)params.get(5), 
-				(double)params.get(6), (double)params.get(7));
-		double relPos = DiamondSquare.calcRelativePositions();
+	private BarChart<String, Double> fillBarChart(BarChart<String, Double> barChart) {
+		CategoryAxis xAxis = new CategoryAxis();
+		xAxis.setLabel("Expressivity");
+		NumberAxis yAxis = new NumberAxis();
+		yAxis.setLabel("Intensity");
+		barChart = new BarChart(xAxis, yAxis);
 		
-		switch (genreSelect.getSelectionModel().getSelectedItem()) {
-		case RTS:
-			
-			break;
-		case OpenWorld:
-			
-			break;
-		}
+		int[][] selectedMap = maps.get(algorithmSelect.getSelectionModel().getSelectedItem());
+		/*
+		List<Integer> params = getMainController().getMapController().getParameters();
+		List<Double> areaCount = DiamondSquare.calcNumberOfAreas(
+				params.get(0), params.get(1), params.get(2)
+				, params.get(3), params.get(4), params.get(5)
+				, params.get(6));*/
+		
+		List<Number> spectraParams = getMainController().getMapController().getSpectraParameters();
+		List<List<Integer>> absPos = DiamondSquare.calcAbsolutePositions(
+				(int)spectraParams.get(0), (double)spectraParams.get(1), (double)spectraParams.get(2),
+				(double)spectraParams.get(3), (double)spectraParams.get(4), (double)spectraParams.get(5), 
+				(double)spectraParams.get(6), (double)spectraParams.get(7));
+		double relPos = DiamondSquare.calcRelativePositions();
 		
 		XYChart.Series<String, Double> series1 = new XYChart.Series<>();
 		series1.setName("Snow");
 		series1.getData().add(new XYChart.Data<>("Separate Areas", 1d));
 		series1.getData().add(new XYChart.Data<>("Spread", 3d));
-		series1.getData().add(new XYChart.Data<>("Distances", 5d));
-
+		series1.getData().add(new XYChart.Data<>("Distance X", (double)absPos.get(6).get(0)));
+		series1.getData().add(new XYChart.Data<>("Distance Y", (double)absPos.get(6).get(1)));
+		
 		XYChart.Series<String, Double> series2 = new XYChart.Series<>();
 		series2.setName("Mountain");
 		series2.getData().add(new XYChart.Data<>("Separate Areas", 1d));
 		series2.getData().add(new XYChart.Data<>("Spread", 5d));
-		series2.getData().add(new XYChart.Data<>("Distances", 5d));
+		series2.getData().add(new XYChart.Data<>("Distance X", (double)absPos.get(5).get(0)));
+		series2.getData().add(new XYChart.Data<>("Distance Y", (double)absPos.get(5).get(1)));
 
 		XYChart.Series<String, Double> series3 = new XYChart.Series<>();
-		series3.setName("Ford");
+		series3.setName("Forest");
 		series3.getData().add(new XYChart.Data<>("Separate Areas", 1d));
 		series3.getData().add(new XYChart.Data<>("Spread", 5d));
-		series3.getData().add(new XYChart.Data<>("Distances", 5d));
+		series3.getData().add(new XYChart.Data<>("Distance X", (double)absPos.get(4).get(0)));
+		series3.getData().add(new XYChart.Data<>("Distance Y", (double)absPos.get(4).get(1)));
+		
+		XYChart.Series<String, Double> series4 = new XYChart.Series<>();
+		series4.setName("Grass");
+		series4.getData().add(new XYChart.Data<>("Separate Areas", 1d));
+		series4.getData().add(new XYChart.Data<>("Spread", 3d));
+		series4.getData().add(new XYChart.Data<>("Distance X", (double)absPos.get(3).get(0)));
+		series4.getData().add(new XYChart.Data<>("Distance Y", (double)absPos.get(3).get(1)));
 
-		barChart.getData().addAll(series1, series2, series3);
+		XYChart.Series<String, Double> series5 = new XYChart.Series<>();
+		series5.setName("Beach");
+		series5.getData().add(new XYChart.Data<>("Separate Areas", 1d));
+		series5.getData().add(new XYChart.Data<>("Spread", 5d));
+		series5.getData().add(new XYChart.Data<>("Distance X", (double)absPos.get(2).get(0)));
+		series5.getData().add(new XYChart.Data<>("Distance Y", (double)absPos.get(2).get(1)));
+
+		XYChart.Series<String, Double> series6 = new XYChart.Series<>();
+		series6.setName("Coast");
+		series6.getData().add(new XYChart.Data<>("Separate Areas", 1d));
+		series6.getData().add(new XYChart.Data<>("Spread", 5d));
+		series6.getData().add(new XYChart.Data<>("Distance X", (double)absPos.get(1).get(0)));
+		series6.getData().add(new XYChart.Data<>("Distance Y", (double)absPos.get(1).get(1)));
+		
+		XYChart.Series<String, Double> series7 = new XYChart.Series<>();
+		series7.setName("Ocean");
+		series7.getData().add(new XYChart.Data<>("Separate Areas", 1d));
+		series7.getData().add(new XYChart.Data<>("Spread", 5d));
+		series7.getData().add(new XYChart.Data<>("Distance X", (double)absPos.get(0).get(0)));
+		series7.getData().add(new XYChart.Data<>("Distance Y", (double)absPos.get(0).get(1)));
+
+		barChart.getData().addAll(series1, series2, series3, series4, series5, series6, series7);
+		
+		
+		barChart.setStyle("-fx-background-color: rgba(0,168,355,0.5);-fx-background-radius: 10;");
+		
+		return barChart;
 	}
 
 	private void initComboBoxes() {
@@ -101,23 +140,11 @@ public class StatisticsController extends Controller {
 		algorithmList.add(getMainController().getMapController().getCellularAutomaton());
 		algorithmList.add(getMainController().getMapController().getDiamondSquare());
 		algorithmSelect.setItems(algorithmList);
-
-		ObservableList<MapType> mapList = FXCollections.observableArrayList();
-		mapList.add(MapType.OpenWorld);
-		mapList.add(MapType.RTS);
-		genreSelect.setItems(mapList);
 	}
 
 	private void createHistogram() {
 		centerBox.getChildren().clear();
-		CategoryAxis xAxis = new CategoryAxis();
-		xAxis.setLabel("Neighbourhood Structures");
-
-		NumberAxis yAxis = new NumberAxis();
-		yAxis.setLabel("Use Count");
-
-		expressivityBarChart = new BarChart(xAxis, yAxis);
-		fillBarChart(expressivityBarChart);
+		expressivityBarChart = fillBarChart(expressivityBarChart);
 		Separator vertSeparator = new Separator();
 		vertSeparator.setOrientation(Orientation.VERTICAL);
 		centerBox.getChildren().add(expressivityBarChart);
@@ -147,7 +174,6 @@ public class StatisticsController extends Controller {
 	}
 
 	private void createExpressiveRangeChart() {
-		System.out.println(algorithmSelect.getSelectionModel().getSelectedItem().getClass());
 		if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof DiamondSquare) {
 			createHistogram();
 		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {

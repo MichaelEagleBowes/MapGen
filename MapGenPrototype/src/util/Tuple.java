@@ -5,6 +5,8 @@ package util;
  * A three dimensional Tuple Container that holds up to three values.
  * @param <A> the first {@link Number}
  * @param <B> the second {@link Number}
+ * 
+ * @author Michael Bowes
  */
 public class Tuple<A extends Number, B extends Number, C extends Number> {
 
@@ -13,7 +15,9 @@ public class Tuple<A extends Number, B extends Number, C extends Number> {
 	Number thirdVal;
 	
 	public Tuple() {
-
+		firstVal = 0;
+		secondVal = 0;
+		thirdVal = 0;
 	}
 	
 	public Tuple(A valOne, B valTwo, C valThree) {

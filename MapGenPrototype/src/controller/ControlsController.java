@@ -108,25 +108,25 @@ public class ControlsController extends Controller {
 		shallowWaterField = new TextField();
 		
 		snowField.setText("20");
-		snowField.setMaxWidth(50);
+		snowField.setMaxWidth(40);
 
 		mountainField.setText("20");
-		mountainField.setMaxWidth(50);
+		mountainField.setMaxWidth(40);
 
 		forestField.setText("20");
-		forestField.setMaxWidth(50);
+		forestField.setMaxWidth(40);
 
 		grassField.setText("10");
-		grassField.setMaxWidth(50);
+		grassField.setMaxWidth(40);
 
 		beachField.setText("20");
-		beachField.setMaxWidth(50);
+		beachField.setMaxWidth(40);
 
 		shallowWaterField.setText("5");
-		shallowWaterField.setMaxWidth(50);
+		shallowWaterField.setMaxWidth(40);
 
 		deepWaterField.setText("5");
-		deepWaterField.setMaxWidth(50);
+		deepWaterField.setMaxWidth(40);
 
 		
 		settingsContainer.add(chooseLabel, 0, 0);

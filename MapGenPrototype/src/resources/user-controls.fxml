@@ -24,9 +24,9 @@
    <VBox>
    <padding><Insets top="10" right="10" left="10" bottom="40"/></padding>
    <Label text="Image Width" />
-   <TextField fx:id="imageWidth" prefWidth="70" text="5000" />
+   <TextField fx:id="imageWidth" prefWidth="70" text="6000" />
    <Label text="Image Height"  />
-   <TextField fx:id="imageHeight"  prefWidth="70" text="5000" />
+   <TextField fx:id="imageHeight"  prefWidth="70" text="6000" />
    <Label text="Map Size" />
    <TextField fx:id="mapSize" prefWidth="70" text="129"/>
    </VBox>

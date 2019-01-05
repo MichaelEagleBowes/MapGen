@@ -24,16 +24,14 @@ fx:controller="controller.StatisticsController">
    <VBox>
     <HBox spacing="10">
 	<ComboBox fx:id="algorithmSelect" />
-	<ComboBox fx:id="genreSelect" />
+	<Button fx:id="controllabilityBtn" mnemonicParsing="false" text="Show Controllability" />
+	<Button fx:id="expressiveRangeBtn" mnemonicParsing="false" text="Show Expressive Range" />
    </HBox>
    	<Separator orientation="HORIZONTAL" />
    </VBox>
    </top>
    <center>
    <HBox fx:id="centerBox" spacing="30" alignment="center">
-   	<Button fx:id="expressiveRangeBtn" mnemonicParsing="false" text="Expressive Range" />
-   	<Separator orientation="VERTICAL" />
-	<Button fx:id="controllabilityBtn" mnemonicParsing="false" text="Controllability" />
    </HBox>
    </center>
    <bottom>

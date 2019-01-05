@@ -8,6 +8,8 @@ import javafx.scene.transform.Scale;
 /**
  * 
  * Applies a sclaing transformation to the given {@link Node} to create a zoom effect.
+ * 
+ * @author Michael Bowes
  */
 public class ZoomScrollPane extends ScrollPane {
 

@@ -1,0 +1,9 @@
+.default-color0.chart-bar { -fx-bar-fill: lightgray; }
+.default-color1.chart-bar { -fx-bar-fill: gray; }
+.default-color2.chart-bar { -fx-bar-fill: darkgreen; }
+.default-color3.chart-bar { -fx-bar-fill: lightgreen; }
+.default-color4.chart-bar { -fx-bar-fill: #F7F29A; }
+.default-color5.chart-bar { -fx-bar-fill: #00ABE1; }
+.default-color6.chart-bar { -fx-bar-fill: #0024C4; }
+-fx-background-color: rgba(0,168,355,0.5);
+-fx-background-radius: 10;

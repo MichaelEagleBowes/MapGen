@@ -29,16 +29,22 @@ import javax.imageio.ImageIO;
 public class Util {
 
 	/**
+	 * Calculates the n-th root of the base.
+	 *
+	 */
+	public static double calcNthRoot(double base, double n) {
+		return Math.pow(Math.E, Math.log(base) / n);
+	}
+
+	/**
 	 * 
 	 * Returns the maximum value out of five integers.
 	 */
 	public static int getMax(int one, int two, int three, int four, int five) {
-		
-		int maximum = Math.max(
-				Math.max(Math.max(one, two), Math.max(two, three)), 
-				Math.max(Math.max(three, four), Math.max(four, five))
-				);
-		
+
+		int maximum = Math.max(Math.max(Math.max(one, two), Math.max(two, three)),
+				Math.max(Math.max(three, four), Math.max(four, five)));
+
 		return maximum;
 	}
 
