@@ -20,6 +20,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -50,6 +52,7 @@ public class MapController extends Controller {
 	private static String BEACH_TILE = System.getProperty("user.dir") + "/resources/beach.jpg";
 	private static String ROCKS_TILE = System.getProperty("user.dir") + "/resources/rocks.jpg";
 	private static String TREE_TILE = System.getProperty("user.dir") + "/resources/tree.jpg";
+	private static List<Number> params;
 
 	/**
 	 * 
@@ -191,9 +194,9 @@ public class MapController extends Controller {
 
 			int mapHeight = map.length;
 			int mapWidth = map.length;
-			System.out.println("picL: " + mapHeight);
-			System.out.println("picW: " + mapWidth);
 
+			params = new ArrayList<Number>();
+			
 			int minimum = 0;
 			int maximum = 0;
 			for (int i = 0; i < mapWidth; i++) {
@@ -206,8 +209,7 @@ public class MapController extends Controller {
 					}
 				}
 			}
-			int spectrum = Math.abs(minimum) + maximum;
-			System.out.println("spec: " + spectrum + " min: " + minimum + " max: " + maximum);
+			double spectrum = Math.abs(minimum) + maximum;
 			double oceanSpectrum = spectrum * (oceanParam * 0.01);
 			double coastSpectrum = spectrum * (coastParam * 0.01);
 			double beachSpectrum = spectrum * (beachParam * 0.01);
@@ -215,6 +217,15 @@ public class MapController extends Controller {
 			double snowSpectrum = spectrum * (snowParam * 0.01);
 			double grassSpectrum = spectrum * (grassParam * 0.01);
 			double forestSpectrum = spectrum * (forestParam * 0.01);
+			
+			params.add(0, minimum);
+			params.add(1, oceanSpectrum);
+			params.add(2, coastSpectrum);
+			params.add(3, beachSpectrum);
+			params.add(4, mountainSpectrum);
+			params.add(5, snowSpectrum);
+			params.add(6, grassSpectrum);
+			params.add(7, forestSpectrum);
 
 			for (int i = 0; i < mapWidth; i++) {
 				for (int j = 0; j < mapHeight; j++) {
@@ -284,6 +295,16 @@ public class MapController extends Controller {
 
 	public DiamondSquare getDiamondSquare() {
 		return diamondSquare;
+	}
+	
+	/**
+	 * 
+	 * Returns a list of parameters including the minimum height value and the spectra for
+	 * each terrain.
+	 * @return
+	 */
+	public List<Number> getParameters() {
+		return params;
 	}
 
 	@Override

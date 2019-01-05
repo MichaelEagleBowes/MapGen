@@ -290,7 +290,7 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 		
 		return areaCount;
 	}
-
+	
 	public static boolean floodfill(int[][] testMap, int x, int y) {
 		boolean count = false;
 		if(x < 0 || y < 0 || x >= testMap.length || y >= testMap.length) {

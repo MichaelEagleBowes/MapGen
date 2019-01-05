@@ -29,13 +29,27 @@ import javax.imageio.ImageIO;
 public class Util {
 
 	/**
+	 * 
+	 * Returns the maximum value out of five integers.
+	 */
+	public static int getMax(int one, int two, int three, int four, int five) {
+		
+		int maximum = Math.max(
+				Math.max(Math.max(one, two), Math.max(two, three)), 
+				Math.max(Math.max(three, four), Math.max(four, five))
+				);
+		
+		return maximum;
+	}
+
+	/**
 	 * Returns a part of the map that surrounds a specified object.
 	 * 
 	 * @param distanceX The tiles surrounding the object in x direction
 	 * @param distanceY The tiles surrounding the object in y direction
-	 * @param objectX The X position of the object in map-tile-coordinates
-	 * @param objectY The Y position of the object in map-tile-coordinates
-	 * @param path to where the map file is stored.
+	 * @param objectX   The X position of the object in map-tile-coordinates
+	 * @param objectY   The Y position of the object in map-tile-coordinates
+	 * @param path      to where the map file is stored.
 	 */
 	public void getMapPart(int distanceX, int distanceY, int objectX, int objectY, String path) {
 		File file = new File(path);
@@ -44,13 +58,13 @@ public class Util {
 			int xEnd = objectX + distanceX;
 			int yStart;
 			int yEnd = objectY + distanceY;
-			//if object distance not outside of beginning or end of map
+			// if object distance not outside of beginning or end of map
 			if ((objectX - distanceX > 0)) {
 				xStart = objectX - distanceX;
 			} else {
 				xStart = 0;
 			}
-			if(xEnd < 257) {
+			if (xEnd < 257) {
 			} else {
 				xEnd = 257;
 			}
@@ -59,7 +73,7 @@ public class Util {
 			} else {
 				yStart = 0;
 			}
-			if(yEnd < 257) {
+			if (yEnd < 257) {
 			} else {
 				yEnd = 257;
 			}
@@ -68,7 +82,7 @@ public class Util {
 			byte[] byteArray = new byte[66049];
 			int l = 0;
 			for (int i = xStart; i < xEnd; i++) {
-				for(int j = yStart;j< yEnd; j++) {
+				for (int j = yStart; j < yEnd; j++) {
 					byteArray[l] = raf.readByte();
 					l++;
 				}
@@ -78,7 +92,7 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * Takes a 2D Array and saves each tile as byte.
@@ -108,10 +122,11 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
-	 * Loads a map file from the given path with the given name and returns it as byte array.
+	 * Loads a map file from the given path with the given name and returns it as
+	 * byte array.
 	 * 
 	 * @param loadPath where the map file is located.
 	 * @return
@@ -123,24 +138,24 @@ public class Util {
 
 		try (FileInputStream fis = new FileInputStream(file)) {
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-			
+
 			int nRead;
 			byte[] data = new byte[1089];
 
 			while ((nRead = fis.read(data, 0, data.length)) != -1) {
-			  buffer.write(data, 0, nRead);
+				buffer.write(data, 0, nRead);
 			}
 
 			buffer.flush();
 
 			return buffer.toByteArray();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * Takes a generated map and saves it in csv format.
@@ -198,23 +213,21 @@ public class Util {
 
 		return map;
 	}
-	
+
 	/**
-	 * Creates an image file of the generated map. Requires a map to be generated with
-	 * generateMap() beforehand. Each map tile is 20*20 in size in the picture. If
-	 * the generated map is bigger than the picture, the edges will be cut off in
+	 * Creates an image file of the generated map. Requires a map to be generated
+	 * with generateMap() beforehand. Each map tile is 20*20 in size in the picture.
+	 * If the generated map is bigger than the picture, the edges will be cut off in
 	 * the image.
 	 * 
-	 * @param map
-	 *            the 2D integer array representing the map.
-	 * @param width
-	 *            width of the picture. Optimum value: 10.000; Maximum value: 18798
-	 * @param height
-	 *            height of the picture. Optimum value: 10.000; Maximum value: 18798
-	 * @param name of the file
-	 * @param imageType
-	 * 			  0 outputs as JPEG, 1 outputs as PNG
-	 * @param path where to save the image.
+	 * @param map       the 2D integer array representing the map.
+	 * @param width     width of the picture. Optimum value: 10.000; Maximum value:
+	 *                  18798
+	 * @param height    height of the picture. Optimum value: 10.000; Maximum value:
+	 *                  18798
+	 * @param name      of the file
+	 * @param imageType 0 outputs as JPEG, 1 outputs as PNG
+	 * @param path      where to save the image.
 	 */
 	public void createPng(int[][] map, int width, int height, String name, boolean imageType, String path) {
 
@@ -298,7 +311,7 @@ public class Util {
 
 			ig2.dispose();
 
-			if(imageType) {
+			if (imageType) {
 				ImageIO.write(bi, "PNG", new File(path));
 			} else {
 				ImageIO.write(bi, "JPEG", new File(path));
@@ -307,10 +320,11 @@ public class Util {
 			ie.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Prints the values of a generated map to the console.
-	 * Used for debugging and testing purposes.
+	 * Prints the values of a generated map to the console. Used for debugging and
+	 * testing purposes.
+	 * 
 	 * @param map to print.
 	 */
 	public void printMap(int[][] map) // this prints the 2D array.
@@ -322,5 +336,5 @@ public class Util {
 			System.out.println("");
 		}
 	}
-	
+
 }

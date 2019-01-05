@@ -1,6 +1,8 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javafx.application.HostServices;
@@ -56,8 +58,12 @@ public class StatisticsController extends Controller {
 	 */
 	private void fillBarChart(BarChart<String, Double> barChart) {
 		int[][] selectedMap = maps.get(algorithmSelect.getSelectionModel().getSelectedItem());
-		double areas = DiamondSquare.calcNumberOfAreas();
-		double absPos = DiamondSquare.calcAbsolutePositions();
+		//double areas = DiamondSquare.calcNumberOfAreas();
+		List<Number> params = getMainController().getMapController().getParameters();
+		List<List<Integer>> absPos = DiamondSquare.calcAbsolutePositions(
+				(int)params.get(0), (double)params.get(1), (double)params.get(2),
+				(double)params.get(3), (double)params.get(4), (double)params.get(5), 
+				(double)params.get(6), (double)params.get(7));
 		double relPos = DiamondSquare.calcRelativePositions();
 		
 		switch (genreSelect.getSelectionModel().getSelectedItem()) {
