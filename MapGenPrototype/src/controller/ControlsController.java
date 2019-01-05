@@ -1,10 +1,12 @@
 package controller;
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import logic.CellularAutomaton;
@@ -144,12 +146,16 @@ public class ControlsController extends Controller {
 		settingsContainer.add(shallowWaterField, 1, 6);
 		settingsContainer.add(deepWaterLabel, 0, 7);
 		settingsContainer.add(deepWaterField, 1, 7);
+		settingsContainer.setPadding(new Insets(10,10,10,10));
 	}
 
 	public void loadDiamondSquareTab() {
 		settingsContainer.getChildren().clear();
 		initDiamondSquareParamFields();
-		generateButton = new Button("generate");
+		generateButton = new Button("Generate");
+		generateButton.setPrefWidth(120);
+		generateButton.setPrefHeight(120);
+		generateButton.setFont(new Font(20));
 		generateButton.setOnAction(event -> {
 			int snowParam = Integer.parseInt(snowField.getText());
 			int mountainParam = Integer.parseInt(mountainField.getText());
@@ -167,7 +173,10 @@ public class ControlsController extends Controller {
 	public void loadCellularAutomatonTab() {
 		settingsContainer.getChildren().clear();
 		initCellularAutomatonParamFields();
-		generateButton = new Button("generate");
+		generateButton = new Button("Generate");
+		generateButton.setPrefWidth(120);
+		generateButton.setPrefHeight(120);
+		generateButton.setFont(new Font(20));
 		generateButton.setOnAction(event -> {
 			int iterations = Integer.parseInt(iterationsField.getText());
 			int birthRule = Integer.parseInt(birthRuleField.getText());
@@ -176,7 +185,8 @@ public class ControlsController extends Controller {
 			getMainController().getMapController().generateCellularAutomaton(
 					iterations, birthRule, deathRule, survival);
 		});
-		settingsContainer.add(generateButton, 1, 5);
+		settingsContainer.add(generateButton, 0, 9);
+		settingsContainer.setPadding(new Insets(10,10,10,10));
 	}
 
 	@Override
@@ -185,16 +195,38 @@ public class ControlsController extends Controller {
 		plus.setText("+");
 		minus.setText("-");
 		plus.setOnAction(event -> {
-			Scale scale = new Scale();
-			scale.setX(1.5);
-			scale.setY(1.5);
-			getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+			if(getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 0) {
+				if(getMainController().getMapController().getDiamondSquare().mapPresent()) {
+					Scale scale = new Scale();
+					scale.setX(1.5);
+					scale.setY(1.5);
+					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+				}
+			} else if(getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 1) {
+				if(getMainController().getMapController().getCellularAutomaton().mapPresent()) {
+					Scale scale = new Scale();
+					scale.setX(1.5);
+					scale.setY(1.5);
+					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+				}
+			}
 		});
 		minus.setOnAction(event -> {
-			Scale scale = new Scale();
-			scale.setX(0.5);
-			scale.setY(0.5);
-			getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+			if(getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 0) {
+				if(getMainController().getMapController().getDiamondSquare().mapPresent()) {
+					Scale scale = new Scale();
+					scale.setX(0.5);
+					scale.setY(0.5);
+					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+				}
+			} else if(getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 1) {
+				if(getMainController().getMapController().getCellularAutomaton().mapPresent()) {
+					Scale scale = new Scale();
+					scale.setX(0.5);
+					scale.setY(0.5);
+					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+				}
+			}
 		});
 		loadDiamondSquareTab();
 	}

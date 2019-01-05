@@ -45,7 +45,7 @@ public class HeatMap extends Canvas {
 			for (int x = 0; x < dimensionTwo.length; x++) {
 				
 				PixelReader pr = colorScale.getPixelReader();
-				Color color = pr.getColor((int)dimensionOne[x], (int)dimensionTwo[y]);
+				Color color = pr.getColor(0, (int)dimensionTwo[y]);
 
 				writer.setColor(x, y, color.darker());
 			}
@@ -55,7 +55,7 @@ public class HeatMap extends Canvas {
 	}
 	
 	public ImageView createColorScale() {
-        colorScale = createColorScaleImage(600, 120, Orientation.VERTICAL);
+        colorScale = createColorScaleImage(80, 400, Orientation.VERTICAL);
         ImageView imageView = new ImageView(colorScale);
         
         return imageView;

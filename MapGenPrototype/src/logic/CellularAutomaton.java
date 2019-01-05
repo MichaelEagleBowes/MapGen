@@ -1,5 +1,7 @@
 package logic;
 
+import javafx.application.Platform;
+
 /**
  * Implementation of a Cellular Automaton that creates a tile-based map using
  * two rules to assign binary values to each tile. Stores the map as 2D Array
@@ -280,6 +282,7 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 				
 		double areaCount = 0;
 		
+
 	    for(int x = 0; x<testMap.length; x++){
 	        for(int y = 0; y<testMap.length; y++){
 	            if(floodfill(testMap, x,y)) {

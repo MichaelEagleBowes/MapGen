@@ -155,22 +155,30 @@ public class StatisticsController extends Controller {
 		centerBox.getChildren().clear();
 		//System.out.println("Areas: "+CellularAutomaton.calcNumberOfAreas()); 1 bis (mapSize^2)/2
 		//System.out.println(" Space: "+CellularAutomaton.calcRelativeOpenSpace()); 0 bis mapSize^2
+        
+		//TODO: add sample size field instead of 100
+		List<Double> areaList = new ArrayList<Double>();
+		List<Double> spaceList = new ArrayList<Double>();
+		for(int i=0;i<100;i++) {
+			CellularAutomaton ca = new CellularAutomaton();
+			ca.generateMap(getMainController().getControlsController().getMapSize());	
+			areaList.add(ca.calcNumberOfAreas());
+			spaceList.add(ca.calcRelativeOpenSpace());
+		}
+		// for current map:
+		double areas = ((CellularAutomaton) algorithmSelect.getSelectionModel().getSelectedItem()).calcNumberOfAreas();
+		double relativeSpace = ((CellularAutomaton) algorithmSelect.getSelectionModel().getSelectedItem())
+				.calcRelativeOpenSpace();
 		
 		HeatMap heatMap = new HeatMap(300, 250);
         GraphicsContext gc = heatMap.getGraphicsContext2D();
         double[] firstDim = {0,30,100};
         double[] secondDim = {10,50,66};
-        heatMap.createColorScale();
-        ImageView imageView = heatMap.drawHeatMap(gc, firstDim, secondDim);
-        
-		double areas = ((CellularAutomaton) algorithmSelect.getSelectionModel().getSelectedItem()).calcNumberOfAreas();
-		double relativeSpace = ((CellularAutomaton) algorithmSelect.getSelectionModel().getSelectedItem())
-				.calcRelativeOpenSpace();
+        ImageView colorScale = heatMap.createColorScale();
+        ImageView heatmapImg = heatMap.drawHeatMap(gc, firstDim, secondDim);
 		
-		centerBox.getChildren().add(imageView);
-		Separator vertSeparator = new Separator();
-		vertSeparator.setOrientation(Orientation.VERTICAL);
-		centerBox.getChildren().add(vertSeparator);
+		centerBox.getChildren().add(heatmapImg);
+		centerBox.getChildren().add(colorScale);
 	}
 
 	private void createExpressiveRangeChart() {
