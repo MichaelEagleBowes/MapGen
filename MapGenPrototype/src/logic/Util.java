@@ -47,6 +47,18 @@ public class Util {
 
 		return maximum;
 	}
+	
+	/**
+	 * 
+	 * Returns the minimum value out of five integers.
+	 */
+	public static int getMin(int one, int two, int three, int four, int five) {
+
+		int minimum = Math.min(Math.min(Math.min(one, two), Math.min(two, three)),
+				Math.min(Math.min(three, four), Math.min(four, five)));
+
+		return minimum;
+	}
 
 	/**
 	 * Returns a part of the map that surrounds a specified object.

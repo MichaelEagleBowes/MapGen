@@ -54,7 +54,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		// TODO: Durchlaufe das 2D Array und ändere alle Zahlen
 		// im Bereich des Grass-Gebiets(von X bis Y) ab.
 		hasMap = true;
-		
+
 		DiamondSquareImpl algo = new DiamondSquareImpl(size);
 		Thread t = new Thread(algo);
 		t.start();
@@ -75,8 +75,8 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * 
 	 * @return areaCount A list of the number of each terrain's separate areas
 	 */
-	public static List<Double> calcNumberOfAreas(int oceanParam, int coastParam,int beachParam, 
-			int grassParam, int forestParam, int snowParam, int mountainParam) {
+	public static List<Double> calcNumberOfAreas(int oceanParam, int coastParam, int beachParam, int grassParam,
+			int forestParam, int snowParam, int mountainParam) {
 		int mapHeight = map.length;
 		int mapWidth = map.length;
 
@@ -119,31 +119,130 @@ public class DiamondSquare implements ProceduralAlgorithm {
 
 		for (int x = 0; x < testMap.length; x++) {
 			for (int y = 0; y < testMap.length; y++) {
-				int areaValue = floodfill(x, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-
-				switch (areaValue) {
-				case 0:
+				double i = minimum + oceanSpectrum;
+				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int)Math.ceil(i));
+				 Thread thread = new Thread(ff);
+				 thread.start();
+			     try {
+					thread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (ff.getResult()) {
 					oceanCount++;
-					break;
-				case 1:
+				}
+			}
+		}
+
+		for (int x = 0; x < testMap.length; x++) {
+			for (int y = 0; y < testMap.length; y++) {
+				double upperBound = minimum + oceanSpectrum + coastSpectrum;
+				double lowerBound = minimum + oceanSpectrum;
+				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int)Math.ceil(lowerBound), (int)Math.ceil(upperBound));
+				 Thread thread = new Thread(ff);
+				 thread.start();
+			     try {
+					thread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (ff.getResult()) {
 					coastCount++;
-					break;
-				case 2:
+				}
+			}
+		}
+		
+		for (int x = 0; x < testMap.length; x++) {
+			for (int y = 0; y < testMap.length; y++) {
+				double lowerBound = minimum + oceanSpectrum + coastSpectrum;
+				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum;
+				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int)Math.ceil(lowerBound), (int)Math.ceil(upperBound));
+				 Thread thread = new Thread(ff);
+				 thread.start();
+			     try {
+					thread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (ff.getResult()) {
 					beachCount++;
-					break;
-				case 3:
+				}
+			}
+		}
+		
+		for (int x = 0; x < testMap.length; x++) {
+			for (int y = 0; y < testMap.length; y++) {
+				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum;
+				double lowerBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum;
+				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int)Math.ceil(lowerBound), (int)Math.ceil(upperBound));
+				 Thread thread = new Thread(ff);
+				 thread.start();
+			     try {
+					thread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (ff.getResult()) {
 					grassCount++;
-					break;
-				case 4:
+				}
+			}
+		}
+		
+		for (int x = 0; x < testMap.length; x++) {
+			for (int y = 0; y < testMap.length; y++) {
+				double lowerBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum;
+				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
+						+ forestSpectrum;
+				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int)Math.ceil(lowerBound), (int)Math.ceil(upperBound));
+				 Thread thread = new Thread(ff);
+				 thread.start();
+			     try {
+					thread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (ff.getResult()) {
 					forestCount++;
-					break;
-				case 5:
+				}
+			}
+		}
+		
+		for (int x = 0; x < testMap.length; x++) {
+			for (int y = 0; y < testMap.length; y++) {
+				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
+						+ forestSpectrum + mountainSpectrum;
+				double lowerBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
+						+ forestSpectrum;
+				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int)Math.ceil(lowerBound), (int)Math.ceil(upperBound));
+				 Thread thread = new Thread(ff);
+				 thread.start();
+			     try {
+					thread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (ff.getResult()) {
 					mountainCount++;
-					break;
-				case 6:
+				}
+			}
+		}
+		
+		for (int x = 0; x < testMap.length; x++) {
+			for (int y = 0; y < testMap.length; y++) {
+				double lowerBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
+						+ forestSpectrum + mountainSpectrum;
+				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
+						+ forestSpectrum + mountainSpectrum + snowSpectrum;
+				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int)Math.ceil(lowerBound), (int)Math.ceil(upperBound));
+				 Thread thread = new Thread(ff);
+				 thread.start();
+			     try {
+					thread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (ff.getResult()) {
 					snowCount++;
-					break;
 				}
 			}
 		}
@@ -156,108 +255,8 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		areaCount.add(5, mountainCount);
 		areaCount.add(6, snowCount);
 
+		System.out.println(areaCount);
 		return areaCount;
-	}
-
-	public static int floodfill(int x, int y, int minimum, double oceanSpectrum, double coastSpectrum,
-			double beachSpectrum, double grassSpectrum, double forestSpectrum, double mountainSpectrum,
-			double snowSpectrum) {
-		int count = 0;
-		if (x < 0 || y < 0 || x >= testMap.length || y >= testMap.length) {
-			return count;
-		} else {
-			if (testMap[x][y] < minimum + oceanSpectrum) {
-				testMap[x][y] = 999;
-				count = 0;
-				int echo1 = floodfill( x - 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo2 = floodfill( x + 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo3 = floodfill( x, y - 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo4 = floodfill( x, y + 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-
-				return Util.getMax(count, echo1, echo2, echo3, echo4);
-			} else if (testMap[x][y] < minimum + oceanSpectrum + coastSpectrum) {
-				testMap[x][y] = 999;
-				count = 1;
-				int echo1 = floodfill( x - 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo2 = floodfill( x + 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo3 = floodfill(x, y - 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo4 = floodfill( x, y + 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				return Util.getMax(count, echo1, echo2, echo3, echo4);
-			} else if (testMap[x][y] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum) {
-				testMap[x][y] = 999;
-				count = 2;
-				int echo1 = floodfill(x - 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo2 = floodfill( x + 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo3 = floodfill(x, y - 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo4 = floodfill(x, y + 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				return Util.getMax(count, echo1, echo2, echo3, echo4);
-			} else if (testMap[x][y] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum) {
-				testMap[x][y] = 999;
-				count = 3;
-				int echo1 = floodfill( x - 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo2 = floodfill(x + 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo3 = floodfill(x, y - 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo4 = floodfill( x, y + 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				return Util.getMax(count, echo1, echo2, echo3, echo4);
-			} else if (testMap[x][y] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-					+ forestSpectrum) {
-				testMap[x][y] = 999;
-				count = 4;
-				int echo1 = floodfill( x - 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo2 = floodfill(x + 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo3 = floodfill( x, y - 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo4 = floodfill(x, y + 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				return Util.getMax(count, echo1, echo2, echo3, echo4);
-			} else if (testMap[x][y] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-					+ forestSpectrum + mountainSpectrum) {
-				testMap[x][y] = 999;
-				count = 5;
-				int echo1 = floodfill( x - 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo2 = floodfill( x + 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo3 = floodfill( x, y - 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo4 = floodfill(x, y + 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				return Util.getMax(count, echo1, echo2, echo3, echo4);
-			} else if (testMap[x][y] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-					+ forestSpectrum + mountainSpectrum + snowSpectrum) {
-				testMap[x][y] = 999;
-				count = 6;
-				int echo1 = floodfill( x - 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo2 = floodfill( x + 1, y, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo3 = floodfill( x, y - 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				int echo4 = floodfill(x, y + 1, minimum, oceanSpectrum, coastSpectrum, beachSpectrum,
-						grassSpectrum, forestSpectrum, mountainSpectrum, snowSpectrum);
-				return Util.getMax(count, echo1, echo2, echo3, echo4);
-			} else {
-				return count;
-			}
-		}
 	}
 
 	/**
@@ -277,7 +276,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		List<Integer> oceanAvg = new ArrayList<Integer>();
 		int oceanX = 0;
 		int oceanY = 0;
-		if((int) sumValues.get(0).getFirstValue() != 0) {
+		if ((int) sumValues.get(0).getFirstValue() != 0) {
 			oceanX = (int) sumValues.get(0).getSecondValue() / (int) sumValues.get(0).getFirstValue();
 			oceanY = (int) sumValues.get(0).getThirdValue() / (int) sumValues.get(0).getFirstValue();
 		}
@@ -287,7 +286,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		List<Integer> coastAvg = new ArrayList<Integer>();
 		int coastX = 0;
 		int coastY = 0;
-		if((int) sumValues.get(1).getFirstValue() != 0) {
+		if ((int) sumValues.get(1).getFirstValue() != 0) {
 			coastX = (int) sumValues.get(1).getSecondValue() / (int) sumValues.get(1).getFirstValue();
 			coastY = (int) sumValues.get(1).getThirdValue() / (int) sumValues.get(1).getFirstValue();
 		}
@@ -297,7 +296,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		List<Integer> beachAvg = new ArrayList<Integer>();
 		int beachX = 0;
 		int beachY = 0;
-		if((int) sumValues.get(2).getFirstValue() != 0) {
+		if ((int) sumValues.get(2).getFirstValue() != 0) {
 			beachX = (int) sumValues.get(2).getSecondValue() / (int) sumValues.get(2).getFirstValue();
 			beachY = (int) sumValues.get(2).getThirdValue() / (int) sumValues.get(2).getFirstValue();
 		}
@@ -307,7 +306,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		List<Integer> grassAvg = new ArrayList<Integer>();
 		int grassX = 0;
 		int grassY = 0;
-		if((int) sumValues.get(3).getFirstValue() != 0) {
+		if ((int) sumValues.get(3).getFirstValue() != 0) {
 			grassX = (int) sumValues.get(3).getSecondValue() / (int) sumValues.get(3).getFirstValue();
 			grassY = (int) sumValues.get(3).getThirdValue() / (int) sumValues.get(3).getFirstValue();
 		}
@@ -317,7 +316,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		List<Integer> forestAvg = new ArrayList<Integer>();
 		int forestX = 0;
 		int forestY = 0;
-		if((int) sumValues.get(4).getFirstValue() != 0) {
+		if ((int) sumValues.get(4).getFirstValue() != 0) {
 			forestX = (int) sumValues.get(4).getSecondValue() / (int) sumValues.get(4).getFirstValue();
 			forestY = (int) sumValues.get(4).getThirdValue() / (int) sumValues.get(4).getFirstValue();
 		}
@@ -327,7 +326,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		List<Integer> mountainAvg = new ArrayList<Integer>();
 		int mountainX = 0;
 		int mountainY = 0;
-		if((int) sumValues.get(5).getFirstValue() != 0) {
+		if ((int) sumValues.get(5).getFirstValue() != 0) {
 			mountainX = (int) sumValues.get(5).getSecondValue() / (int) sumValues.get(5).getFirstValue();
 			mountainY = (int) sumValues.get(5).getThirdValue() / (int) sumValues.get(5).getFirstValue();
 		}
@@ -337,16 +336,16 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		List<Integer> snowAvg = new ArrayList<Integer>();
 		int snowX = 0;
 		int snowY = 0;
-		if((int) sumValues.get(6).getFirstValue() != 0) {
+		if ((int) sumValues.get(6).getFirstValue() != 0) {
 			snowX = (int) sumValues.get(6).getSecondValue() / (int) sumValues.get(6).getFirstValue();
 			snowY = (int) sumValues.get(6).getThirdValue() / (int) sumValues.get(6).getFirstValue();
 		}
 		snowAvg.add(0, snowX);
 		snowAvg.add(0, snowY);
-		
-		System.out.println(snowAvg + " "+mountainAvg + " "+forestAvg + " "+grassAvg + 
-				" "+coastAvg +" "+beachAvg+" "+oceanAvg);
-		
+
+		System.out.println(snowAvg + " " + mountainAvg + " " + forestAvg + " " + grassAvg + " " + coastAvg + " "
+				+ beachAvg + " " + oceanAvg);
+
 		bowesDistance.add(oceanAvg);
 		bowesDistance.add(coastAvg);
 		bowesDistance.add(beachAvg);
@@ -422,7 +421,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 
 			}
 		}
-		
+
 		sumValues.add(oceanTuple);
 		sumValues.add(coastTuple);
 		sumValues.add(beachTuple);

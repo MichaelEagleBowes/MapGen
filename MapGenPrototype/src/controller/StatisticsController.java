@@ -64,20 +64,18 @@ public class StatisticsController extends Controller {
 		barChart = new BarChart(xAxis, yAxis);
 
 		int[][] selectedMap = maps.get(algorithmSelect.getSelectionModel().getSelectedItem());
-		/*
-		 * List<Integer> params =
-		 * getMainController().getMapController().getParameters(); List<Double>
-		 * areaCount = DiamondSquare.calcNumberOfAreas( params.get(0), params.get(1),
-		 * params.get(2) , params.get(3), params.get(4), params.get(5) , params.get(6));
-		 */
 
 		List<Number> spectraParams = getMainController().getMapController().getSpectraParameters();
+		
 		List<List<Integer>> absPos = DiamondSquare.calcAbsolutePositions((int) spectraParams.get(0),
 				(double) spectraParams.get(1), (double) spectraParams.get(2), (double) spectraParams.get(3),
 				(double) spectraParams.get(4), (double) spectraParams.get(5), (double) spectraParams.get(6),
 				(double) spectraParams.get(7));
-		double relPos = DiamondSquare.calcRelativePositions();
-
+		//double relPos = DiamondSquare.calcRelativePositions();
+		List<Integer> params = getMainController().getMapController().getParameters();
+		List<Double> areaCount = DiamondSquare.calcNumberOfAreas(params.get(0), params.get(1), params.get(2),
+				params.get(3), params.get(4), params.get(5), params.get(6));
+		
 		XYChart.Series<String, Double> series1 = new XYChart.Series<>();
 		series1.setName("Snow");
 		series1.getData().add(new XYChart.Data<>("Separate Areas", 1d));
@@ -151,17 +149,12 @@ public class StatisticsController extends Controller {
 	}
 
 	private double[] createHeatMapSamples(double[] spaceList) {
-		for (int i = 1; i < 101; i++) {
-			for (int d = 1; d < 9; d++) {
-				for (int b = 1; b < 9; b++) {
-					for (int s = 0; s < 1; s += 0.1f) {
-						CellularAutomaton ca = new CellularAutomaton(1 * i, 1 * b, 1 * d, 0.1f+s);
-						ca.generateMap(getMainController().getControlsController().getMapSize());
-						// areaList.add(ca.calcNumberOfAreas());
-						spaceList[i] = CellularAutomaton.calcRelativeOpenSpace();
-					}
-				}
-			}
+		CellularAutomaton ca = getMainController().getMapController().getCellularAutomaton();
+		
+		for (int i = 0; i < 100; i++) {
+			ca.generateMap(getMainController().getControlsController().getMapSize());
+			spaceList[i] = CellularAutomaton.calcRelativeOpenSpace();
+			System.out.println(ca.calcNumberOfAreas());
 		}
 		return spaceList;
 	}

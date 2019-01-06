@@ -296,23 +296,22 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 	
 	public static boolean floodfill(int[][] testMap, int x, int y) {
 		boolean count = false;
-		if(x < 0 || y < 0 || x >= testMap.length || y >= testMap.length) {
-			return count;
-		} else {
-			if (testMap[x][y] == 0) {
-				testMap[x][y] = 1;
-				count = true;
-				boolean echo1 = floodfill(testMap, x - 1, y);
-				boolean echo2 = floodfill(testMap, x + 1, y);
-				boolean echo3 = floodfill(testMap, x, y - 1);
-				boolean echo4 = floodfill(testMap, x, y + 1);
-				
-				return (count || echo1 || echo2 || echo3 || echo4);
-			} else {
+			if(x < 0 || y < 0 || x >= testMap.length || y >= testMap.length) {
 				return count;
+			} else {
+				if (testMap[x][y] == 1) {
+					return count;
+				} else {
+					testMap[x][y] = 1;
+					count = true;
+					boolean echo1 = floodfill(testMap, x - 1, y);
+					boolean echo2 = floodfill(testMap, x + 1, y);
+					boolean echo3 = floodfill(testMap, x, y - 1);
+					boolean echo4 = floodfill(testMap, x, y + 1);
+					
+					return (count || echo1 || echo2 || echo3 || echo4);
+				}
 			}
-		}
-		
 	}
 
 	/**
@@ -334,7 +333,6 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 				}
 			}
 		}
-		System.out.println(" Wallcount "+wallCount + " spaceC "+spaceCount);
 
 		double space = spaceCount / wallCount;
 		return space;
