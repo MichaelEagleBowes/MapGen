@@ -65,63 +65,62 @@ public class StatisticsController extends Controller {
 
 		int[][] selectedMap = maps.get(algorithmSelect.getSelectionModel().getSelectedItem());
 
-		List<Number> spectraParams = getMainController().getMapController().getSpectraParameters();
-		
-		List<List<Integer>> absPos = DiamondSquare.calcAbsolutePositions((int) spectraParams.get(0),
-				(double) spectraParams.get(1), (double) spectraParams.get(2), (double) spectraParams.get(3),
-				(double) spectraParams.get(4), (double) spectraParams.get(5), (double) spectraParams.get(6),
-				(double) spectraParams.get(7));
-		//double relPos = DiamondSquare.calcRelativePositions();
+		//List<Number> spectraParams = getMainController().getMapController().getSpectraParameters();
 		List<Integer> params = getMainController().getMapController().getParameters();
+		HashMap<Integer, List<Integer>> absPos = DiamondSquare.calcAbsolutePositions(params.get(0), params.get(1), params.get(2),
+				params.get(3), params.get(4), params.get(5), params.get(6));
+		
+		List<Double> relPos = DiamondSquare.calcRelativePositions();
+		
 		List<Double> areaCount = DiamondSquare.calcNumberOfAreas(params.get(0), params.get(1), params.get(2),
 				params.get(3), params.get(4), params.get(5), params.get(6));
 		
 		XYChart.Series<String, Double> series1 = new XYChart.Series<>();
 		series1.setName("Snow");
-		series1.getData().add(new XYChart.Data<>("Separate Areas", 1d));
-		series1.getData().add(new XYChart.Data<>("Spread", 3d));
-		series1.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(6).get(0)));
-		series1.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(6).get(1)));
+		series1.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(6)));
+		series1.getData().add(new XYChart.Data<>("Spread", relPos.get(0)));
+		series1.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(5).get(0)));
+		series1.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(5).get(1)));
 
 		XYChart.Series<String, Double> series2 = new XYChart.Series<>();
 		series2.setName("Mountain");
-		series2.getData().add(new XYChart.Data<>("Separate Areas", 1d));
-		series2.getData().add(new XYChart.Data<>("Spread", 5d));
-		series2.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(5).get(0)));
-		series2.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(5).get(1)));
+		series2.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(5)));
+		series2.getData().add(new XYChart.Data<>("Spread", relPos.get(1)));
+		series2.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(6).get(0)));
+		series2.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(6).get(1)));
 
 		XYChart.Series<String, Double> series3 = new XYChart.Series<>();
 		series3.setName("Forest");
-		series3.getData().add(new XYChart.Data<>("Separate Areas", 1d));
-		series3.getData().add(new XYChart.Data<>("Spread", 5d));
+		series3.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(4)));
+		series3.getData().add(new XYChart.Data<>("Spread", relPos.get(2)));
 		series3.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(4).get(0)));
 		series3.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(4).get(1)));
 
 		XYChart.Series<String, Double> series4 = new XYChart.Series<>();
 		series4.setName("Grass");
-		series4.getData().add(new XYChart.Data<>("Separate Areas", 1d));
-		series4.getData().add(new XYChart.Data<>("Spread", 3d));
+		series4.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(3)));
+		series4.getData().add(new XYChart.Data<>("Spread", relPos.get(3)));
 		series4.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(3).get(0)));
 		series4.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(3).get(1)));
 
 		XYChart.Series<String, Double> series5 = new XYChart.Series<>();
 		series5.setName("Beach");
-		series5.getData().add(new XYChart.Data<>("Separate Areas", 1d));
-		series5.getData().add(new XYChart.Data<>("Spread", 5d));
+		series5.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(2)));
+		series5.getData().add(new XYChart.Data<>("Spread", relPos.get(4)));
 		series5.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(2).get(0)));
 		series5.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(2).get(1)));
 
 		XYChart.Series<String, Double> series6 = new XYChart.Series<>();
 		series6.setName("Coast");
-		series6.getData().add(new XYChart.Data<>("Separate Areas", 1d));
-		series6.getData().add(new XYChart.Data<>("Spread", 5d));
+		series6.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(1)));
+		series6.getData().add(new XYChart.Data<>("Spread", relPos.get(5)));
 		series6.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(1).get(0)));
 		series6.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(1).get(1)));
 
 		XYChart.Series<String, Double> series7 = new XYChart.Series<>();
 		series7.setName("Ocean");
-		series7.getData().add(new XYChart.Data<>("Separate Areas", 1d));
-		series7.getData().add(new XYChart.Data<>("Spread", 5d));
+		series7.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(0)));
+		series7.getData().add(new XYChart.Data<>("Spread", relPos.get(6)));
 		series7.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(0).get(0)));
 		series7.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(0).get(1)));
 
