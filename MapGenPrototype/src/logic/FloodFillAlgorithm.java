@@ -1,7 +1,11 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
+import model.Tile;
 
 public class FloodFillAlgorithm implements Runnable {
 
@@ -42,14 +46,67 @@ public class FloodFillAlgorithm implements Runnable {
 	@Override
 	public void run() {
 		if (mode) {
-			result = floodLand(testMap, x, y, lowerBound, upperBound);
+			result = floodLandQueue(testMap, x, y, lowerBound, upperBound);
 		} else {
-			result = floodOcean(testMap, x, y, threshold);
+			result = floodOceanQueue(testMap, x, y, threshold);
 		}
 	}
 
-	public boolean getResult() {
-		return result;
+	/**
+	 * Queue implementation of the flood fill algorithm, to fix the StackOverflowError.
+	 * @param testMap
+	 * @param x
+	 * @param y
+	 * @param threshold
+	 * @param fill
+	 */
+	public static boolean floodOceanQueue(int[][] testMap, int x, int y, int threshold) {
+		boolean count = false;
+		boolean echo1 = false;
+		boolean echo2 = false;
+		boolean echo3 = false;
+		boolean echo4 = false;
+			Queue<Tile> queue = new LinkedList<Tile>();
+			if (testMap[x][y] >= threshold) {
+				System.out.println(false);
+				return false;
+			} else {
+				queue.add(new Tile(x, y, testMap[x][y]));
+				
+				while (!queue.isEmpty()) {
+					Tile p = queue.remove();
+					if (testMap[p.x][p.y] < threshold) {
+						testMap[p.x][p.y] = threshold;
+						count = true;
+						xCoordinates.add(x);
+						yCoordinates.add(y);
+						tileCount++;
+						if(p.x > 0) {
+							echo1 = queue.add(new Tile(p.x - 1, p.y, testMap[p.x - 1][p.y]));
+						}
+						if(p.y > 0) {
+							echo3 = queue.add(new Tile(p.x, p.y - 1, testMap[p.x][p.y - 1]));
+						}
+						if(p.x < testMap.length-1) {
+							echo2 = queue.add(new Tile(p.x + 1, p.y, testMap[p.x + 1][p.y]));
+						}
+						if(p.y < testMap.length-1) {
+							echo4 = queue.add(new Tile(p.x, p.y + 1, testMap[p.x][p.y + 1]));
+						}
+						for (int coord : xCoordinates) {
+							avgXCoordinate += coord;
+						}
+						avgXCoordinate /= tileCount;
+
+						for (int coord : yCoordinates) {
+							avgYCoordinate += coord;
+						}
+						avgYCoordinate /= tileCount;
+					}
+				}
+				System.out.println(count + " " + echo1 + " " + echo2 + " " + echo3 + " " + echo4);
+				return (count || echo1 || echo2 || echo3 || echo4);
+				}
 	}
 
 	/**
@@ -111,6 +168,53 @@ public class FloodFillAlgorithm implements Runnable {
 			}
 		}
 	}
+	
+	public static boolean floodLandQueue(int[][] testMap, int x, int y, int lowerBound, int upperBound) {
+		boolean count = false;
+		boolean echo1 = false;
+		boolean echo2 = false;
+		boolean echo3 = false;
+		boolean echo4 = false;
+			Queue<Tile> queue = new LinkedList<Tile>();
+			if (testMap[x][y] < lowerBound || testMap[x][y] >= upperBound) {
+				return false;
+			} else {
+				queue.add(new Tile(x, y, testMap[x][y]));
+				
+				while (!queue.isEmpty()) {
+					Tile p = queue.remove();
+					if (testMap[p.x][p.y] < upperBound && testMap[p.x][p.y] >= lowerBound) {
+						testMap[p.x][p.y] = upperBound;
+						count = true;
+						xCoordinates.add(x);
+						yCoordinates.add(y);
+						tileCount++;
+						if(p.x > 0) {
+							echo1 = queue.add(new Tile(p.x - 1, p.y, testMap[p.x - 1][p.y]));
+						}
+						if(p.y > 0) {
+							echo3 = queue.add(new Tile(p.x, p.y - 1, testMap[p.x][p.y - 1]));
+						}
+						if(p.x < testMap.length-1) {
+							echo2 = queue.add(new Tile(p.x + 1, p.y, testMap[p.x + 1][p.y]));
+						}
+						if(p.y < testMap.length-1) {
+							echo4 = queue.add(new Tile(p.x, p.y + 1, testMap[p.x][p.y + 1]));
+						}
+						for (int coord : xCoordinates) {
+							avgXCoordinate += coord;
+						}
+						avgXCoordinate /= tileCount;
+
+						for (int coord : yCoordinates) {
+							avgYCoordinate += coord;
+						}
+						avgYCoordinate /= tileCount;
+					}
+				}
+				return (count || echo1 || echo2 || echo3 || echo4);
+				}
+	}
 
 	/**
 	 * Applies the flood fill algorithm to all terrain types that do not contain
@@ -142,6 +246,10 @@ public class FloodFillAlgorithm implements Runnable {
 				return (count || echo1 || echo2 || echo3 || echo4);
 			}
 		}
+	}
+
+	public boolean getResult() {
+		return result;
 	}
 
 	public int getAverageXCoordinate() {

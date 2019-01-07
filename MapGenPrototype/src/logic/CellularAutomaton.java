@@ -1,6 +1,10 @@
 package logic;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import javafx.application.Platform;
+import model.Tile;
 
 /**
  * Implementation of a Cellular Automaton that creates a tile-based map using
@@ -274,44 +278,98 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 	 */
 	public static double calcNumberOfAreas() {
 		int[][] testMap = new int[map.length][map.length];
-		for(int i=0;i<testMap.length;i++) {
-			for(int j=0;j<testMap.length;j++) {
-			testMap[i][j] = map[i][j];
+		for (int i = 0; i < testMap.length; i++) {
+			for (int j = 0; j < testMap.length; j++) {
+				testMap[i][j] = map[i][j];
 			}
 		}
-				
-		double areaCount = 0;
-		
 
-	    for(int x = 0; x<testMap.length; x++){
-	        for(int y = 0; y<testMap.length; y++){
-	            if(floodfill(testMap, x,y)) {
-	            	areaCount++;
-	            };
-	        }
-	    }
-		
+		double areaCount = 0;
+
+		for (int x = 0; x < testMap.length; x++) {
+			for (int y = 0; y < testMap.length; y++) {
+				if (floodQueue(testMap, x, y)) {
+					areaCount++;
+				}
+				;
+			}
+		}
+
 		return areaCount;
 	}
-	
-	public static boolean floodfill(int[][] testMap, int x, int y) {
+
+	/**
+	 * Implementation of the Flood Fill algorithm with recursion. Checks the number
+	 * of separate open areas, i.e. with values 0, of the map.
+	 * 
+	 * @param testMap
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public static boolean floodFill(int[][] testMap, int x, int y) {
 		boolean count = false;
-			if(x < 0 || y < 0 || x >= testMap.length || y >= testMap.length) {
+		if (x < 0 || y < 0 || x >= testMap.length || y >= testMap.length) {
+			return count;
+		} else {
+			if (testMap[x][y] == 1) {
 				return count;
 			} else {
-				if (testMap[x][y] == 1) {
-					return count;
-				} else {
-					testMap[x][y] = 1;
+				testMap[x][y] = 1;
+				count = true;
+				boolean echo1 = floodFill(testMap, x - 1, y);
+				boolean echo2 = floodFill(testMap, x + 1, y);
+				boolean echo3 = floodFill(testMap, x, y - 1);
+				boolean echo4 = floodFill(testMap, x, y + 1);
+
+				return (count || echo1 || echo2 || echo3 || echo4);
+			}
+		}
+	}
+
+	/**
+	 * Implementation of the Flood Fill algorithm with a queue, to prevent potential
+	 * StackOverflowErrors for large map sizes.
+	 * 
+	 * @param testMap
+	 * @param x
+	 * @param y
+	 * @param threshold
+	 * @param fill
+	 */
+	public static boolean floodQueue(int[][] testMap, int x, int y) {
+		boolean count = false;
+		boolean echo1 = false;
+		boolean echo2 = false;
+		boolean echo3 = false;
+		boolean echo4 = false;
+		Queue<Tile> queue = new LinkedList<Tile>();
+		if (testMap[x][y] == 1) {
+			return false;
+		} else {
+			queue.add(new Tile(x, y, testMap[x][y]));
+
+			while (!queue.isEmpty()) {
+				Tile p = queue.remove();
+				if (testMap[p.x][p.y] < 1) {
+					testMap[p.x][p.y] = 1;
 					count = true;
-					boolean echo1 = floodfill(testMap, x - 1, y);
-					boolean echo2 = floodfill(testMap, x + 1, y);
-					boolean echo3 = floodfill(testMap, x, y - 1);
-					boolean echo4 = floodfill(testMap, x, y + 1);
-					
-					return (count || echo1 || echo2 || echo3 || echo4);
+					if (p.x > 0) {
+						echo1 = queue.add(new Tile(p.x - 1, p.y, testMap[p.x - 1][p.y]));
+					}
+					if (p.y > 0) {
+						echo3 = queue.add(new Tile(p.x, p.y - 1, testMap[p.x][p.y - 1]));
+					}
+					if (p.x < testMap.length - 1) {
+						echo2 = queue.add(new Tile(p.x + 1, p.y, testMap[p.x + 1][p.y]));
+					}
+					if (p.y < testMap.length - 1) {
+						echo4 = queue.add(new Tile(p.x, p.y + 1, testMap[p.x][p.y + 1]));
+					}
 				}
 			}
+			return (count || echo1 || echo2 || echo3 || echo4);
+		}
 	}
 
 	/**
