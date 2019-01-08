@@ -24,6 +24,7 @@ fx:controller="controller.StatisticsController">
    <VBox>
     <HBox spacing="10">
 	<ComboBox fx:id="algorithmSelect" />
+	<Button fx:id="currentMapStatisticsBtn" mnemonicParsing="false" text="Show Statistics of Current Map" />
 	<Button fx:id="controllabilityBtn" mnemonicParsing="false" text="Show Controllability" />
 	<Button fx:id="expressiveRangeBtn" mnemonicParsing="false" text="Show Expressive Range" />
    </HBox>

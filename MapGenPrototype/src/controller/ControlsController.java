@@ -169,6 +169,22 @@ public class ControlsController extends Controller {
 		});
 		settingsContainer.add(generateButton, 0, 9);
 	}
+	
+	public int getBirthRule() {
+		return Integer.parseInt(birthRuleField.getText());
+	}
+	
+	public int getDeathRule() {
+		return Integer.parseInt(deathRuleField.getText());
+	}
+	
+	public int getIterations() {
+		return Integer.parseInt(iterationsField.getText());
+	}
+	
+	public float getSurvivalChance() {
+		return Float.parseFloat(survivalField.getText());
+	}
 
 	public void loadCellularAutomatonTab() {
 		settingsContainer.getChildren().clear();

@@ -29,8 +29,8 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 
 	private String name;
 	private boolean hasMap;
-	private static int[][] map;
-	private static int mapSize;
+	private int[][] map;
+	private int mapSize;
 	/**
 	 * Chance that a tile is initialized with value 1.
 	 */
@@ -274,9 +274,10 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 
 	/**
 	 * Uses the Flood Fill Algorithm to calculate the number of separated areas in a
-	 * map.
+	 * map. Ranges between 0, with only wall segments, and half the square of the map's size, if a lattice grid
+	 * of open space is created, i.e. every second tile is a wall segment.
 	 */
-	public static double calcNumberOfAreas() {
+	public double calcNumberOfAreas() {
 		int[][] testMap = new int[map.length][map.length];
 		for (int i = 0; i < testMap.length; i++) {
 			for (int j = 0; j < testMap.length; j++) {
@@ -374,12 +375,12 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 
 	/**
 	 * Calculates the number of relative open space compared to wall segments.
-	 * Ranges between 0, if no spaceCount, and the size of the map, with low
+	 * Ranges between 0, if no spaceCount, and the square of the map's size, with low
 	 * wallCount.
 	 */
-	public static double calcRelativeOpenSpace() {
-		int spaceCount = 0;
-		int wallCount = 0;
+	public double calcRelativeOpenSpace() {
+		double spaceCount = 0;
+		double wallCount = 0;
 
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {
@@ -391,9 +392,13 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 				}
 			}
 		}
-
-		double space = spaceCount / wallCount;
-		return space;
+		double space;
+		if(wallCount == 0) {
+			space = spaceCount;
+		} else {
+			space = spaceCount / wallCount;
+		}
+		return Math.round(space * 1000.0) / 1000.0;
 	}
 
 	@Override
@@ -414,6 +419,38 @@ public class CellularAutomaton implements ProceduralAlgorithm {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public float getSurvivalChance() {
+		return survivalChance;
+	}
+
+	public void setSurvivalChance(float survivalChance) {
+		this.survivalChance = survivalChance;
+	}
+
+	public int getBirthRule() {
+		return birthRule;
+	}
+
+	public void setBirthRule(int birthRule) {
+		this.birthRule = birthRule;
+	}
+
+	public int getDeathRule() {
+		return deathRule;
+	}
+
+	public void setDeathRule(int deathRule) {
+		this.deathRule = deathRule;
+	}
+
+	public int getIterations() {
+		return iterations;
+	}
+
+	public void setIterations(int iterations) {
+		this.iterations = iterations;
 	}
 
 }
