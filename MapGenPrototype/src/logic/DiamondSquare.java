@@ -66,7 +66,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		// im Bereich des Grass-Gebiets(von X bis Y) ab.
 		hasMap = true;
 
-		DiamondSquareImpl algo = new DiamondSquareImpl(size);
+		DiamondSquareThread algo = new DiamondSquareThread(size);
 		Thread t = new Thread(algo);
 		t.start();
 		try {

@@ -11,12 +11,12 @@ import java.util.Random;
  * @author Michael Bowes
  * 
  */
-public class DiamondSquareImpl implements Runnable {
+public class DiamondSquareThread implements Runnable {
 	
 	private int arraySize;
 	private int mapArray[][];
 	private int noise;
-	private Random rand;
+	private Random random;
 	private int size;
 
 	/**
@@ -25,24 +25,24 @@ public class DiamondSquareImpl implements Runnable {
 	 * @param size
 	 *            Size of the map to be generated.
 	 */
-	public DiamondSquareImpl(int size) {
+	public DiamondSquareThread(int size) {
 		this.size = size;
 	}
 	
 	@Override
 	public void run() {
-		rand = new Random();
-		noise = rand.nextInt(20) + 50;
+		random = new Random();
+		noise = random.nextInt(20) + 50;
 		arraySize = size - 1;
 		mapArray = new int[size][size];
 		
-		setStartingCorners();
+		setCornerSeeds();
 		size -= 1;
 		/**
 		 * Rounds size down from 1025 to 512. Then iterates over the map and halves the
 		 * size with each iteration, until the entire map is filled.
 		 */
-		for (double x = size / 2; x >= 1; x /= 2) {	        
+		for (double x = size / 2; x >= 1; x /= 2) {
 			size /= 2; // how far the distance between each point is.
 
 			diamond(size); // diamond Step
@@ -64,7 +64,7 @@ public class DiamondSquareImpl implements Runnable {
 	private void diamond(int size) {
 		for (int y = size; y < arraySize; y += size * 2) {
 			for (int x = size; x < arraySize; x += size * 2) {
-				mapArray[y][x] = cornerAverage(y, x, size);
+				mapArray[y][x] = calculateDiamondAverage(y, x, size);
 			}
 		}
 	}
@@ -80,10 +80,10 @@ public class DiamondSquareImpl implements Runnable {
 	 *            Size of the current sub-array.
 	 * @return Average of each corner of the given (sub-)array.
 	 */
-	private int cornerAverage(int y, int x, int size) {
+	private int calculateDiamondAverage(int y, int x, int size) {
 		int average = ((mapArray[y - size][x - size] + mapArray[y + size][x - size] + mapArray[y - size][x + size]
 				+ mapArray[y + size][x + size]) / 4);
-		average = average + (rand.nextInt(noise*2 + 1) - noise);
+		average = average + (random.nextInt(noise*2 + 1) - noise);
 
 		return average;
 	}
@@ -100,13 +100,13 @@ public class DiamondSquareImpl implements Runnable {
 			for (int x = size; x < arraySize; x += size * 2) {
 				// e.g. at size=64:
 				// e.g. 0(),32(mid)
-				mapArray[y - size][x] = topBottomAverage(y - size, x, size);
+				mapArray[y - size][x] = calculateSquareAverage(y - size, x, size);
 				// e.g. 64,32(mid)
-				mapArray[y + size][x] = topBottomAverage(y + size, x, size);
+				mapArray[y + size][x] = calculateSquareAverage(y + size, x, size);
 				// e.g. 32,0(top)
-				mapArray[y][x - size] = topBottomAverage(y, x - size, size);
+				mapArray[y][x - size] = calculateSquareAverage(y, x - size, size);
 				// e.g. 32,64(bottom)
-				mapArray[y][x + size] = topBottomAverage(y, x + size, size);
+				mapArray[y][x + size] = calculateSquareAverage(y, x + size, size);
 			}
 		}
 	}
@@ -114,11 +114,11 @@ public class DiamondSquareImpl implements Runnable {
 	/**
 	 * Calculates the average for the square points.
 	 */
-	private int topBottomAverage(int y, int x, int size) {
+	private int calculateSquareAverage(int y, int x, int size) {
 
 		int average = ((mapArray[(Math.abs(y - size))][x] + mapArray[(y + size) % arraySize][x]
 				+ mapArray[y][(x + size) % arraySize] + mapArray[y][Math.abs(x - size)]) / 4);
-		average = average + (rand.nextInt(noise*2 + 1) - noise);
+		average = average + (random.nextInt(noise*2 + 1) - noise);
 
 		return average;
 	}
@@ -128,10 +128,10 @@ public class DiamondSquareImpl implements Runnable {
 	 * The corner values can be adjusted here for control over the map generation on
 	 * the edges.<br>
 	 */
-	private void setStartingCorners() {
+	private void setCornerSeeds() {
 		for (int i = 0; i <= arraySize; i += arraySize) {
 			for (int j = 0; j <= arraySize; j += arraySize) {
-				mapArray[i][j] = rand.nextInt(80); // this is the
+				mapArray[i][j] = random.nextInt(80); // this is the
 				// random amount that each corner gets.
 				// corners: i,j
 				// corner1: 0,0 | top left
