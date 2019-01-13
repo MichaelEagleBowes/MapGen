@@ -107,7 +107,7 @@ public class ControlsController extends Controller {
 	 * 
 	 */
 	private void initDiamondSquareParamFields() {
-		Label chooseLabel = new Label("Choose parameters:");
+		Label chooseLabel = new Label("Choose terrain percentage:");
 		chooseLabel.setUnderline(true);
 		Label snowLabel = new Label("Snow:");
 		Label mountainLabel = new Label("Mountains:");
