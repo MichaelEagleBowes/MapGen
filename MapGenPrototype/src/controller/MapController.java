@@ -230,42 +230,49 @@ public class MapController extends Controller {
 
 			for (int i = 0; i < mapWidth; i++) {
 				for (int j = 0; j < mapHeight; j++) {
-					if (map[j][i] < minimum + oceanSpectrum) // 15% chance to turn BLUE = deep water
+					if (map[j][i] <= minimum + oceanSpectrum && oceanParam > 0) // 15% chance to turn BLUE = deep water
 					{
 						ig2.drawImage(dw, i * 32, j * 32, null);
-					} else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum) // chance for shallow water
+					} else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum && coastParam > 0) // chance for shallow water
 					{
 						ig2.drawImage(w, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum) // chance for beach
+					else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum
+							&& beachParam > 0) // chance for beach
 					{
 						ig2.drawImage(beach, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum) // chance
+					else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
+							&& grassParam > 0) // chance
 																													// for
 																													// grass
 					{
 						ig2.drawImage(green, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-							+ forestSpectrum) // chance
+					else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
+							+ forestSpectrum
+							&& forestParam > 0) // chance
 					// for
 					// forest
 					{
 						ig2.drawImage(darkgreen, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-							+ forestSpectrum + mountainSpectrum) // chance for mountain
+					else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
+							+ forestSpectrum + mountainSpectrum
+							&& mountainParam > 0) // chance for mountain
 					{
 						ig2.drawImage(mountain, i * 32, j * 32, null);
-					} else if (map[j][i] < minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-							+ forestSpectrum + mountainSpectrum + snowSpectrum) // chance for snow
+					} else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
+							+ forestSpectrum + mountainSpectrum + snowSpectrum
+							&& snowParam > 0) // chance for snow
 					{
 						ig2.drawImage(snow, i * 32, j * 32, null);
+					} else {
+						
 					}
 				}
 			}

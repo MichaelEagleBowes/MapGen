@@ -1,10 +1,15 @@
 package controller;
+import java.text.DecimalFormat;
+import java.util.function.UnaryOperator;
+
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
@@ -33,6 +38,8 @@ public class ControlsController extends Controller {
 	@FXML
 	TextField mapSize;
 	
+	UnaryOperator<Change> filter;
+	UnaryOperator<Change> decimalFilter;
 	TextField snowField;
 	TextField mountainField;
 	TextField forestField;
@@ -40,7 +47,6 @@ public class ControlsController extends Controller {
 	TextField beachField;
 	TextField shallowWaterField;
 	TextField deepWaterField;
-	
 	
 	TextField survivalField;
 	TextField birthRuleField;
@@ -60,6 +66,11 @@ public class ControlsController extends Controller {
 		Label survivalLabel = new Label("survivalChance:");
 		Label iterationsLabel = new Label("Iterations:");
 		
+		TextFormatter<String> deathRuleFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> birthRuleFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> iterationsFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> survivalFormatter = new TextFormatter<>(decimalFilter);
+		
 		survivalField = new TextField();
 		deathRuleField = new TextField();
 		birthRuleField = new TextField();
@@ -67,15 +78,19 @@ public class ControlsController extends Controller {
 		
 		survivalField.setText("0.5");
 		survivalField.setMaxWidth(50);
+		survivalField.setTextFormatter(survivalFormatter);
 		
 		deathRuleField.setText("4");
 		deathRuleField.setMaxWidth(50);
+		deathRuleField.setTextFormatter(deathRuleFormatter);
 		
 		birthRuleField.setText("5");
 		birthRuleField.setMaxWidth(50);
+		birthRuleField.setTextFormatter(birthRuleFormatter);
 		
 		iterationsField.setText("3");
 		iterationsField.setMaxWidth(50);
+		iterationsField.setTextFormatter(iterationsFormatter);
 		
 		settingsContainer.add(chooseLabel, 0, 0);
 		settingsContainer.add(birthLabel, 0, 1);
@@ -101,6 +116,15 @@ public class ControlsController extends Controller {
 		Label beachLabel = new Label("Beach:");
 		Label shallowWaterLabel = new Label("Coast:");
 		Label deepWaterLabel = new Label("Ocean:");
+		
+		TextFormatter<String> snowFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> mountainFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> grassFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> forestFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> beachFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> deepWaterFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> shallowWaterFormatter = new TextFormatter<>(filter);
+		
 		snowField = new TextField();
 		mountainField = new TextField();
 		grassField = new TextField();
@@ -111,24 +135,31 @@ public class ControlsController extends Controller {
 		
 		snowField.setText("20");
 		snowField.setMaxWidth(40);
+		snowField.setTextFormatter(snowFormatter);
 
 		mountainField.setText("20");
 		mountainField.setMaxWidth(40);
+		mountainField.setTextFormatter(mountainFormatter);
 
 		forestField.setText("20");
 		forestField.setMaxWidth(40);
+		forestField.setTextFormatter(forestFormatter);
 
 		grassField.setText("10");
 		grassField.setMaxWidth(40);
+		grassField.setTextFormatter(grassFormatter);
 
 		beachField.setText("20");
 		beachField.setMaxWidth(40);
+		beachField.setTextFormatter(beachFormatter);
 
 		shallowWaterField.setText("5");
 		shallowWaterField.setMaxWidth(40);
+		shallowWaterField.setTextFormatter(shallowWaterFormatter);
 
 		deepWaterField.setText("5");
 		deepWaterField.setMaxWidth(40);
+		deepWaterField.setTextFormatter(deepWaterFormatter);
 
 		
 		settingsContainer.add(chooseLabel, 0, 0);
@@ -197,7 +228,13 @@ public class ControlsController extends Controller {
 			int iterations = Integer.parseInt(iterationsField.getText());
 			int birthRule = Integer.parseInt(birthRuleField.getText());
 			int deathRule = Integer.parseInt(deathRuleField.getText());
-			float survival = Float.parseFloat(survivalField.getText());
+			float survival = 0f;
+			try {
+				survival = Float.parseFloat(survivalField.getText());
+		    }
+		    catch (NumberFormatException e) {
+		        Util.informationAlert("Wrong Format", "Please enter a valid decimal for survivalChance.");
+		    }
 			getMainController().getMapController().generateCellularAutomaton(
 					iterations, birthRule, deathRule, survival);
 		});
@@ -244,6 +281,29 @@ public class ControlsController extends Controller {
 				}
 			}
 		});
+		filter = change -> {
+		    String text = change.getText();
+
+		    if (text.matches("[0-9]*")) {
+		        return change;
+		    }
+
+		    return null;
+		};
+		decimalFilter = change -> {
+		    String text = change.getText();
+		    if (text.matches("\\d*(\\.\\d*)?")) {
+		        return change;
+		    }
+
+		    return null;
+		};
+		TextFormatter<String> imageWidthFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> imageHeightFormatter = new TextFormatter<>(filter);
+		TextFormatter<String> mapSizeFormatter = new TextFormatter<>(filter);
+		imageWidth.setTextFormatter(imageWidthFormatter);
+		imageHeight.setTextFormatter(imageHeightFormatter);
+		mapSize.setTextFormatter(mapSizeFormatter);
 		loadDiamondSquareTab();
 	}
 	
