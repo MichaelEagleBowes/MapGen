@@ -16,6 +16,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -204,7 +205,7 @@ public class StatisticsController extends Controller {
 				absPosDeviation = (xDeviation + yDeviation) / 2;
 				tuple.addSecondValue(absPosDeviation);
 				tuple.addThirdValue(absPosDeviation);
-				//tuples.add(tuple);
+				// tuples.add(tuple);
 			}
 
 		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
@@ -212,9 +213,9 @@ public class StatisticsController extends Controller {
 					getMainController().getControlsController().getBirthRule(),
 					getMainController().getControlsController().getDeathRule(),
 					getMainController().getControlsController().getSurvivalChance());
-
-			MapContainer map = new MapContainer();
 			
+			MapContainer map = new MapContainer();
+
 			for (int j = 0; j < 10; j++) {
 				for (int i = 1; i < 11; i++) {
 					double size = Math.pow(2, i) + 1;
@@ -227,17 +228,17 @@ public class StatisticsController extends Controller {
 					for (double m = 1; m < cap; m = m + 1 * m) {
 						double previousN = 0;
 						for (double n = 1; n < cap; n = n + 1 * n) {
-							System.out.println("m1: "+Math.pow(2, 10) / m);
-							System.out.println("m2: "+Math.pow(2, 10) / (m - previousM));
-							if (map.getRelativeSpace() > Math.pow(2, 10) / m
+							if (map.getRelativeSpace() >= Math.pow(2, 10) / m
 									&& map.getRelativeSpace() < Math.pow(2, 10) / (m - previousM)
-									&& map.getAreaCount() > (Math.pow(2, 10) / 2) / n
+									&& map.getAreaCount() >= (Math.pow(2, 10) / 2) / n
 									&& map.getAreaCount() < (Math.pow(2, 10) / 2) / (n - previousN)) {
 								map.setX(j);
-								map.setY(i-1);
-								mapSamples.add(map);
+								map.setY(i - 1);
+								if (mapSamples.contains(map)) {
+								} else {
+									mapSamples.add(map);
+								}
 							} else {
-								//System.out.println(map.getAreaCount() +" "+ map.getRelativeSpace());
 							}
 							previousN = n;
 						}
@@ -248,36 +249,75 @@ public class StatisticsController extends Controller {
 
 			for (int j = 0; j < 10; j++) {
 				for (int i = 0; i < 10; i++) {
-						int count = 0;
-						MapContainer currentContainer = new MapContainer();
-						for (MapContainer container : mapSamples) {
-							if(container.getX() == j && container.getY() == i) {
-								count++;
-								currentContainer = container;
-							}
+					int count = 0;
+					MapContainer currentContainer = new MapContainer();
+					for (MapContainer container : mapSamples) {
+						if (container.getX() == j && container.getY() == i) {
+							count++;
+							currentContainer = container;
 						}
-						currentContainer.setMapCount(count);
-						currentContainer.setTotalMapCount(j*i);
-						collectiveMapSamples.put(new Tuple(j, i), currentContainer);
 					}
+					currentContainer.setMapCount(count);
+					currentContainer.setTotalMapCount(j * i);
+					collectiveMapSamples.put(new Tuple(j, i), currentContainer);
 				}
+			}
 		}
 		System.out.println(collectiveMapSamples);
 
 		return collectiveMapSamples;
 	}
+	
+	private ScatterChart<String, Number> createScatterPlot() {
+		CellularAutomaton ca = new CellularAutomaton(getMainController().getControlsController().getIterations(),
+				getMainController().getControlsController().getBirthRule(),
+				getMainController().getControlsController().getDeathRule(),
+				getMainController().getControlsController().getSurvivalChance());
+
+		double maximumRelativeSpace=0;
+		double maximumNumberOfAreas=0;
+		
+		XYChart.Series series = new XYChart.Series();
+		series.setName("Caves");
+		for (int j = 0; j < 10; j++) {
+			for (int i = 1; i < 11; i++) {
+				double size = Math.pow(2, i) + 1;
+				ca.generateMap((int) size);
+				if(ca.calcRelativeOpenSpace() > maximumRelativeSpace) {
+					maximumRelativeSpace = ca.calcRelativeOpenSpace();
+				}
+				if(ca.calcNumberOfAreas() > maximumNumberOfAreas) {
+					maximumNumberOfAreas = ca.calcNumberOfAreas();
+				}
+				series.getData().add(new XYChart.Data(ca.calcRelativeOpenSpace(), ca.calcNumberOfAreas()));
+			}
+		}
+		
+		NumberAxis xAxis = new NumberAxis(0, maximumRelativeSpace, 0);
+		xAxis.setLabel("Relative Open Space");
+
+		NumberAxis yAxis = new NumberAxis(0, maximumNumberOfAreas, 0);
+		yAxis.setLabel("Number of Areas");
+
+		ScatterChart<String, Number> scatterChart = new ScatterChart(xAxis, yAxis);
+
+		// Setting the data to scatter chart
+		scatterChart.getData().addAll(series);
+		
+		return scatterChart;
+	}
 
 	private void createHeatMap() {
 		centerBox.getChildren().clear();
 
-		HashMap<Tuple, MapContainer> newTuples = createHeatMapSamples();
+		//HashMap<Tuple, MapContainer> newTuples = createHeatMapSamples();
 
 		HeatMap heatMap = new HeatMap(400, 400);
 		GraphicsContext gc = heatMap.getGraphicsContext2D();
 		ImageView colorScale = heatMap.createColorScale();
-		ImageView heatmapImg = heatMap.drawHeatMap(gc, newTuples);
+		//ImageView heatmapImg = heatMap.drawHeatMap(gc, newTuples);
 
-		centerBox.getChildren().add(heatmapImg);
+		centerBox.getChildren().add(createScatterPlot());
 		centerBox.getChildren().add(colorScale);
 	}
 
