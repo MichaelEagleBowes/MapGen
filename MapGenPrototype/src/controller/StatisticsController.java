@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,50 +166,6 @@ public class StatisticsController extends Controller {
 	private HashMap<Tuple, MapContainer> createHeatMapSamples() {
 		List<MapContainer> mapSamples = new ArrayList<MapContainer>();
 		HashMap<Tuple, MapContainer> collectiveMapSamples = new HashMap();
-		if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof DiamondSquare) {
-			List<Integer> params = getMainController().getMapController().getParametersDiamondSquare();
-			DiamondSquare ds = new DiamondSquare();
-			HashMap<Integer, List<Integer>> absPos = DiamondSquare.calcAbsolutePositions(params.get(0), params.get(1),
-					params.get(2), params.get(3), params.get(4), params.get(5), params.get(6));
-			List<Double> areaCount = DiamondSquare.calcNumberOfAreas(params.get(0), params.get(1), params.get(2),
-					params.get(3), params.get(4), params.get(5), params.get(6));
-
-			for (int i = 0; i < 100; i++) {
-				ds.generateMap(getMainController().getControlsController().getMapSize());
-				Triple<Number, Number, Number> tuple = new Triple<Number, Number, Number>();
-				tuple.addFirstValue(1); // The type of parameter combination
-				double absPosDeviation = 0;
-				double x;
-				double xDeviation = 0;
-				double y;
-				double yDeviation = 0;
-				for (int k = 0; k < absPos.size(); k++) {
-					List<Integer> coords = absPos.get(k);
-					x = absPos.get(k).get(0);
-					double x2;
-					for (Integer o : coords) {
-						x2 = x - o;
-						xDeviation += x2;
-					}
-				}
-				xDeviation /= (absPos.size() - 1);
-				for (int k = 0; k < absPos.size(); k++) {
-					List<Integer> coords = absPos.get(k);
-					y = absPos.get(k).get(1);
-					double y2;
-					for (Integer o : coords) {
-						y2 = y - o;
-						yDeviation += y2;
-					}
-				}
-				yDeviation /= (absPos.size() - 1);
-				absPosDeviation = (xDeviation + yDeviation) / 2;
-				tuple.addSecondValue(absPosDeviation);
-				tuple.addThirdValue(absPosDeviation);
-				// tuples.add(tuple);
-			}
-
-		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
 			CellularAutomaton ca = new CellularAutomaton(getMainController().getControlsController().getIterations(),
 					getMainController().getControlsController().getBirthRule(),
 					getMainController().getControlsController().getDeathRule(),
@@ -262,47 +219,113 @@ public class StatisticsController extends Controller {
 					collectiveMapSamples.put(new Tuple(j, i), currentContainer);
 				}
 			}
-		}
 		System.out.println(collectiveMapSamples);
 
 		return collectiveMapSamples;
 	}
 	
 	private ScatterChart<String, Number> createScatterPlot() {
-		CellularAutomaton ca = new CellularAutomaton(getMainController().getControlsController().getIterations(),
-				getMainController().getControlsController().getBirthRule(),
-				getMainController().getControlsController().getDeathRule(),
-				getMainController().getControlsController().getSurvivalChance());
+		NumberAxis xAxis = new NumberAxis(0, 10, 0);
+		xAxis.setLabel("X-Axis");
 
-		double maximumRelativeSpace=0;
-		double maximumNumberOfAreas=0;
-		
-		XYChart.Series series = new XYChart.Series();
-		series.setName("Caves");
-		for (int j = 0; j < 10; j++) {
-			for (int i = 1; i < 11; i++) {
-				double size = Math.pow(2, i) + 1;
-				ca.generateMap((int) size);
-				if(ca.calcRelativeOpenSpace() > maximumRelativeSpace) {
-					maximumRelativeSpace = ca.calcRelativeOpenSpace();
-				}
-				if(ca.calcNumberOfAreas() > maximumNumberOfAreas) {
-					maximumNumberOfAreas = ca.calcNumberOfAreas();
-				}
-				series.getData().add(new XYChart.Data(ca.calcRelativeOpenSpace(), ca.calcNumberOfAreas()));
-			}
-		}
-		
-		NumberAxis xAxis = new NumberAxis(0, maximumRelativeSpace, 0);
-		xAxis.setLabel("Relative Open Space");
-
-		NumberAxis yAxis = new NumberAxis(0, maximumNumberOfAreas, 0);
-		yAxis.setLabel("Number of Areas");
-
+		NumberAxis yAxis = new NumberAxis(0, 10, 0);
+		yAxis.setLabel("Y-Axis");
 		ScatterChart<String, Number> scatterChart = new ScatterChart(xAxis, yAxis);
+		
+		if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof DiamondSquare) {
+			List<Integer> params = getMainController().getMapController().getParametersDiamondSquare();
+			DiamondSquare ds = new DiamondSquare();
+			
+			double maximumAbsPos=0;
+			double maximumAreaCount=0;
+			
+			XYChart.Series series1 = new XYChart.Series();
+			XYChart.Series series2 = new XYChart.Series();
+			XYChart.Series series3 = new XYChart.Series();
+			XYChart.Series series4 = new XYChart.Series();
+			XYChart.Series series5 = new XYChart.Series();
+			XYChart.Series series6 = new XYChart.Series();
+			XYChart.Series series7 = new XYChart.Series();
+			series1.setName("Ocean");
+			series2.setName("Coast");
+			series3.setName("Beach");
+			series4.setName("Grass");
+			series5.setName("Forest");
+			series6.setName("Mountain");
+			series7.setName("Snow");
+			
+			for (int j = 0; j < 10; j++) {
+				for (int i = 1; i < 11; i++) {
+					double size = Math.pow(2, i) + 1;
+					ds.generateMap((int) size);
+					List<Double> absPos = DiamondSquare.calcAbsolutePositionsAverage(params.get(0), params.get(1),
+							params.get(2), params.get(3), params.get(4), params.get(5), params.get(6));
+					List<Double> areaCount = DiamondSquare.calcNumberOfAreas(params.get(0), params.get(1), params.get(2),
+							params.get(3), params.get(4), params.get(5), params.get(6));
+					
+					if(Collections.max(absPos)> maximumAbsPos) {
+						maximumAbsPos = Collections.max(absPos);
+					}
+					if(Collections.max(areaCount)> maximumAreaCount) {
+						maximumAreaCount = Collections.max(areaCount);
+					}
+					series1.getData().add(new XYChart.Data(absPos.get(0), areaCount.get(0)));
+					series2.getData().add(new XYChart.Data(absPos.get(1), areaCount.get(1)));
+					series3.getData().add(new XYChart.Data(absPos.get(2), areaCount.get(2)));
+					series4.getData().add(new XYChart.Data(absPos.get(3), areaCount.get(3)));
+					series5.getData().add(new XYChart.Data(absPos.get(4), areaCount.get(4)));
+					series6.getData().add(new XYChart.Data(absPos.get(5), areaCount.get(5)));
+					series7.getData().add(new XYChart.Data(absPos.get(6), areaCount.get(6)));
+				}
+			}
+			
+			NumberAxis caXAxis = new NumberAxis(0, maximumAbsPos, 0);
+			caXAxis.setLabel("Absolute Positions");
 
-		// Setting the data to scatter chart
-		scatterChart.getData().addAll(series);
+			NumberAxis caYAxis = new NumberAxis(0, maximumAreaCount, 0);
+			caYAxis.setLabel("Area Counts");
+
+			scatterChart = new ScatterChart(xAxis, yAxis);
+
+			// Setting the data to scatter chart
+			scatterChart.getData().addAll(series1, series2, series3, series4, series5, series6, series7);
+			
+		} else if(algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
+			CellularAutomaton ca = new CellularAutomaton(getMainController().getControlsController().getIterations(),
+					getMainController().getControlsController().getBirthRule(),
+					getMainController().getControlsController().getDeathRule(),
+					getMainController().getControlsController().getSurvivalChance());
+
+			double maximumRelativeSpace=0;
+			double maximumNumberOfAreas=0;
+			
+			XYChart.Series series = new XYChart.Series();
+			series.setName("Caves");
+			for (int j = 0; j < 10; j++) {
+				for (int i = 1; i < 11; i++) {
+					double size = Math.pow(2, i) + 1;
+					ca.generateMap((int) size);
+					if(ca.calcRelativeOpenSpace() > maximumRelativeSpace) {
+						maximumRelativeSpace = ca.calcRelativeOpenSpace();
+					}
+					if(ca.calcNumberOfAreas() > maximumNumberOfAreas) {
+						maximumNumberOfAreas = ca.calcNumberOfAreas();
+					}
+					series.getData().add(new XYChart.Data(ca.calcRelativeOpenSpace(), ca.calcNumberOfAreas()));
+				}
+			}
+			
+			NumberAxis caXAxis = new NumberAxis(0, maximumRelativeSpace, 0);
+			caXAxis.setLabel("Relative Open Space");
+
+			NumberAxis caYAxis = new NumberAxis(0, maximumNumberOfAreas, 0);
+			caYAxis.setLabel("Number of Areas");
+
+			scatterChart = new ScatterChart(xAxis, yAxis);
+
+			// Setting the data to scatter chart
+			scatterChart.getData().addAll(series);
+		}
 		
 		return scatterChart;
 	}
