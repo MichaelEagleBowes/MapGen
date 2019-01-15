@@ -3,51 +3,59 @@ package util;
 /**
  * 
  * A three dimensional Tuple Container that holds up to three values.
+ * 
  * @param <A> the first {@link Number}
  * @param <B> the second {@link Number}
  * 
  * @author Michael Bowes
  */
-public class Tuple<A extends Number, B extends Number, C extends Number> {
+public class Tuple {
 
-	Number firstVal;
-	Number secondVal;
-	Number thirdVal;
-	
+	int firstVal;
+	int secondVal;
+
 	public Tuple() {
 		firstVal = 0;
 		secondVal = 0;
-		thirdVal = 0;
-	}
-	
-	public Tuple(A valOne, B valTwo, C valThree) {
-		firstVal = valOne;
-		secondVal = valTwo;
-		thirdVal = valThree;
 	}
 
-	public Number getFirstValue() {
+	public Tuple(int valOne, int valTwo) {
+		firstVal = valOne;
+		secondVal = valTwo;
+	}
+
+	public int getFirstValue() {
 		return firstVal;
 	}
 
-	public Number getSecondValue() {
+	public int getSecondValue() {
 		return secondVal;
 	}
-	
-	public Number getThirdValue() {
-		return thirdVal;
-	}
 
-	public void addFirstValue(A val) {
+	public void addFirstValue(int val) {
 		this.firstVal = val;
 	}
-	
-	public void addSecondValue(B val) {
+
+	public void addSecondValue(int val) {
 		this.secondVal = val;
 	}
-	
-	public void addThirdValue(B val) {
-		this.thirdVal = val;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (((Tuple) obj).getFirstValue() == this.getFirstValue()
+				&& ((Tuple) obj).getSecondValue() == this.getSecondValue()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return firstVal + secondVal;
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import util.Tuple;
+import util.Triple;
 
 /**
  * 
@@ -34,7 +34,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * calculation of the Bowes Distance. The terrain types are sorted in ascending
 	 * order by height values.
 	 */
-	private static HashMap<Integer, Tuple<Integer, Integer, Integer>> sumValues;
+	private static HashMap<Integer, Triple<Integer, Integer, Integer>> sumValues;
 	/**
 	 * The arithmetic mean values of each terrains' X and Y coordinates across the
 	 * map. The terrain types are sorted in ascending order by height values.
@@ -422,18 +422,18 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * @param snowSpectrum
 	 * @return
 	 */
-	private static HashMap<Integer, Tuple<Integer, Integer, Integer>> calcSumValues(int minimum, double oceanSpectrum,
+	private static HashMap<Integer, Triple<Integer, Integer, Integer>> calcSumValues(int minimum, double oceanSpectrum,
 			double coastSpectrum, double beachSpectrum, double grassSpectrum, double forestSpectrum,
 			double mountainSpectrum, double snowSpectrum) {
 		double areaCount = 0;
-		sumValues = new HashMap<Integer, Tuple<Integer, Integer, Integer>>();
-		Tuple<Integer, Integer, Integer> oceanTuple = new Tuple<Integer, Integer, Integer>();
-		Tuple<Integer, Integer, Integer> coastTuple = new Tuple<Integer, Integer, Integer>();
-		Tuple<Integer, Integer, Integer> beachTuple = new Tuple<Integer, Integer, Integer>();
-		Tuple<Integer, Integer, Integer> grassTuple = new Tuple<Integer, Integer, Integer>();
-		Tuple<Integer, Integer, Integer> forestTuple = new Tuple<Integer, Integer, Integer>();
-		Tuple<Integer, Integer, Integer> mountainTuple = new Tuple<Integer, Integer, Integer>();
-		Tuple<Integer, Integer, Integer> snowTuple = new Tuple<Integer, Integer, Integer>();
+		sumValues = new HashMap<Integer, Triple<Integer, Integer, Integer>>();
+		Triple<Integer, Integer, Integer> oceanTuple = new Triple<Integer, Integer, Integer>();
+		Triple<Integer, Integer, Integer> coastTuple = new Triple<Integer, Integer, Integer>();
+		Triple<Integer, Integer, Integer> beachTuple = new Triple<Integer, Integer, Integer>();
+		Triple<Integer, Integer, Integer> grassTuple = new Triple<Integer, Integer, Integer>();
+		Triple<Integer, Integer, Integer> forestTuple = new Triple<Integer, Integer, Integer>();
+		Triple<Integer, Integer, Integer> mountainTuple = new Triple<Integer, Integer, Integer>();
+		Triple<Integer, Integer, Integer> snowTuple = new Triple<Integer, Integer, Integer>();
 
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map.length; j++) {

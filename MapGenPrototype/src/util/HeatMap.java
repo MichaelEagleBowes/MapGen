@@ -24,6 +24,7 @@ import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
+import model.MapContainer;
 
 /**
  * Draws a heat map and a color scale onto a canvas.
@@ -44,47 +45,36 @@ public class HeatMap extends Canvas {
 		setHeight(height);
 	}
 
-	public ImageView drawHeatMap(GraphicsContext gc, HashMap<Double, Tuple<Number, Number, Number>> tuples) {
-		WritableImage wImage = new WritableImage((int) getWidth(), (int) getHeight());
+	public ImageView drawHeatMap(GraphicsContext gc, HashMap<Tuple, MapContainer> mapSamples) {
+		WritableImage wImage = new WritableImage(500, 500);
 		PixelWriter writer = wImage.getPixelWriter();
 
-		double c1 = 0; // outer iteration count
-		double c2 = 0; // inner iteration count
-		
-		for (int m = 1; m < 8193; m = m + 1 * m) {
-			for (int n = 1; n < 8193; n = n + 1 * n) {
-				Tuple t = tuples.get(c1 + (c2 / 10000));
-				if (t == null) {
+		int cumulativeColorId = 0;
+		for (int j = 0; j < 10; j++) {
+			for (int i = 0; i < 10; i++) {
 
-				} else {
-					BigDecimal val = new BigDecimal((double) t.getFirstValue());
-					MathContext mc = new MathContext(3);
-					BigDecimal roundedVal = val.round(mc);
-					System.out.println(roundedVal);
-					int colorId = roundedVal.intValue();
+				Tuple t = new Tuple(j, i);
+				MapContainer currentContainer = mapSamples.get(t);
+				if(mapSamples.containsKey(t)) {
+					int colorId = 0;
+					cumulativeColorId += colorId;
+					if(currentContainer.getMapCount() > 0) {
+						colorId = 400*currentContainer.getMapCount()/currentContainer.getTotalMapCount();
+						System.out.println(currentContainer.getMapCount());
+						System.out.println("color: "+colorId);
+					}
 					PixelReader pr = colorScale.getPixelReader();
 
 					// System.out.println("col: "+colorId);
 					Color color = pr.getColor(40, colorId);
 
-					int x = (int) t.getSecondValue();
-					int y = (int) t.getThirdValue();
-					for (int k = 0; k < 40; k++) {
-						writer.setColor(m * k, n * k, color);
-					}
+					for (int l = 0; l < 50; l++)
+						for (int k = 0; k < 50; k++) {
+							writer.setColor(j*50+l, i*50+k, color);
+						}
 				}
 			}
 		}
-
-		/*
-		for (int m = 1; m < 15; m++) {
-			c1++;
-			for (int n = 1; n < 15; n++) {
-				c2++;
-				int previousM = 0;
-
-			}
-		}*/
 
 		return new ImageView(wImage);
 	}
@@ -100,7 +90,7 @@ public class HeatMap extends Canvas {
 		if (value < MIN || value > MAX) {
 			return Color.BLACK;
 		}
-		double hue = YELLOW_HUE + (RED_HUE - YELLOW_HUE) * (value - MIN) / (MAX - MIN);
+		double hue = RED_HUE + (YELLOW_HUE - RED_HUE) * (value - MIN) / (MAX - MIN);
 		return Color.hsb(hue, 1.0, 1.0);
 	}
 

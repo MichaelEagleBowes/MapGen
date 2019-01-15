@@ -27,8 +27,10 @@ import javafx.stage.Stage;
 import logic.CellularAutomaton;
 import logic.DiamondSquare;
 import logic.ProceduralAlgorithm;
+import model.MapContainer;
 import model.MapType;
 import util.HeatMap;
+import util.Triple;
 import util.Tuple;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -159,19 +161,20 @@ public class StatisticsController extends Controller {
 		centerBox.getChildren().add(expressivityBarChart);
 	}
 
-	private HashMap<Double, Tuple<Number, Number, Number>> createHeatMapSamples(List<Tuple<Number, Number, Number>> tuples) {
-		HashMap<Double, Tuple<Number, Number, Number>> newTuples = new HashMap<Double, Tuple<Number, Number, Number>>();
+	private HashMap<Tuple, MapContainer> createHeatMapSamples() {
+		List<MapContainer> mapSamples = new ArrayList<MapContainer>();
+		HashMap<Tuple, MapContainer> collectiveMapSamples = new HashMap();
 		if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof DiamondSquare) {
 			List<Integer> params = getMainController().getMapController().getParametersDiamondSquare();
 			DiamondSquare ds = new DiamondSquare();
-			HashMap<Integer, List<Integer>> absPos = DiamondSquare.calcAbsolutePositions(params.get(0),
-					params.get(1), params.get(2), params.get(3), params.get(4), params.get(5), params.get(6));
+			HashMap<Integer, List<Integer>> absPos = DiamondSquare.calcAbsolutePositions(params.get(0), params.get(1),
+					params.get(2), params.get(3), params.get(4), params.get(5), params.get(6));
 			List<Double> areaCount = DiamondSquare.calcNumberOfAreas(params.get(0), params.get(1), params.get(2),
 					params.get(3), params.get(4), params.get(5), params.get(6));
-			
+
 			for (int i = 0; i < 100; i++) {
 				ds.generateMap(getMainController().getControlsController().getMapSize());
-				Tuple<Number, Number, Number> tuple = new Tuple<Number, Number, Number>();
+				Triple<Number, Number, Number> tuple = new Triple<Number, Number, Number>();
 				tuple.addFirstValue(1); // The type of parameter combination
 				double absPosDeviation = 0;
 				double x;
@@ -201,51 +204,40 @@ public class StatisticsController extends Controller {
 				absPosDeviation = (xDeviation + yDeviation) / 2;
 				tuple.addSecondValue(absPosDeviation);
 				tuple.addThirdValue(absPosDeviation);
-				tuples.add(tuple);
+				//tuples.add(tuple);
 			}
 
 		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
-			CellularAutomaton ca = new CellularAutomaton(
-					getMainController().getControlsController().getIterations(),
+			CellularAutomaton ca = new CellularAutomaton(getMainController().getControlsController().getIterations(),
 					getMainController().getControlsController().getBirthRule(),
 					getMainController().getControlsController().getDeathRule(),
 					getMainController().getControlsController().getSurvivalChance());
 
-			Tuple<Number, Number, Number> tuple = new Tuple<Number, Number, Number>();
+			MapContainer map = new MapContainer();
+			
 			for (int j = 0; j < 10; j++) {
 				for (int i = 1; i < 11; i++) {
 					double size = Math.pow(2, i) + 1;
-					ca.generateMap((int)size);
-					tuple.addSecondValue(ca.calcRelativeOpenSpace());
-					tuple.addThirdValue(ca.calcNumberOfAreas());
+					ca.generateMap((int) size);
+					map.setRelativeSpace(ca.calcRelativeOpenSpace());
+					map.setAreaCount(ca.calcNumberOfAreas());
 
 					int cap = 8193;
-					double c1=0; //outer iteration count
-					double c2=0; //inner iteration count
-					int previousM = 0;
-					for (int m = 1; m < cap; m = m+1*m) {
-						int previousN = 0;
-						for (int n = 1; n < cap; n = n+1*n) {
-							/*
-							System.out.println("--");
-							if((double)tuple.getSecondValue() > Math.pow(2, 10) / m) {
-								System.out.println("con1");
-							}
-							if((double) tuple.getSecondValue() < Math.pow(2, 10) / (m - previousM)) {
-								System.out.println("con2");
-							}
-							if((double) tuple.getThirdValue() > (Math.pow(2, 10) / 2) / n) {
-								System.out.println("con3");
-							}
-							if((double) tuple.getThirdValue() < (Math.pow(2, 10) / 2) / (n - previousN)) {
-								System.out.println("con4");
-							}*/
-							if ((double)tuple.getSecondValue() > Math.pow(2, 10) / m
-									&& (double) tuple.getSecondValue() < Math.pow(2, 10) / (m - previousM)
-									&& (double) tuple.getThirdValue() > (Math.pow(2, 10) / 2) / n
-									&& (double) tuple.getThirdValue() < (Math.pow(2, 10) / 2) / (n - previousN)) {
-								tuple.addFirstValue(m + (n / 10000)); // e.g. 1.01 - 1.1
-								tuples.add(tuple);
+					double previousM = 0;
+					for (double m = 1; m < cap; m = m + 1 * m) {
+						double previousN = 0;
+						for (double n = 1; n < cap; n = n + 1 * n) {
+							System.out.println("m1: "+Math.pow(2, 10) / m);
+							System.out.println("m2: "+Math.pow(2, 10) / (m - previousM));
+							if (map.getRelativeSpace() > Math.pow(2, 10) / m
+									&& map.getRelativeSpace() < Math.pow(2, 10) / (m - previousM)
+									&& map.getAreaCount() > (Math.pow(2, 10) / 2) / n
+									&& map.getAreaCount() < (Math.pow(2, 10) / 2) / (n - previousN)) {
+								map.setX(j);
+								map.setY(i-1);
+								mapSamples.add(map);
+							} else {
+								//System.out.println(map.getAreaCount() +" "+ map.getRelativeSpace());
 							}
 							previousN = n;
 						}
@@ -253,26 +245,32 @@ public class StatisticsController extends Controller {
 					}
 				}
 			}
-			
-			for (Tuple t2 : tuples) {
-				if(newTuples.containsKey(t2.getFirstValue())) {
-					Tuple t3 = newTuples.get(t2.getFirstValue());
-					t3.addFirstValue((int)t3.getFirstValue()+(int)t2.getFirstValue());
-				} else {
-					newTuples.put(Double.valueOf((int)t2.getFirstValue()), t2);
-				}
-			}
-		}
-		System.out.println(newTuples);
 
-		return newTuples;
+			for (int j = 0; j < 10; j++) {
+				for (int i = 0; i < 10; i++) {
+						int count = 0;
+						MapContainer currentContainer = new MapContainer();
+						for (MapContainer container : mapSamples) {
+							if(container.getX() == j && container.getY() == i) {
+								count++;
+								currentContainer = container;
+							}
+						}
+						currentContainer.setMapCount(count);
+						currentContainer.setTotalMapCount(j*i);
+						collectiveMapSamples.put(new Tuple(j, i), currentContainer);
+					}
+				}
+		}
+		System.out.println(collectiveMapSamples);
+
+		return collectiveMapSamples;
 	}
 
 	private void createHeatMap() {
 		centerBox.getChildren().clear();
 
-		List<Tuple<Number, Number, Number>> tuples = new ArrayList<Tuple<Number, Number, Number>>();
-		HashMap<Double, Tuple<Number, Number, Number>> newTuples = createHeatMapSamples(tuples);
+		HashMap<Tuple, MapContainer> newTuples = createHeatMapSamples();
 
 		HeatMap heatMap = new HeatMap(400, 400);
 		GraphicsContext gc = heatMap.getGraphicsContext2D();
