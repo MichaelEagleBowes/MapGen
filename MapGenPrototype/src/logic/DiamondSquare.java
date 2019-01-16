@@ -1,7 +1,6 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,32 +18,48 @@ import util.Triple;
 public class DiamondSquare implements ProceduralAlgorithm {
 
 	String name;
-	private static int[][] map;
+	private int[][] map;
 	private boolean hasMap;
 	private int mapSize;
-	private static int[][] testMap;
+	private int[][] testMap;
 
-	private static List<Double> areaCount;
-	private static List<Double> minima;
-	private static HashMap<Integer, List<Integer>> averageAreaXCoordinates;
-	private static HashMap<Integer, List<Integer>> averageAreaYCoordinates;
+	private List<Double> areaCount;
+	private List<Double> minima;
+	private HashMap<Integer, List<Integer>> averageAreaXCoordinates;
+	private HashMap<Integer, List<Integer>> averageAreaYCoordinates;
+	private double oceanSpectrum;
+	private double coastSpectrum;
+	private double beachSpectrum;
+	private double grassSpectrum;
+	private double forestSpectrum;
+	private double mountainSpectrum;
+	private double snowSpectrum;
+	private int minimum;
+	private int oceanParam;
+	private int coastParam;
+	private int beachParam;
+	private int grassParam;
+	private int forestParam;
+	private int snowParam;
+	private int mountainParam;
+	
 	/**
 	 * 
 	 * Stores the sum of all X and Y coordinates for each terrain type for
 	 * calculation of the Bowes Distance. The terrain types are sorted in ascending
 	 * order by height values.
 	 */
-	private static HashMap<Integer, Triple<Integer, Integer, Integer>> sumValues;
+	//private HashMap<Integer, Triple<Integer, Integer, Integer>> sumValues;
 	/**
 	 * The arithmetic mean values of each terrains' X and Y coordinates across the
 	 * map. The terrain types are sorted in ascending order by height values.
 	 */
-	private static List<Double> bowesDistance;
+	private List<Double> bowesDistanceAvg;
 	/**
 	 * The average of the arithmetic mean values of each terrains' X and Y coordinates across the
 	 * map. The terrain types are sorted in ascending order by height values.
 	 */
-	private static HashMap<Integer, List<Integer>> bowesDistanceAvg;
+	private HashMap<Integer, List<Double>> bowesDistance;
 
 	public DiamondSquare() {
 		this.name = "DiamondSquare";
@@ -56,6 +71,23 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		}
 	}
 
+	public DiamondSquare(int oceanParam, int coastParam, int beachParam, int grassParam,
+			int forestParam, int snowParam, int mountainParam) {
+		this.oceanParam = oceanParam;
+		this.coastParam = coastParam;
+		this.beachParam = beachParam;
+		this.grassParam = grassParam;
+		this.forestParam = forestParam;
+		this.snowParam = snowParam;
+		this.mountainParam = mountainParam;
+		this.name = "DiamondSquare";
+		averageAreaXCoordinates = new HashMap<>();
+		averageAreaYCoordinates = new HashMap<>();
+		for (int i = 0; i < 7; i++) {
+			averageAreaXCoordinates.put(i, new ArrayList<Integer>());
+			averageAreaYCoordinates.put(i, new ArrayList<Integer>());
+		}
+	}	
 	/**
 	 * 
 	 * Generates a single square map with the given size and name.
@@ -80,6 +112,27 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			e.printStackTrace();
 		}
 		map = algo.getMap();
+		
+		minimum = 0;
+		int maximum = 0;
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map.length; j++) {
+				if (map[j][i] > maximum) {
+					maximum = map[j][i];
+				}
+				if (map[j][i] < minimum) {
+					minimum = map[j][i];
+				}
+			}
+		}
+		int spectrum = Math.abs(minimum) + maximum;
+		oceanSpectrum = spectrum * (oceanParam * 0.01);
+		coastSpectrum = spectrum * (coastParam * 0.01);
+		beachSpectrum = spectrum * (beachParam * 0.01);
+		grassSpectrum = spectrum * (grassParam * 0.01);
+		forestSpectrum = spectrum * (forestParam * 0.01);
+		snowSpectrum = spectrum * (snowParam * 0.01);
+		mountainSpectrum = spectrum * (mountainParam * 0.01);
 
 		return map;
 	}
@@ -91,32 +144,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * 
 	 * @return areaCount A list of the number of each terrain's separate areas
 	 */
-	public static List<Double> calcNumberOfAreas(int oceanParam, int coastParam, int beachParam, int grassParam,
-			int forestParam, int snowParam, int mountainParam) {
-		int mapHeight = map.length;
-		int mapWidth = map.length;
-
-		int minimum = 0;
-		int maximum = 0;
-		for (int i = 0; i < mapWidth; i++) {
-			for (int j = 0; j < mapHeight; j++) {
-				if (map[j][i] > maximum) {
-					maximum = map[j][i];
-				}
-				if (map[j][i] < minimum) {
-					minimum = map[j][i];
-				}
-			}
-		}
-		int spectrum = Math.abs(minimum) + maximum;
-		double oceanSpectrum = spectrum * (oceanParam * 0.01);
-		double coastSpectrum = spectrum * (coastParam * 0.01);
-		double beachSpectrum = spectrum * (beachParam * 0.01);
-		double grassSpectrum = spectrum * (grassParam * 0.01);
-		double forestSpectrum = spectrum * (forestParam * 0.01);
-		double mountainSpectrum = spectrum * (mountainParam * 0.01);
-		double snowSpectrum = spectrum * (snowParam * 0.01);
-
+	public List<Double> calcNumberOfAreas() {
 		areaCount = new ArrayList<Double>();
 		double oceanCount = 0;
 		double coastCount = 0;
@@ -291,7 +319,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		areaCount.add(5, mountainCount);
 		areaCount.add(6, snowCount);
 
-		System.out.println(areaCount);
 		return areaCount;
 	}
 
@@ -302,107 +329,46 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * 
 	 * @return
 	 */
-	public static List<Double> calcAbsolutePositionsAverage(int oceanParam, int coastParam, int beachParam, int grassParam,
-			int forestParam, int snowParam, int mountainParam) {
-		int mapHeight = map.length;
-		int mapWidth = map.length;
-
-		int minimum = 0;
-		int maximum = 0;
-		for (int i = 0; i < mapWidth; i++) {
-			for (int j = 0; j < mapHeight; j++) {
-				if (map[j][i] > maximum) {
-					maximum = map[j][i];
-				}
-				if (map[j][i] < minimum) {
-					minimum = map[j][i];
-				}
-			}
-		}
-		int spectrum = Math.abs(minimum) + maximum;
-		double oceanSpectrum = spectrum * (oceanParam * 0.01);
-		double coastSpectrum = spectrum * (coastParam * 0.01);
-		double beachSpectrum = spectrum * (beachParam * 0.01);
-		double grassSpectrum = spectrum * (grassParam * 0.01);
-		double forestSpectrum = spectrum * (forestParam * 0.01);
-		double mountainSpectrum = spectrum * (mountainParam * 0.01);
-		double snowSpectrum = spectrum * (snowParam * 0.01);
-
-		bowesDistance = new ArrayList<Double>();
-		sumValues = calcSumValues(minimum, oceanSpectrum, coastSpectrum, beachSpectrum, grassSpectrum, forestSpectrum,
-				mountainSpectrum, snowSpectrum);
+	public List<Double> calcAbsolutePositionsAverage() {
+		bowesDistanceAvg = new ArrayList<Double>();
+		calcSumValues();
 		double oceanAvg = 0;
-		int oceanX = 0;
-		int oceanY = 0;
-		if ((int) sumValues.get(0).getFirstValue() != 0) {
-			oceanX = (int) sumValues.get(0).getSecondValue() / (int) sumValues.get(0).getFirstValue();
-			oceanY = (int) sumValues.get(0).getThirdValue() / (int) sumValues.get(0).getFirstValue();
-		}
-		oceanAvg = Math.sqrt(oceanX * oceanY);
+		List<Double> oceanList = bowesDistance.get(0);
+		oceanAvg = Math.sqrt(oceanList.get(0) * oceanList.get(1));
 
 		double coastAvg = 0;
-		int coastX = 0;
-		int coastY = 0;
-		if ((int) sumValues.get(1).getFirstValue() != 0) {
-			coastX = (int) sumValues.get(1).getSecondValue() / (int) sumValues.get(1).getFirstValue();
-			coastY = (int) sumValues.get(1).getThirdValue() / (int) sumValues.get(1).getFirstValue();
-		}
-		coastAvg = Math.sqrt(coastX * coastY);
+		List<Double> coastList = bowesDistance.get(1);
+		coastAvg = Math.sqrt(coastList.get(0) * coastList.get(1));
 
 		double beachAvg = 0;
-		int beachX = 0;
-		int beachY = 0;
-		if ((int) sumValues.get(2).getFirstValue() != 0) {
-			beachX = (int) sumValues.get(2).getSecondValue() / (int) sumValues.get(2).getFirstValue();
-			beachY = (int) sumValues.get(2).getThirdValue() / (int) sumValues.get(2).getFirstValue();
-		}
-		beachAvg = Math.sqrt(beachX * beachY);
+		List<Double> beachList = bowesDistance.get(2);
+		beachAvg = Math.sqrt(beachList.get(0) * beachList.get(1));
 
 		double grassAvg = 0;
-		int grassX = 0;
-		int grassY = 0;
-		if ((int) sumValues.get(3).getFirstValue() != 0) {
-			grassX = (int) sumValues.get(3).getSecondValue() / (int) sumValues.get(3).getFirstValue();
-			grassY = (int) sumValues.get(3).getThirdValue() / (int) sumValues.get(3).getFirstValue();
-		}
-		grassAvg = Math.sqrt(grassX * grassY);
+		List<Double> grassList = bowesDistance.get(3);
+		grassAvg = Math.sqrt(grassList.get(0) * grassList.get(1));
 
 		double forestAvg = 0;
-		int forestX = 0;
-		int forestY = 0;
-		if ((int) sumValues.get(4).getFirstValue() != 0) {
-			forestX = (int) sumValues.get(4).getSecondValue() / (int) sumValues.get(4).getFirstValue();
-			forestY = (int) sumValues.get(4).getThirdValue() / (int) sumValues.get(4).getFirstValue();
-		}
-		forestAvg = Math.sqrt(forestX * forestY);
+		List<Double> forestList = bowesDistance.get(4);
+		forestAvg = Math.sqrt(forestList.get(0) * forestList.get(1));
 
 		double mountainAvg = 0;
-		int mountainX = 0;
-		int mountainY = 0;
-		if ((int) sumValues.get(5).getFirstValue() != 0) {
-			mountainX = (int) sumValues.get(5).getSecondValue() / (int) sumValues.get(5).getFirstValue();
-			mountainY = (int) sumValues.get(5).getThirdValue() / (int) sumValues.get(5).getFirstValue();
-		}
-		mountainAvg = Math.sqrt(mountainX * mountainY);
+		List<Double> mountainList = bowesDistance.get(5);
+		mountainAvg = Math.sqrt(mountainList.get(0) * mountainList.get(1));
 
 		double snowAvg = 0;
-		int snowX = 0;
-		int snowY = 0;
-		if ((int) sumValues.get(6).getFirstValue() != 0) {
-			snowX = (int) sumValues.get(6).getSecondValue() / (int) sumValues.get(6).getFirstValue();
-			snowY = (int) sumValues.get(6).getThirdValue() / (int) sumValues.get(6).getFirstValue();
-		}
-		snowAvg = Math.sqrt(snowX * snowY);
+		List<Double> snowList = bowesDistance.get(6);
+		snowAvg = Math.sqrt(snowList.get(0) * snowList.get(1));
 
-		bowesDistance.add(0, oceanAvg);
-		bowesDistance.add(1, coastAvg);
-		bowesDistance.add(2, beachAvg);
-		bowesDistance.add(3, grassAvg);
-		bowesDistance.add(4, forestAvg);
-		bowesDistance.add(5, mountainAvg);
-		bowesDistance.add(6, snowAvg);
+		bowesDistanceAvg.add(0, oceanAvg);
+		bowesDistanceAvg.add(1, coastAvg);
+		bowesDistanceAvg.add(2, beachAvg);
+		bowesDistanceAvg.add(3, grassAvg);
+		bowesDistanceAvg.add(4, forestAvg);
+		bowesDistanceAvg.add(5, mountainAvg);
+		bowesDistanceAvg.add(6, snowAvg);
 
-		return bowesDistance;
+		return bowesDistanceAvg;
 	}
 	
 	/**
@@ -412,38 +378,12 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * 
 	 * @return
 	 */
-	public static HashMap<Integer, List<Integer>> calcAbsolutePositions(int oceanParam, int coastParam, int beachParam, int grassParam,
-			int forestParam, int snowParam, int mountainParam) {
-		int mapHeight = map.length;
-		int mapWidth = map.length;
-
-		int minimum = 0;
-		int maximum = 0;
-		for (int i = 0; i < mapWidth; i++) {
-			for (int j = 0; j < mapHeight; j++) {
-				if (map[j][i] > maximum) {
-					maximum = map[j][i];
-				}
-				if (map[j][i] < minimum) {
-					minimum = map[j][i];
-				}
-			}
-		}
-		int spectrum = Math.abs(minimum) + maximum;
-		double oceanSpectrum = spectrum * (oceanParam * 0.01);
-		double coastSpectrum = spectrum * (coastParam * 0.01);
-		double beachSpectrum = spectrum * (beachParam * 0.01);
-		double grassSpectrum = spectrum * (grassParam * 0.01);
-		double forestSpectrum = spectrum * (forestParam * 0.01);
-		double mountainSpectrum = spectrum * (mountainParam * 0.01);
-		double snowSpectrum = spectrum * (snowParam * 0.01);
-
-		bowesDistanceAvg = new HashMap<Integer, List<Integer>>();
-		sumValues = calcSumValues(minimum, oceanSpectrum, coastSpectrum, beachSpectrum, grassSpectrum, forestSpectrum,
-				mountainSpectrum, snowSpectrum);
-		List<Integer> oceanAvg = new ArrayList<Integer>();
-		int oceanX = 0;
-		int oceanY = 0;
+	public HashMap<Integer, List<Double>> calcAbsolutePositions() {
+		calcSumValues();
+		/*
+		List<Double> oceanAvg = new ArrayList<Double>();
+		double oceanX = 0;
+		double oceanY = 0;
 		if ((int) sumValues.get(0).getFirstValue() != 0) {
 			oceanX = (int) sumValues.get(0).getSecondValue() / (int) sumValues.get(0).getFirstValue();
 			oceanY = (int) sumValues.get(0).getThirdValue() / (int) sumValues.get(0).getFirstValue();
@@ -451,9 +391,9 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		oceanAvg.add(0, oceanX);
 		oceanAvg.add(0, oceanY);
 
-		List<Integer> coastAvg = new ArrayList<Integer>();
-		int coastX = 0;
-		int coastY = 0;
+		List<Double> coastAvg = new ArrayList<Double>();
+		double coastX = 0;
+		double coastY = 0;
 		if ((int) sumValues.get(1).getFirstValue() != 0) {
 			coastX = (int) sumValues.get(1).getSecondValue() / (int) sumValues.get(1).getFirstValue();
 			coastY = (int) sumValues.get(1).getThirdValue() / (int) sumValues.get(1).getFirstValue();
@@ -461,9 +401,9 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		coastAvg.add(0, coastX);
 		coastAvg.add(0, coastY);
 
-		List<Integer> beachAvg = new ArrayList<Integer>();
-		int beachX = 0;
-		int beachY = 0;
+		List<Double> beachAvg = new ArrayList<Double>();
+		double beachX = 0;
+		double beachY = 0;
 		if ((int) sumValues.get(2).getFirstValue() != 0) {
 			beachX = (int) sumValues.get(2).getSecondValue() / (int) sumValues.get(2).getFirstValue();
 			beachY = (int) sumValues.get(2).getThirdValue() / (int) sumValues.get(2).getFirstValue();
@@ -471,9 +411,9 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		beachAvg.add(0, beachX);
 		beachAvg.add(0, beachY);
 
-		List<Integer> grassAvg = new ArrayList<Integer>();
-		int grassX = 0;
-		int grassY = 0;
+		List<Double> grassAvg = new ArrayList<Double>();
+		double grassX = 0;
+		double grassY = 0;
 		if ((int) sumValues.get(3).getFirstValue() != 0) {
 			grassX = (int) sumValues.get(3).getSecondValue() / (int) sumValues.get(3).getFirstValue();
 			grassY = (int) sumValues.get(3).getThirdValue() / (int) sumValues.get(3).getFirstValue();
@@ -481,9 +421,9 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		grassAvg.add(0, grassX);
 		grassAvg.add(0, grassY);
 
-		List<Integer> forestAvg = new ArrayList<Integer>();
-		int forestX = 0;
-		int forestY = 0;
+		List<Double> forestAvg = new ArrayList<Double>();
+		double forestX = 0;
+		double forestY = 0;
 		if ((int) sumValues.get(4).getFirstValue() != 0) {
 			forestX = (int) sumValues.get(4).getSecondValue() / (int) sumValues.get(4).getFirstValue();
 			forestY = (int) sumValues.get(4).getThirdValue() / (int) sumValues.get(4).getFirstValue();
@@ -491,9 +431,9 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		forestAvg.add(0, forestX);
 		forestAvg.add(0, forestY);
 
-		List<Integer> mountainAvg = new ArrayList<Integer>();
-		int mountainX = 0;
-		int mountainY = 0;
+		List<Double> mountainAvg = new ArrayList<Double>();
+		double mountainX = 0;
+		double mountainY = 0;
 		if ((int) sumValues.get(5).getFirstValue() != 0) {
 			mountainX = (int) sumValues.get(5).getSecondValue() / (int) sumValues.get(5).getFirstValue();
 			mountainY = (int) sumValues.get(5).getThirdValue() / (int) sumValues.get(5).getFirstValue();
@@ -501,9 +441,9 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		mountainAvg.add(0, mountainX);
 		mountainAvg.add(0, mountainY);
 
-		List<Integer> snowAvg = new ArrayList<Integer>();
-		int snowX = 0;
-		int snowY = 0;
+		List<Double> snowAvg = new ArrayList<Double>();
+		double snowX = 0;
+		double snowY = 0;
 		if ((int) sumValues.get(6).getFirstValue() != 0) {
 			snowX = (int) sumValues.get(6).getSecondValue() / (int) sumValues.get(6).getFirstValue();
 			snowY = (int) sumValues.get(6).getThirdValue() / (int) sumValues.get(6).getFirstValue();
@@ -518,8 +458,9 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		bowesDistanceAvg.put(4, forestAvg);
 		bowesDistanceAvg.put(5, mountainAvg);
 		bowesDistanceAvg.put(6, snowAvg);
+		*/
 
-		return bowesDistanceAvg;
+		return bowesDistance;
 	}
 
 	/**
@@ -537,11 +478,8 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * @param snowSpectrum
 	 * @return
 	 */
-	private static HashMap<Integer, Triple<Integer, Integer, Integer>> calcSumValues(int minimum, double oceanSpectrum,
-			double coastSpectrum, double beachSpectrum, double grassSpectrum, double forestSpectrum,
-			double mountainSpectrum, double snowSpectrum) {
-		double areaCount = 0;
-		sumValues = new HashMap<Integer, Triple<Integer, Integer, Integer>>();
+	private HashMap<Integer, Triple<Integer, Integer, Integer>> calcSumValues() {
+		HashMap<Integer, Triple<Integer, Integer, Integer>> sumValues = new HashMap<Integer, Triple<Integer, Integer, Integer>>();
 		Triple<Integer, Integer, Integer> oceanTuple = new Triple<Integer, Integer, Integer>();
 		Triple<Integer, Integer, Integer> coastTuple = new Triple<Integer, Integer, Integer>();
 		Triple<Integer, Integer, Integer> beachTuple = new Triple<Integer, Integer, Integer>();
@@ -588,6 +526,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			}
 		}
 
+		bowesDistance = new HashMap<Integer, List<Double>>();
 		sumValues.put(0, oceanTuple);
 		sumValues.put(1, coastTuple);
 		sumValues.put(2, beachTuple);
@@ -595,7 +534,85 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		sumValues.put(4, forestTuple);
 		sumValues.put(5, mountainTuple);
 		sumValues.put(6, snowTuple);
+		
+		List<Double> oceanAvg = new ArrayList<Double>();
+		double oceanX = 0;
+		double oceanY = 0;
+		if ((int) sumValues.get(0).getFirstValue() != 0) {
+			oceanX = (int) sumValues.get(0).getSecondValue() / (int) sumValues.get(0).getFirstValue();
+			oceanY = (int) sumValues.get(0).getThirdValue() / (int) sumValues.get(0).getFirstValue();
+		}
+		oceanAvg.add(0, oceanX);
+		oceanAvg.add(1, oceanY);
 
+		List<Double> coastAvg = new ArrayList<Double>();
+		double coastX = 0;
+		double coastY = 0;
+		if ((int) sumValues.get(1).getFirstValue() != 0) {
+			coastX = (int) sumValues.get(1).getSecondValue() / (int) sumValues.get(1).getFirstValue();
+			coastY = (int) sumValues.get(1).getThirdValue() / (int) sumValues.get(1).getFirstValue();
+		}
+		coastAvg.add(0, coastX);
+		coastAvg.add(1, coastY);
+
+		List<Double> beachAvg = new ArrayList<Double>();
+		double beachX = 0;
+		double beachY = 0;
+		if ((int) sumValues.get(2).getFirstValue() != 0) {
+			beachX = (int) sumValues.get(2).getSecondValue() / (int) sumValues.get(2).getFirstValue();
+			beachY = (int) sumValues.get(2).getThirdValue() / (int) sumValues.get(2).getFirstValue();
+		}
+		beachAvg.add(0, beachX);
+		beachAvg.add(1, beachY);
+
+		List<Double> grassAvg = new ArrayList<Double>();
+		double grassX = 0;
+		double grassY = 0;
+		if ((int) sumValues.get(3).getFirstValue() != 0) {
+			grassX = (int) sumValues.get(3).getSecondValue() / (int) sumValues.get(3).getFirstValue();
+			grassY = (int) sumValues.get(3).getThirdValue() / (int) sumValues.get(3).getFirstValue();
+		}
+		grassAvg.add(0, grassX);
+		grassAvg.add(1, grassY);
+
+		List<Double> forestAvg = new ArrayList<Double>();
+		double forestX = 0;
+		double forestY = 0;
+		if ((int) sumValues.get(4).getFirstValue() != 0) {
+			forestX = (int) sumValues.get(4).getSecondValue() / (int) sumValues.get(4).getFirstValue();
+			forestY = (int) sumValues.get(4).getThirdValue() / (int) sumValues.get(4).getFirstValue();
+		}
+		forestAvg.add(0, forestX);
+		forestAvg.add(1, forestY);
+
+		List<Double> mountainAvg = new ArrayList<Double>();
+		double mountainX = 0;
+		double mountainY = 0;
+		if ((int) sumValues.get(5).getFirstValue() != 0) {
+			mountainX = (int) sumValues.get(5).getSecondValue() / (int) sumValues.get(5).getFirstValue();
+			mountainY = (int) sumValues.get(5).getThirdValue() / (int) sumValues.get(5).getFirstValue();
+		}
+		mountainAvg.add(0, mountainX);
+		mountainAvg.add(1, mountainY);
+
+		List<Double> snowAvg = new ArrayList<Double>();
+		double snowX = 0;
+		double snowY = 0;
+		if ((int) sumValues.get(6).getFirstValue() != 0) {
+			snowX = (int) sumValues.get(6).getSecondValue() / (int) sumValues.get(6).getFirstValue();
+			snowY = (int) sumValues.get(6).getThirdValue() / (int) sumValues.get(6).getFirstValue();
+		}
+		snowAvg.add(0, snowX);
+		snowAvg.add(1, snowY);
+
+		bowesDistance.put(0, oceanAvg);
+		bowesDistance.put(1, coastAvg);
+		bowesDistance.put(2, beachAvg);
+		bowesDistance.put(3, grassAvg);
+		bowesDistance.put(4, forestAvg);
+		bowesDistance.put(5, mountainAvg);
+		bowesDistance.put(6, snowAvg);
+		
 		return sumValues;
 	}
 
@@ -605,7 +622,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * 
 	 * @return
 	 */
-	public static List<Double> calcRelativePositions() {
+	public List<Double> calcRelativePositions() {
 		
 		minima = new ArrayList<Double>();
 		
@@ -666,6 +683,38 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public double getOceanSpectrum() {
+		return oceanSpectrum;
+	}
+
+	public double getCoastSpectrum() {
+		return coastSpectrum;
+	}
+
+	public double getBeachSpectrum() {
+		return beachSpectrum;
+	}
+
+	public double getGrassSpectrum() {
+		return grassSpectrum;
+	}
+
+	public double getForestSpectrum() {
+		return forestSpectrum;
+	}
+
+	public double getMountainSpectrum() {
+		return mountainSpectrum;
+	}
+
+	public double getSnowSpectrum() {
+		return snowSpectrum;
+	}
+
+	public int getMinimum() {
+		return minimum;
 	}
 
 }

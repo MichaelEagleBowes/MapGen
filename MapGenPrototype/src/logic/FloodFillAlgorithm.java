@@ -53,7 +53,9 @@ public class FloodFillAlgorithm implements Runnable {
 	}
 
 	/**
-	 * Queue implementation of the flood fill algorithm, to fix the StackOverflowError.
+	 * Queue implementation of the flood fill algorithm, to fix the
+	 * StackOverflowError.
+	 * 
 	 * @param testMap
 	 * @param x
 	 * @param y
@@ -66,47 +68,92 @@ public class FloodFillAlgorithm implements Runnable {
 		boolean echo2 = false;
 		boolean echo3 = false;
 		boolean echo4 = false;
-			Queue<Tile> queue = new LinkedList<Tile>();
-			if (testMap[x][y] >= threshold) {
-				System.out.println(false);
-				return false;
-			} else {
-				queue.add(new Tile(x, y, testMap[x][y]));
-				
-				while (!queue.isEmpty()) {
-					Tile p = queue.remove();
-					if (testMap[p.x][p.y] < threshold) {
-						testMap[p.x][p.y] = threshold;
-						count = true;
-						xCoordinates.add(x);
-						yCoordinates.add(y);
-						tileCount++;
-						if(p.x > 0) {
-							echo1 = queue.add(new Tile(p.x - 1, p.y, testMap[p.x - 1][p.y]));
-						}
-						if(p.y > 0) {
-							echo3 = queue.add(new Tile(p.x, p.y - 1, testMap[p.x][p.y - 1]));
-						}
-						if(p.x < testMap.length-1) {
-							echo2 = queue.add(new Tile(p.x + 1, p.y, testMap[p.x + 1][p.y]));
-						}
-						if(p.y < testMap.length-1) {
-							echo4 = queue.add(new Tile(p.x, p.y + 1, testMap[p.x][p.y + 1]));
-						}
-						for (int coord : xCoordinates) {
-							avgXCoordinate += coord;
-						}
-						avgXCoordinate /= tileCount;
+		Queue<Tile> queue = new LinkedList<Tile>();
+		if (testMap[x][y] >= threshold) {
+			return false;
+		} else {
+			queue.add(new Tile(x, y, testMap[x][y]));
 
-						for (int coord : yCoordinates) {
-							avgYCoordinate += coord;
-						}
-						avgYCoordinate /= tileCount;
+			while (!queue.isEmpty()) {
+				Tile p = queue.remove();
+				if (testMap[p.x][p.y] < threshold) {
+					testMap[p.x][p.y] = threshold;
+					count = true;
+					xCoordinates.add(x);
+					yCoordinates.add(y);
+					tileCount++;
+					if (p.x > 0) {
+						echo1 = queue.add(new Tile(p.x - 1, p.y, testMap[p.x - 1][p.y]));
 					}
+					if (p.y > 0) {
+						echo3 = queue.add(new Tile(p.x, p.y - 1, testMap[p.x][p.y - 1]));
+					}
+					if (p.x < testMap.length - 1) {
+						echo2 = queue.add(new Tile(p.x + 1, p.y, testMap[p.x + 1][p.y]));
+					}
+					if (p.y < testMap.length - 1) {
+						echo4 = queue.add(new Tile(p.x, p.y + 1, testMap[p.x][p.y + 1]));
+					}
+					for (int coord : xCoordinates) {
+						avgXCoordinate += coord;
+					}
+					avgXCoordinate /= tileCount;
+
+					for (int coord : yCoordinates) {
+						avgYCoordinate += coord;
+					}
+					avgYCoordinate /= tileCount;
 				}
-				System.out.println(count + " " + echo1 + " " + echo2 + " " + echo3 + " " + echo4);
-				return (count || echo1 || echo2 || echo3 || echo4);
+			}
+			return (count || echo1 || echo2 || echo3 || echo4);
+		}
+	}
+
+	public static boolean floodLandQueue(int[][] testMap, int x, int y, int lowerBound, int upperBound) {
+		boolean count = false;
+		boolean echo1 = false;
+		boolean echo2 = false;
+		boolean echo3 = false;
+		boolean echo4 = false;
+		Queue<Tile> queue = new LinkedList<Tile>();
+		if (testMap[x][y] < lowerBound || testMap[x][y] >= upperBound) {
+			return false;
+		} else {
+			queue.add(new Tile(x, y, testMap[x][y]));
+
+			while (!queue.isEmpty()) {
+				Tile p = queue.remove();
+				if (testMap[p.x][p.y] < upperBound && testMap[p.x][p.y] >= lowerBound) {
+					testMap[p.x][p.y] = upperBound;
+					count = true;
+					xCoordinates.add(x);
+					yCoordinates.add(y);
+					tileCount++;
+					if (p.x > 0) {
+						echo1 = queue.add(new Tile(p.x - 1, p.y, testMap[p.x - 1][p.y]));
+					}
+					if (p.y > 0) {
+						echo3 = queue.add(new Tile(p.x, p.y - 1, testMap[p.x][p.y - 1]));
+					}
+					if (p.x < testMap.length - 1) {
+						echo2 = queue.add(new Tile(p.x + 1, p.y, testMap[p.x + 1][p.y]));
+					}
+					if (p.y < testMap.length - 1) {
+						echo4 = queue.add(new Tile(p.x, p.y + 1, testMap[p.x][p.y + 1]));
+					}
+					for (int coord : xCoordinates) {
+						avgXCoordinate += coord;
+					}
+					avgXCoordinate /= tileCount;
+
+					for (int coord : yCoordinates) {
+						avgYCoordinate += coord;
+					}
+					avgYCoordinate /= tileCount;
 				}
+			}
+			return (count || echo1 || echo2 || echo3 || echo4);
+		}
 	}
 
 	/**
@@ -120,6 +167,7 @@ public class FloodFillAlgorithm implements Runnable {
 	 * @param threshold
 	 * @return
 	 */
+	@Deprecated
 	public static boolean floodOcean(int[][] testMap, int x, int y, int threshold) {
 		boolean count = false;
 		if (x < 0 || y < 0 || x >= testMap.length || y >= testMap.length) {
@@ -168,53 +216,6 @@ public class FloodFillAlgorithm implements Runnable {
 			}
 		}
 	}
-	
-	public static boolean floodLandQueue(int[][] testMap, int x, int y, int lowerBound, int upperBound) {
-		boolean count = false;
-		boolean echo1 = false;
-		boolean echo2 = false;
-		boolean echo3 = false;
-		boolean echo4 = false;
-			Queue<Tile> queue = new LinkedList<Tile>();
-			if (testMap[x][y] < lowerBound || testMap[x][y] >= upperBound) {
-				return false;
-			} else {
-				queue.add(new Tile(x, y, testMap[x][y]));
-				
-				while (!queue.isEmpty()) {
-					Tile p = queue.remove();
-					if (testMap[p.x][p.y] < upperBound && testMap[p.x][p.y] >= lowerBound) {
-						testMap[p.x][p.y] = upperBound;
-						count = true;
-						xCoordinates.add(x);
-						yCoordinates.add(y);
-						tileCount++;
-						if(p.x > 0) {
-							echo1 = queue.add(new Tile(p.x - 1, p.y, testMap[p.x - 1][p.y]));
-						}
-						if(p.y > 0) {
-							echo3 = queue.add(new Tile(p.x, p.y - 1, testMap[p.x][p.y - 1]));
-						}
-						if(p.x < testMap.length-1) {
-							echo2 = queue.add(new Tile(p.x + 1, p.y, testMap[p.x + 1][p.y]));
-						}
-						if(p.y < testMap.length-1) {
-							echo4 = queue.add(new Tile(p.x, p.y + 1, testMap[p.x][p.y + 1]));
-						}
-						for (int coord : xCoordinates) {
-							avgXCoordinate += coord;
-						}
-						avgXCoordinate /= tileCount;
-
-						for (int coord : yCoordinates) {
-							avgYCoordinate += coord;
-						}
-						avgYCoordinate /= tileCount;
-					}
-				}
-				return (count || echo1 || echo2 || echo3 || echo4);
-				}
-	}
 
 	/**
 	 * Applies the flood fill algorithm to all terrain types that do not contain
@@ -228,6 +229,7 @@ public class FloodFillAlgorithm implements Runnable {
 	 * @param upperBound
 	 * @return
 	 */
+	@Deprecated
 	public static boolean floodLand(int[][] testMap, int x, int y, int lowerBound, int upperBound) {
 		boolean count = false;
 		if (x < 0 || y < 0 || x >= testMap.length || y >= testMap.length) {

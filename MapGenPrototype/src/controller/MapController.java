@@ -68,9 +68,10 @@ public class MapController extends Controller {
 	 * 2049, 4097, 8193
 	 *
 	 */
-	public void generateDiamondSquare(int snowParam, int mountainParam, int forestParam, int grassParam, int beachParam,
-			int coastParam, int oceanParam) {
-		diamondSquare = new DiamondSquare();
+	public void generateDiamondSquare(int oceanParam, int coastParam, int beachParam, int grassParam, int forestParam,
+			int snowParam, int mountainParam) {
+		diamondSquare = new DiamondSquare(oceanParam, coastParam, beachParam, grassParam, forestParam, mountainParam,
+				snowParam);
 		int mapSize = getMainController().getControlsController().getMapSize();
 		int imgWidth = getMainController().getControlsController().getImageWidth();
 		int imgHeight = getMainController().getControlsController().getImageHeight();
@@ -195,30 +196,6 @@ public class MapController extends Controller {
 
 			Graphics2D ig2 = bi.createGraphics();
 
-			int mapHeight = map.length;
-			int mapWidth = map.length;
-			
-			int minimum = 0;
-			int maximum = 0;
-			for (int i = 0; i < mapWidth; i++) {
-				for (int j = 0; j < mapHeight; j++) {
-					if (map[j][i] > maximum) {
-						maximum = map[j][i];
-					}
-					if (map[j][i] < minimum) {
-						minimum = map[j][i];
-					}
-				}
-			}
-			double spectrum = Math.abs(minimum) + maximum;
-			double oceanSpectrum = spectrum * (oceanParam * 0.01);
-			double coastSpectrum = spectrum * (coastParam * 0.01);
-			double beachSpectrum = spectrum * (beachParam * 0.01);
-			double grassSpectrum = spectrum * (grassParam * 0.01);
-			double forestSpectrum = spectrum * (forestParam * 0.01);
-			double mountainSpectrum = spectrum * (mountainParam * 0.01);
-			double snowSpectrum = spectrum * (snowParam * 0.01);
-			
 			paramsDiamondSquare = new ArrayList<Integer>();
 			paramsDiamondSquare.add(oceanParam);
 			paramsDiamondSquare.add(coastParam);
@@ -228,51 +205,66 @@ public class MapController extends Controller {
 			paramsDiamondSquare.add(mountainParam);
 			paramsDiamondSquare.add(snowParam);
 
-			for (int i = 0; i < mapWidth; i++) {
-				for (int j = 0; j < mapHeight; j++) {
-					if (map[j][i] <= minimum + oceanSpectrum && oceanParam > 0) // 15% chance to turn BLUE = deep water
+			for (int i = 0; i < map.length; i++) {
+				for (int j = 0; j < map.length; j++) {
+					if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum() && oceanParam > 0) // 15%
+																														// chance
+																														// to
+																														// turn
+																														// BLUE
+																														// =
+																														// deep
+																														// water
 					{
 						ig2.drawImage(dw, i * 32, j * 32, null);
-					} else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum && coastParam > 0) // chance for shallow water
+					} else if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum()
+							+ diamondSquare.getCoastSpectrum() && coastParam > 0) // chance for shallow water
 					{
 						ig2.drawImage(w, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum
-							&& beachParam > 0) // chance for beach
+					else if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum()
+							+ diamondSquare.getCoastSpectrum() + diamondSquare.getBeachSpectrum() && beachParam > 0) // chance
+																														// for
+																														// beach
 					{
 						ig2.drawImage(beach, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-							&& grassParam > 0) // chance
-																													// for
-																													// grass
+					else if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum()
+							+ diamondSquare.getCoastSpectrum() + diamondSquare.getBeachSpectrum()
+							+ diamondSquare.getGrassSpectrum() && grassParam > 0) // chance
+																					// for
+																					// grass
 					{
 						ig2.drawImage(green, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-							+ forestSpectrum
-							&& forestParam > 0) // chance
+					else if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum()
+							+ diamondSquare.getCoastSpectrum() + diamondSquare.getBeachSpectrum()
+							+ diamondSquare.getGrassSpectrum() + diamondSquare.getForestSpectrum() && forestParam > 0) // chance
 					// for
 					// forest
 					{
 						ig2.drawImage(darkgreen, i * 32, j * 32, null);
 					}
 
-					else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-							+ forestSpectrum + mountainSpectrum
-							&& mountainParam > 0) // chance for mountain
+					else if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum()
+							+ diamondSquare.getCoastSpectrum() + diamondSquare.getBeachSpectrum()
+							+ diamondSquare.getGrassSpectrum() + diamondSquare.getForestSpectrum()
+							+ diamondSquare.getMountainSpectrum() && mountainParam > 0) // chance for mountain
 					{
 						ig2.drawImage(mountain, i * 32, j * 32, null);
-					} else if (map[j][i] <= minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-							+ forestSpectrum + mountainSpectrum + snowSpectrum
-							&& snowParam > 0) // chance for snow
+					} else if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum()
+							+ diamondSquare.getCoastSpectrum() + diamondSquare.getBeachSpectrum()
+							+ diamondSquare.getGrassSpectrum() + diamondSquare.getForestSpectrum()
+							+ diamondSquare.getMountainSpectrum() + diamondSquare.getSnowSpectrum() && snowParam > 0) // chance
+																														// for
+																														// snow
 					{
 						ig2.drawImage(snow, i * 32, j * 32, null);
 					} else {
-						
+
 					}
 				}
 			}
@@ -304,7 +296,13 @@ public class MapController extends Controller {
 	public DiamondSquare getDiamondSquare() {
 		return diamondSquare;
 	}
-	
+
+	/**
+	 * Gets the parameters of the Diamond Square algorithm in ascending order of the corresponding parameter's
+	 * terrain's height values, starting with oceanParam at index 0 and ending with snowParam at index 6.
+	 * 
+	 * @return
+	 */
 	public List<Integer> getParametersDiamondSquare() {
 		return paramsDiamondSquare;
 	}
