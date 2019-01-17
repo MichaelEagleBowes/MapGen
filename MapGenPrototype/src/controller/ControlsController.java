@@ -1,4 +1,5 @@
 package controller;
+
 import java.text.DecimalFormat;
 import java.util.function.UnaryOperator;
 
@@ -37,7 +38,7 @@ public class ControlsController extends Controller {
 	TextField imageHeight;
 	@FXML
 	TextField mapSize;
-	
+
 	UnaryOperator<Change> filter;
 	UnaryOperator<Change> decimalFilter;
 	TextField snowField;
@@ -47,7 +48,7 @@ public class ControlsController extends Controller {
 	TextField beachField;
 	TextField shallowWaterField;
 	TextField deepWaterField;
-	
+
 	TextField survivalField;
 	TextField birthRuleField;
 	TextField deathRuleField;
@@ -65,33 +66,33 @@ public class ControlsController extends Controller {
 		Label deathLabel = new Label("deathRate:");
 		Label survivalLabel = new Label("survivalChance:");
 		Label iterationsLabel = new Label("Iterations:");
-		
+
 		TextFormatter<String> deathRuleFormatter = new TextFormatter<>(filter);
 		TextFormatter<String> birthRuleFormatter = new TextFormatter<>(filter);
 		TextFormatter<String> iterationsFormatter = new TextFormatter<>(filter);
 		TextFormatter<String> survivalFormatter = new TextFormatter<>(decimalFilter);
-		
+
 		survivalField = new TextField();
 		deathRuleField = new TextField();
 		birthRuleField = new TextField();
 		iterationsField = new TextField();
-		
+
 		survivalField.setText("0.5");
 		survivalField.setMaxWidth(50);
 		survivalField.setTextFormatter(survivalFormatter);
-		
+
 		deathRuleField.setText("4");
 		deathRuleField.setMaxWidth(50);
 		deathRuleField.setTextFormatter(deathRuleFormatter);
-		
+
 		birthRuleField.setText("5");
 		birthRuleField.setMaxWidth(50);
 		birthRuleField.setTextFormatter(birthRuleFormatter);
-		
+
 		iterationsField.setText("3");
 		iterationsField.setMaxWidth(50);
 		iterationsField.setTextFormatter(iterationsFormatter);
-		
+
 		settingsContainer.add(chooseLabel, 0, 0);
 		settingsContainer.add(birthLabel, 0, 1);
 		settingsContainer.add(deathLabel, 0, 2);
@@ -102,7 +103,7 @@ public class ControlsController extends Controller {
 		settingsContainer.add(survivalField, 1, 3);
 		settingsContainer.add(iterationsField, 1, 4);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -116,7 +117,7 @@ public class ControlsController extends Controller {
 		Label beachLabel = new Label("Beach:");
 		Label shallowWaterLabel = new Label("Coast:");
 		Label deepWaterLabel = new Label("Ocean:");
-		
+
 		TextFormatter<String> snowFormatter = new TextFormatter<>(filter);
 		TextFormatter<String> mountainFormatter = new TextFormatter<>(filter);
 		TextFormatter<String> grassFormatter = new TextFormatter<>(filter);
@@ -124,7 +125,7 @@ public class ControlsController extends Controller {
 		TextFormatter<String> beachFormatter = new TextFormatter<>(filter);
 		TextFormatter<String> deepWaterFormatter = new TextFormatter<>(filter);
 		TextFormatter<String> shallowWaterFormatter = new TextFormatter<>(filter);
-		
+
 		snowField = new TextField();
 		mountainField = new TextField();
 		grassField = new TextField();
@@ -132,7 +133,7 @@ public class ControlsController extends Controller {
 		beachField = new TextField();
 		deepWaterField = new TextField();
 		shallowWaterField = new TextField();
-		
+
 		snowField.setText("20");
 		snowField.setMaxWidth(40);
 		snowField.setTextFormatter(snowFormatter);
@@ -161,7 +162,6 @@ public class ControlsController extends Controller {
 		deepWaterField.setMaxWidth(40);
 		deepWaterField.setTextFormatter(deepWaterFormatter);
 
-		
 		settingsContainer.add(chooseLabel, 0, 0);
 		settingsContainer.add(snowLabel, 0, 1);
 		settingsContainer.add(snowField, 1, 1);
@@ -177,7 +177,7 @@ public class ControlsController extends Controller {
 		settingsContainer.add(shallowWaterField, 1, 6);
 		settingsContainer.add(deepWaterLabel, 0, 7);
 		settingsContainer.add(deepWaterField, 1, 7);
-		settingsContainer.setPadding(new Insets(10,10,10,10));
+		settingsContainer.setPadding(new Insets(10, 10, 10, 10));
 	}
 
 	public void loadDiamondSquareTab() {
@@ -195,24 +195,24 @@ public class ControlsController extends Controller {
 			int beachParam = Integer.parseInt(beachField.getText());
 			int coastParam = Integer.parseInt(shallowWaterField.getText());
 			int oceanParam = Integer.parseInt(deepWaterField.getText());
-			getMainController().getMapController().generateDiamondSquare(snowParam, mountainParam, forestParam,
-					grassParam, beachParam, coastParam, oceanParam);
+			getMainController().getMapController().generateDiamondSquare(oceanParam, coastParam, beachParam, grassParam,
+					forestParam, snowParam, mountainParam);
 		});
 		settingsContainer.add(generateButton, 0, 9);
 	}
-	
+
 	public int getBirthRule() {
 		return Integer.parseInt(birthRuleField.getText());
 	}
-	
+
 	public int getDeathRule() {
 		return Integer.parseInt(deathRuleField.getText());
 	}
-	
+
 	public int getIterations() {
 		return Integer.parseInt(iterationsField.getText());
 	}
-	
+
 	public float getSurvivalChance() {
 		return Float.parseFloat(survivalField.getText());
 	}
@@ -231,15 +231,14 @@ public class ControlsController extends Controller {
 			float survival = 0f;
 			try {
 				survival = Float.parseFloat(survivalField.getText());
-		    }
-		    catch (NumberFormatException e) {
-		        Util.informationAlert("Wrong Format", "Please enter a valid decimal for survivalChance.");
-		    }
-			getMainController().getMapController().generateCellularAutomaton(
-					iterations, birthRule, deathRule, survival);
+			} catch (NumberFormatException e) {
+				Util.informationAlert("Wrong Format", "Please enter a valid decimal for survivalChance.");
+			}
+			getMainController().getMapController().generateCellularAutomaton(iterations, birthRule, deathRule,
+					survival);
 		});
 		settingsContainer.add(generateButton, 0, 9);
-		settingsContainer.setPadding(new Insets(10,10,10,10));
+		settingsContainer.setPadding(new Insets(10, 10, 10, 10));
 	}
 
 	@Override
@@ -248,15 +247,16 @@ public class ControlsController extends Controller {
 		plus.setText("+");
 		minus.setText("-");
 		plus.setOnAction(event -> {
-			if(getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 0) {
-				if(getMainController().getMapController().getDiamondSquare().mapPresent()) {
+			if (getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 0) {
+				if (getMainController().getMapController().getDiamondSquare().mapPresent()) {
 					Scale scale = new Scale();
 					scale.setX(1.5);
 					scale.setY(1.5);
 					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
 				}
-			} else if(getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 1) {
-				if(getMainController().getMapController().getCellularAutomaton().mapPresent()) {
+			} else if (getMainController().getMapController().getTabPane().getSelectionModel()
+					.getSelectedIndex() == 1) {
+				if (getMainController().getMapController().getCellularAutomaton().mapPresent()) {
 					Scale scale = new Scale();
 					scale.setX(1.5);
 					scale.setY(1.5);
@@ -265,15 +265,16 @@ public class ControlsController extends Controller {
 			}
 		});
 		minus.setOnAction(event -> {
-			if(getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 0) {
-				if(getMainController().getMapController().getDiamondSquare().mapPresent()) {
+			if (getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 0) {
+				if (getMainController().getMapController().getDiamondSquare().mapPresent()) {
 					Scale scale = new Scale();
 					scale.setX(0.5);
 					scale.setY(0.5);
 					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
 				}
-			} else if(getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 1) {
-				if(getMainController().getMapController().getCellularAutomaton().mapPresent()) {
+			} else if (getMainController().getMapController().getTabPane().getSelectionModel()
+					.getSelectedIndex() == 1) {
+				if (getMainController().getMapController().getCellularAutomaton().mapPresent()) {
 					Scale scale = new Scale();
 					scale.setX(0.5);
 					scale.setY(0.5);
@@ -282,21 +283,21 @@ public class ControlsController extends Controller {
 			}
 		});
 		filter = change -> {
-		    String text = change.getText();
+			String text = change.getText();
 
-		    if (text.matches("[0-9]*")) {
-		        return change;
-		    }
+			if (text.matches("[0-9]*")) {
+				return change;
+			}
 
-		    return null;
+			return null;
 		};
 		decimalFilter = change -> {
-		    String text = change.getText();
-		    if (text.matches("\\d*(\\.\\d*)?")) {
-		        return change;
-		    }
+			String text = change.getText();
+			if (text.matches("\\d*(\\.\\d*)?")) {
+				return change;
+			}
 
-		    return null;
+			return null;
 		};
 		TextFormatter<String> imageWidthFormatter = new TextFormatter<>(filter);
 		TextFormatter<String> imageHeightFormatter = new TextFormatter<>(filter);
@@ -306,17 +307,17 @@ public class ControlsController extends Controller {
 		mapSize.setTextFormatter(mapSizeFormatter);
 		loadDiamondSquareTab();
 	}
-	
+
 	public int getImageWidth() {
 		return Integer.parseInt(imageWidth.getText());
 	}
-	
+
 	public int getImageHeight() {
 		return Integer.parseInt(imageHeight.getText());
 	}
-	
+
 	public int getMapSize() {
 		return Integer.parseInt(mapSize.getText());
 	}
-	
+
 }

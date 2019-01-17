@@ -76,8 +76,8 @@ public class MapController extends Controller {
 		int imgWidth = getMainController().getControlsController().getImageWidth();
 		int imgHeight = getMainController().getControlsController().getImageHeight();
 		currentMap = diamondSquare.generateMap(mapSize);
-		Image mapImage = drawGround(currentMap, imgWidth, imgHeight, snowParam, mountainParam, forestParam, grassParam,
-				beachParam, coastParam, oceanParam);
+		Image mapImage = drawGround(currentMap, imgWidth, imgHeight, oceanParam, coastParam, beachParam, grassParam, forestParam, mountainParam,
+				snowParam);
 		currentView = new ImageView();
 
 		currentView.setImage(mapImage);
@@ -172,8 +172,8 @@ public class MapController extends Controller {
 	 * @param height Height of the picture. Optimum value: 10.000; Maximum value:
 	 *               18798
 	 */
-	public Image drawGround(int[][] map, int width, int height, int snowParam, int mountainParam, int forestParam,
-			int grassParam, int beachParam, int coastParam, int oceanParam) {
+	public Image drawGround(int[][] map, int width, int height, int oceanParam, int coastParam, int beachParam, int grassParam, int forestParam,
+			int snowParam, int mountainParam) {
 
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
@@ -207,14 +207,7 @@ public class MapController extends Controller {
 
 			for (int i = 0; i < map.length; i++) {
 				for (int j = 0; j < map.length; j++) {
-					if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum() && oceanParam > 0) // 15%
-																														// chance
-																														// to
-																														// turn
-																														// BLUE
-																														// =
-																														// deep
-																														// water
+					if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum() && oceanParam > 0) // 15% chance
 					{
 						ig2.drawImage(dw, i * 32, j * 32, null);
 					} else if (map[j][i] <= diamondSquare.getMinimum() + diamondSquare.getOceanSpectrum()
