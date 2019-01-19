@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import logic.CellularAutomaton;
 import logic.DiamondSquare;
+import logic.NoiseBased;
 import model.Model;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -41,6 +42,7 @@ public class MapController extends Controller {
 
 	private static DiamondSquare diamondSquare = new DiamondSquare();
 	private static CellularAutomaton cellularAutomaton = new CellularAutomaton();
+	private static NoiseBased noiseBased = new NoiseBased();
 	private static int[][] currentMap;
 	private ImageView currentView;
 	private static String SNOW_TILE = System.getProperty("user.dir") + "/resources/snow.jpg";
@@ -88,8 +90,20 @@ public class MapController extends Controller {
 		tab.setContent(scrollPane);
 	}
 
-	public void generateActorBased() {
-
+	public void generateNoiseBased() {
+		int mapSize = getMainController().getControlsController().getMapSize();
+		int imgWidth = getMainController().getControlsController().getImageWidth();
+		int imgHeight = getMainController().getControlsController().getImageHeight();
+		currentMap = noiseBased.generateMap(mapSize);
+		Image mapImage = drawNoiseMap(currentMap, imgWidth, imgHeight);
+		
+		currentView = new ImageView();
+		currentView.setImage(mapImage);
+		Tab tab = tabPane.getTabs().get(2);
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setContent(currentView);
+		scrollPane.setPadding(new Insets(50));
+		tab.setContent(scrollPane);
 	}
 
 	public void generateCellularAutomaton(int iterations, int birthRule, int deathRule, float survival) {
@@ -110,6 +124,43 @@ public class MapController extends Controller {
 		tab.setContent(scrollPane);
 	}
 
+	public Image drawNoiseMap(int[][] map, int width, int height) {
+
+		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		try {
+			BufferedImage wallSegment = null;
+			BufferedImage ground = null;
+
+			wallSegment = ImageIO.read(new File(MOUNTAIN_TILE));
+			ground = ImageIO.read(new File(FOREST_TILE));
+
+			Graphics2D ig2 = bi.createGraphics();
+
+			int mapHeight = map.length;
+			int mapWidth = map.length;
+
+			for (int i = 0; i < mapWidth; i++) {
+				for (int j = 0; j < mapHeight; j++) {
+					if (map[j][i] > 50) {
+						ig2.drawImage(ground, i * 45, j * 45, null);
+					} else {
+						ig2.drawImage(wallSegment, i * 45, j * 45, null);
+					}
+				}
+			}
+
+			ig2.dispose();
+
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+
+		Image image = new Util().convertBufferedImage(bi);
+
+		return image;
+	}
+	
 	/**
 	 * 
 	 * Draws the height map for the cellular automaton onto an image.
@@ -289,6 +340,10 @@ public class MapController extends Controller {
 	public DiamondSquare getDiamondSquare() {
 		return diamondSquare;
 	}
+	
+	public NoiseBased getNoiseBased() {
+		return noiseBased;
+	}
 
 	/**
 	 * Gets the parameters of the Diamond Square algorithm in ascending order of the corresponding parameter's
@@ -311,6 +366,9 @@ public class MapController extends Controller {
 				}
 				if ((int) newValue == 1) {
 					getMainController().getControlsController().loadCellularAutomatonTab();
+				}
+				if ((int) newValue == 2) {
+					getMainController().getControlsController().loadNoiseBasedTab();
 				}
 			}
 		});

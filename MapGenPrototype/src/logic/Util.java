@@ -354,5 +354,15 @@ public class Util {
 			System.out.println("");
 		}
 	}
+	
+	public void printMap(double[][] map) // this prints the 2D array.
+	{
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map.length; j++) {
+				System.out.print(map[j][i] + "\t");
+			}
+			System.out.println("");
+		}
+	}
 
 }

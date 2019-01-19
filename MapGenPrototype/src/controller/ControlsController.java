@@ -104,6 +104,10 @@ public class ControlsController extends Controller {
 		settingsContainer.add(iterationsField, 1, 4);
 	}
 
+	private void initNoiseBasedParamFields() {
+		
+	}
+	
 	/**
 	 * 
 	 */
@@ -217,6 +221,20 @@ public class ControlsController extends Controller {
 		return Float.parseFloat(survivalField.getText());
 	}
 
+	public void loadNoiseBasedTab() {
+		settingsContainer.getChildren().clear();
+		initNoiseBasedParamFields();
+		generateButton = new Button("Generate");
+		generateButton.setPrefWidth(120);
+		generateButton.setPrefHeight(120);
+		generateButton.setFont(new Font(20));
+		generateButton.setOnAction(event -> {
+			getMainController().getMapController().generateNoiseBased();
+		});
+		settingsContainer.add(generateButton, 0, 9);
+		settingsContainer.setPadding(new Insets(10, 10, 10, 10));
+	}
+	
 	public void loadCellularAutomatonTab() {
 		settingsContainer.getChildren().clear();
 		initCellularAutomatonParamFields();
@@ -262,6 +280,14 @@ public class ControlsController extends Controller {
 					scale.setY(1.5);
 					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
 				}
+			} else if(getMainController().getMapController().getTabPane().getSelectionModel()
+					.getSelectedIndex() == 2) {
+				if (getMainController().getMapController().getNoiseBased().mapPresent()) {
+					Scale scale = new Scale();
+					scale.setX(1.5);
+					scale.setY(1.5);
+					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+				}
 			}
 		});
 		minus.setOnAction(event -> {
@@ -275,6 +301,14 @@ public class ControlsController extends Controller {
 			} else if (getMainController().getMapController().getTabPane().getSelectionModel()
 					.getSelectedIndex() == 1) {
 				if (getMainController().getMapController().getCellularAutomaton().mapPresent()) {
+					Scale scale = new Scale();
+					scale.setX(0.5);
+					scale.setY(0.5);
+					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+				}
+			} else if(getMainController().getMapController().getTabPane().getSelectionModel()
+					.getSelectedIndex() == 2) {
+				if (getMainController().getMapController().getNoiseBased().mapPresent()) {
 					Scale scale = new Scale();
 					scale.setX(0.5);
 					scale.setY(0.5);
