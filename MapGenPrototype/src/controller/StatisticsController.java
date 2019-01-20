@@ -226,7 +226,6 @@ public class StatisticsController extends Controller {
 				collectiveMapSamples.put(new Tuple(j, i), currentContainer);
 			}
 		}
-		System.out.println(collectiveMapSamples);
 
 		return collectiveMapSamples;
 	}
@@ -251,7 +250,7 @@ public class StatisticsController extends Controller {
 					params.get(4), params.get(5), params.get(6));
 
 			double maximumAbsPos = 0;
-			double maximumAreaCount = 0;
+			double maximumDispersion = 0;
 
 			XYChart.Series series1 = new XYChart.Series();
 			XYChart.Series series2 = new XYChart.Series();
@@ -274,33 +273,41 @@ public class StatisticsController extends Controller {
 					ds.generateMap((int) size);
 					List<Double> absPos = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
 							.calcAbsolutePositionsAverage();
-					List<Double> areaCount = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
-							.calcNumberOfAreas();
+					List<Double> dispersion = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem()).calcDispersion();
 					double maxPos = Collections.max(absPos);
 					if (maxPos > maximumAbsPos) {
 						maximumAbsPos = maxPos;
 					}
+					
+					double maxDispersion = Collections.max(dispersion);
+					if (maxDispersion > maximumDispersion) {
+						maximumDispersion = maxDispersion;
+					}
+					/*
+					List<Double> areaCount = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
+							.calcNumberOfAreas();
 					double maxCount = Collections.max(areaCount);
 					if (maxCount > maximumAreaCount) {
 						maximumAreaCount = maxCount;
-					}
-					series1.getData().add(new XYChart.Data(absPos.get(0), areaCount.get(0)));
-					series2.getData().add(new XYChart.Data(absPos.get(1), areaCount.get(1)));
-					series3.getData().add(new XYChart.Data(absPos.get(2), areaCount.get(2)));
-					series4.getData().add(new XYChart.Data(absPos.get(3), areaCount.get(3)));
-					series5.getData().add(new XYChart.Data(absPos.get(4), areaCount.get(4)));
-					series6.getData().add(new XYChart.Data(absPos.get(5), areaCount.get(5)));
-					series7.getData().add(new XYChart.Data(absPos.get(6), areaCount.get(6)));
+					}*/
+					System.out.println(absPos.get(0) +" "+ absPos.get(1) +" "+ absPos.get(2) +" "+ absPos.get(3) +" "+ absPos.get(4));
+					series1.getData().add(new XYChart.Data(absPos.get(0), dispersion.get(0)));
+					series2.getData().add(new XYChart.Data(absPos.get(1), dispersion.get(1)));
+					series3.getData().add(new XYChart.Data(absPos.get(2), dispersion.get(2)));
+					series4.getData().add(new XYChart.Data(absPos.get(3), dispersion.get(3)));
+					series5.getData().add(new XYChart.Data(absPos.get(4), dispersion.get(4)));
+					series6.getData().add(new XYChart.Data(absPos.get(5), dispersion.get(5)));
+					series7.getData().add(new XYChart.Data(absPos.get(6), dispersion.get(6)));
 				}
 			}
 
 			NumberAxis caXAxis = new NumberAxis(0, maximumAbsPos, 0);
 			caXAxis.setLabel("Absolute Positions");
 
-			NumberAxis caYAxis = new NumberAxis(0, maximumAreaCount, 0);
-			caYAxis.setLabel("Area Counts");
+			NumberAxis caYAxis = new NumberAxis(0, maximumDispersion, 0);
+			caYAxis.setLabel("Dispersion");
 
-			scatterChart = new ScatterChart(xAxis, yAxis);
+			scatterChart = new ScatterChart(caXAxis, caYAxis);
 
 			// Setting the data to scatter chart
 			scatterChart.getData().addAll(series1, series2, series3, series4, series5, series6, series7);
