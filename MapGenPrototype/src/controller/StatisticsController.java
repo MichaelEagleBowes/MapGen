@@ -248,7 +248,7 @@ public class StatisticsController extends Controller {
 			List<Integer> params = getMainController().getMapController().getParametersDiamondSquare();
 			DiamondSquare ds = new DiamondSquare(params.get(0), params.get(1), params.get(2), params.get(3),
 					params.get(4), params.get(5), params.get(6));
-
+			
 			double maximumAbsPos = 0;
 			double maximumDispersion = 0;
 
@@ -271,9 +271,9 @@ public class StatisticsController extends Controller {
 				double size = Math.pow(2, j) + 1;
 				for (int i = 0; i < 10; i++) {
 					ds.generateMap((int) size);
-					List<Double> absPos = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
+					List<Double> absPos = ds
 							.calcAbsolutePositionsAverage();
-					List<Double> dispersion = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem()).calcDispersion();
+					List<Double> dispersion = ds.calcDispersion();
 					double maxPos = Collections.max(absPos);
 					if (maxPos > maximumAbsPos) {
 						maximumAbsPos = maxPos;
