@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
 
 <BorderPane minWidth="800" minHeight="550" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
 fx:controller="controller.StatisticsController">
@@ -25,8 +26,9 @@ fx:controller="controller.StatisticsController">
     <HBox spacing="10">
 	<ComboBox fx:id="algorithmSelect" />
 	<Button fx:id="currentMapStatisticsBtn" mnemonicParsing="false" text="Show Statistics of Current Map" />
-	<Button fx:id="controllabilityBtn" mnemonicParsing="false" text="Show Controllability" />
 	<Button fx:id="expressiveRangeBtn" mnemonicParsing="false" text="Show Expressive Range" />
+	<Label text="Expressivity Samples: " />
+	<TextField fx:id="sampleSizeField"  prefWidth="70" text="100" />
    </HBox>
    	<Separator orientation="HORIZONTAL" />
    </VBox>

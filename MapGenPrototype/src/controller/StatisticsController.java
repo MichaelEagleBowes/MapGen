@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 
 import javafx.application.HostServices;
 import javafx.application.Platform;
@@ -22,6 +23,9 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
@@ -47,7 +51,7 @@ public class StatisticsController extends Controller {
 	@FXML
 	private Button expressiveRangeBtn;
 	@FXML
-	private Button controllabilityBtn;
+	private TextField sampleSizeField;
 	private HashMap<ProceduralAlgorithm, int[][]> maps = new HashMap<ProceduralAlgorithm, int[][]>();
 	private BarChart<String, Double> expressivityBarChart;
 
@@ -90,49 +94,50 @@ public class StatisticsController extends Controller {
 			// getMainController().getMapController().getParametersDiamondSquare();
 			HashMap<Integer, List<Double>> absPos = ((DiamondSquare) algorithmSelect.getSelectionModel()
 					.getSelectedItem()).calcAbsolutePositions();
-			List<Double> areaCount = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
-					.calcNumberOfAreas();
+			List<Double> trace = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem()).calcDispersion();
+			//List<Double> areaCount = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
+			//		.calcNumberOfAreas();
 			// List<Double> relPos = DiamondSquare.calcRelativePositions();
 
 			XYChart.Series<String, Double> series1 = new XYChart.Series<>();
 			series1.setName("Snow");
-			series1.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(6)));
+			series1.getData().add(new XYChart.Data<>("Dispersion", trace.get(0)));
 			series1.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(5).get(0)));
 			series1.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(5).get(1)));
 
 			XYChart.Series<String, Double> series2 = new XYChart.Series<>();
 			series2.setName("Mountain");
-			series2.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(5)));
+			series2.getData().add(new XYChart.Data<>("Dispersion", trace.get(1)));
 			series2.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(6).get(0)));
 			series2.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(6).get(1)));
 
 			XYChart.Series<String, Double> series3 = new XYChart.Series<>();
 			series3.setName("Forest");
-			series3.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(4)));
+			series3.getData().add(new XYChart.Data<>("Dispersion", trace.get(2)));
 			series3.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(4).get(0)));
 			series3.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(4).get(1)));
 
 			XYChart.Series<String, Double> series4 = new XYChart.Series<>();
 			series4.setName("Grass");
-			series4.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(3)));
+			series4.getData().add(new XYChart.Data<>("Dispersion", trace.get(3)));
 			series4.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(3).get(0)));
 			series4.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(3).get(1)));
 
 			XYChart.Series<String, Double> series5 = new XYChart.Series<>();
 			series5.setName("Beach");
-			series5.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(2)));
+			series5.getData().add(new XYChart.Data<>("Dispersion", trace.get(4)));
 			series5.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(2).get(0)));
 			series5.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(2).get(1)));
 
 			XYChart.Series<String, Double> series6 = new XYChart.Series<>();
 			series6.setName("Coast");
-			series6.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(1)));
+			series6.getData().add(new XYChart.Data<>("Dispersion", trace.get(5)));
 			series6.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(1).get(0)));
 			series6.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(1).get(1)));
 
 			XYChart.Series<String, Double> series7 = new XYChart.Series<>();
 			series7.setName("Ocean");
-			series7.getData().add(new XYChart.Data<>("Separate Areas", areaCount.get(0)));
+			series7.getData().add(new XYChart.Data<>("Dispersion", trace.get(6)));
 			series7.getData().add(new XYChart.Data<>("Distance X", (double) absPos.get(0).get(0)));
 			series7.getData().add(new XYChart.Data<>("Distance Y", (double) absPos.get(0).get(1)));
 
@@ -266,10 +271,10 @@ public class StatisticsController extends Controller {
 			series5.setName("Forest");
 			series6.setName("Mountain");
 			series7.setName("Snow");
-
-			for (int j = 1; j < 11; j++) {
-				double size = Math.pow(2, j) + 1;
-				for (int i = 0; i < 10; i++) {
+			
+			double size = Math.pow(2, 6) + 1;
+			int sampleSize = Integer.parseInt(sampleSizeField.getText());
+				for (int i = 0; i < sampleSize; i++) {
 					ds.generateMap((int) size);
 					List<Double> absPos = ds
 							.calcAbsolutePositionsAverage();
@@ -298,7 +303,6 @@ public class StatisticsController extends Controller {
 					series5.getData().add(new XYChart.Data(absPos.get(4), dispersion.get(4)));
 					series6.getData().add(new XYChart.Data(absPos.get(5), dispersion.get(5)));
 					series7.getData().add(new XYChart.Data(absPos.get(6), dispersion.get(6)));
-				}
 			}
 
 			NumberAxis caXAxis = new NumberAxis(0, maximumAbsPos, 0);
@@ -311,7 +315,7 @@ public class StatisticsController extends Controller {
 
 			// Setting the data to scatter chart
 			scatterChart.getData().addAll(series1, series2, series3, series4, series5, series6, series7);
-
+			
 		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
 			CellularAutomaton ca = new CellularAutomaton(getMainController().getControlsController().getIterations(),
 					getMainController().getControlsController().getBirthRule(),
@@ -338,14 +342,13 @@ public class StatisticsController extends Controller {
 					series.getData().add(new XYChart.Data(relSpace, areaCount));
 				}
 			}
-
-			NumberAxis caXAxis = new NumberAxis(0, maximumRelativeSpace, 0);
-			caXAxis.setLabel("Relative Open Space");
+			
+			NumberAxis caXAxis = new NumberAxis("Relative Open Space", 0, maximumRelativeSpace, 0);
 
 			NumberAxis caYAxis = new NumberAxis(0, maximumNumberOfAreas, 0);
 			caYAxis.setLabel("Number of Areas");
 
-			scatterChart = new ScatterChart(xAxis, yAxis);
+			scatterChart = new ScatterChart(caXAxis, caYAxis);
 
 			// Setting the data to scatter chart
 			scatterChart.getData().addAll(series);
@@ -395,10 +398,18 @@ public class StatisticsController extends Controller {
 				Util.informationAlert("No Map available", "Please generate a map for the selected Algorithm first.");
 			}
 		});
+		
+		UnaryOperator<Change> filter = change -> {
+			String text = change.getText();
 
-		controllabilityBtn.setOnAction(event -> {
+			if (text.matches("[0-9]*")) {
+				return change;
+			}
 
-		});
+			return null;
+		};
+		TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+		sampleSizeField.setTextFormatter(textFormatter);
 	}
 
 	@Override

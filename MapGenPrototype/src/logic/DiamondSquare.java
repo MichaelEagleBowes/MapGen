@@ -346,6 +346,8 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	/**
 	 * 
 	 * Calculates the trace for an N x N double Array representing a matrix.
+	 * The trace is divided by the length of the matrix for normalization of the values, so
+	 * that the values for different map sizes can be compared.
 	 * 
 	 * @param covarianceMatrix
 	 * @return The trace, i.e. the sum of complex eigenvalues in the 2D array.

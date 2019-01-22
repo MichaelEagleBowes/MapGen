@@ -1,0 +1,56 @@
+.chart-vertical-grid-lines {
+    -fx-stroke: transparent;
+}
+.chart-horizontal-grid-lines {
+    -fx-stroke: transparent;
+}
+
+.chart-legend {
+   -fx-background-color:  #7290A3;
+}
+
+.chart-plot-background {
+    -fx-background-color: #7290A3;
+}
+
+.default-color0.chart-symbol {
+    -fx-background-color: #0024C4;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+}
+
+.default-color1.chart-symbol {
+    -fx-background-color: #00ABE1;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+}
+
+.default-color2.chart-symbol {
+    -fx-background-color: #F7F29A;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+}
+
+.default-color3.chart-symbol {
+    -fx-background-color: lightgreen;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+}
+
+.default-color4.chart-symbol {
+    -fx-background-color: darkgreen;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+}
+
+.default-color5.chart-symbol {
+    -fx-background-color: lightgray;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+}
+
+.default-color6.chart-symbol {
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+}

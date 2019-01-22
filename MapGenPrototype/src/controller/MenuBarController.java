@@ -87,7 +87,7 @@ public class MenuBarController extends Controller {
 	private void openWindow(String fxmlPath, String title, int minWidth, int minHeight) {
 		Stage stage = Util.loadFxml(fxmlPath, null, null, getMainController());
 		stage.getScene().getStylesheets().add(getClass().getResource("barChart.css").toExternalForm());
-		stage.getScene().getStylesheets().add(getClass().getResource("scatterChartIcon.css").toExternalForm());
+		stage.getScene().getStylesheets().add(getClass().getResource("scatterChartDS.css").toExternalForm());
 		Util.showStage(stage, title, minWidth, minHeight);
 	}
 

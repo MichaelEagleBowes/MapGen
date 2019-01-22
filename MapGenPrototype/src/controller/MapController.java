@@ -44,7 +44,9 @@ public class MapController extends Controller {
 	private static CellularAutomaton cellularAutomaton = new CellularAutomaton();
 	private static NoiseBased noiseBased = new NoiseBased();
 	private static int[][] currentMap;
-	private ImageView currentView;
+	private ImageView diamondSquareView;
+	private ImageView cellularAutomatonView;
+	private ImageView noiseBasedView;
 	private static String SNOW_TILE = System.getProperty("user.dir") + "/resources/snow.jpg";
 	private static String MOUNTAIN_TILE = System.getProperty("user.dir") + "/resources/mountain.jpg";
 	private static String GRASS_TILE = System.getProperty("user.dir") + "/resources/grass.jpg";
@@ -80,12 +82,12 @@ public class MapController extends Controller {
 		currentMap = diamondSquare.generateMap(mapSize);
 		Image mapImage = drawGround(currentMap, imgWidth, imgHeight, oceanParam, coastParam, beachParam, grassParam, forestParam, mountainParam,
 				snowParam);
-		currentView = new ImageView();
+		diamondSquareView = new ImageView();
 
-		currentView.setImage(mapImage);
+		diamondSquareView.setImage(mapImage);
 		Tab tab = tabPane.getTabs().get(0);
 		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setContent(currentView);
+		scrollPane.setContent(diamondSquareView);
 		scrollPane.setPadding(new Insets(50));
 		tab.setContent(scrollPane);
 	}
@@ -97,11 +99,11 @@ public class MapController extends Controller {
 		currentMap = noiseBased.generateMap(mapSize);
 		Image mapImage = drawNoiseMap(currentMap, imgWidth, imgHeight);
 		
-		currentView = new ImageView();
-		currentView.setImage(mapImage);
+		noiseBasedView = new ImageView();
+		noiseBasedView.setImage(mapImage);
 		Tab tab = tabPane.getTabs().get(2);
 		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setContent(currentView);
+		scrollPane.setContent(noiseBasedView);
 		scrollPane.setPadding(new Insets(50));
 		tab.setContent(scrollPane);
 	}
@@ -113,14 +115,15 @@ public class MapController extends Controller {
 		int imgHeight = getMainController().getControlsController().getImageHeight();
 		currentMap = cellularAutomaton.generateMap(mapSize);
 		Image mapImage = drawCave(currentMap, imgWidth, imgHeight);
-		currentView = new ImageView();
+		cellularAutomatonView = new ImageView();
 
-		currentView.setImage(mapImage);
+		cellularAutomatonView.setImage(mapImage);
 		Tab tab = tabPane.getTabs().get(1);
 		ScrollPane scrollPane = new ScrollPane();
 		final Separator sepVert2 = new Separator();
 		sepVert2.setOrientation(Orientation.VERTICAL);
-		scrollPane.setContent(currentView);
+		scrollPane.setContent(cellularAutomatonView);
+		scrollPane.setPadding(new Insets(50));
 		tab.setContent(scrollPane);
 	}
 
@@ -329,10 +332,18 @@ public class MapController extends Controller {
 		return tabPane;
 	}
 
-	public ImageView getCurrentView() {
-		return currentView;
+	public ImageView getDiamondSquareView() {
+		return diamondSquareView;
 	}
-
+	
+	public ImageView getCellularAutomatonView() {
+		return cellularAutomatonView;
+	}
+	
+	public ImageView getNoiseBasedView() {
+		return noiseBasedView;
+	}
+	
 	public CellularAutomaton getCellularAutomaton() {
 		return cellularAutomaton;
 	}

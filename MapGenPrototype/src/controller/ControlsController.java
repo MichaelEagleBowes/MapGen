@@ -270,7 +270,7 @@ public class ControlsController extends Controller {
 					Scale scale = new Scale();
 					scale.setX(1.5);
 					scale.setY(1.5);
-					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+					getMainController().getMapController().getDiamondSquareView().getTransforms().add(scale);
 				}
 			} else if (getMainController().getMapController().getTabPane().getSelectionModel()
 					.getSelectedIndex() == 1) {
@@ -278,7 +278,7 @@ public class ControlsController extends Controller {
 					Scale scale = new Scale();
 					scale.setX(1.5);
 					scale.setY(1.5);
-					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+					getMainController().getMapController().getCellularAutomatonView().getTransforms().add(scale);
 				}
 			} else if(getMainController().getMapController().getTabPane().getSelectionModel()
 					.getSelectedIndex() == 2) {
@@ -286,7 +286,7 @@ public class ControlsController extends Controller {
 					Scale scale = new Scale();
 					scale.setX(1.5);
 					scale.setY(1.5);
-					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+					getMainController().getMapController().getNoiseBasedView().getTransforms().add(scale);
 				}
 			}
 		});
@@ -296,7 +296,7 @@ public class ControlsController extends Controller {
 					Scale scale = new Scale();
 					scale.setX(0.5);
 					scale.setY(0.5);
-					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+					getMainController().getMapController().getDiamondSquareView().getTransforms().add(scale);
 				}
 			} else if (getMainController().getMapController().getTabPane().getSelectionModel()
 					.getSelectedIndex() == 1) {
@@ -304,7 +304,7 @@ public class ControlsController extends Controller {
 					Scale scale = new Scale();
 					scale.setX(0.5);
 					scale.setY(0.5);
-					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+					getMainController().getMapController().getCellularAutomatonView().getTransforms().add(scale);
 				}
 			} else if(getMainController().getMapController().getTabPane().getSelectionModel()
 					.getSelectedIndex() == 2) {
@@ -312,7 +312,7 @@ public class ControlsController extends Controller {
 					Scale scale = new Scale();
 					scale.setX(0.5);
 					scale.setY(0.5);
-					getMainController().getMapController().getCurrentView().getTransforms().add(scale);
+					getMainController().getMapController().getNoiseBasedView().getTransforms().add(scale);
 				}
 			}
 		});
