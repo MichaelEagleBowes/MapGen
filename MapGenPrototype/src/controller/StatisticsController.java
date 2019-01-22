@@ -295,7 +295,6 @@ public class StatisticsController extends Controller {
 					if (maxCount > maximumAreaCount) {
 						maximumAreaCount = maxCount;
 					}*/
-					System.out.println(absPos.get(0) +" "+ absPos.get(1) +" "+ absPos.get(2) +" "+ absPos.get(3) +" "+ absPos.get(4));
 					series1.getData().add(new XYChart.Data(absPos.get(0), dispersion.get(0)));
 					series2.getData().add(new XYChart.Data(absPos.get(1), dispersion.get(1)));
 					series3.getData().add(new XYChart.Data(absPos.get(2), dispersion.get(2)));

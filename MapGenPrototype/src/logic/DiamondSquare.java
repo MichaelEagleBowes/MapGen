@@ -375,7 +375,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	private double[][] createCovarianceMatrix(int index, List<Double> xValues, List<Double> yValues) {
 		
 		int root = (int)Math.floor(Math.sqrt(xValues.size()));
-		System.out.println(root);
 		double xMean = coordinateMeans.get(index).get(0);
 		double yMean = coordinateMeans.get(index).get(1);
 		double[][] covarianceMatrix = new double[root][root];
