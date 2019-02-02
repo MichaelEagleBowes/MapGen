@@ -75,24 +75,24 @@ public class FloodFillAlgorithm implements Runnable {
 			queue.add(new Tile(x, y, testMap[x][y]));
 
 			while (!queue.isEmpty()) {
-				Tile p = queue.remove();
-				if (testMap[p.x][p.y] < threshold) {
-					testMap[p.x][p.y] = threshold;
+				Tile t = queue.remove();
+				if (testMap[t.x][t.y] < threshold) {
+					testMap[t.x][t.y] = threshold;
 					count = true;
 					xCoordinates.add(x);
 					yCoordinates.add(y);
 					tileCount++;
-					if (p.x > 0) {
-						echo1 = queue.add(new Tile(p.x - 1, p.y, testMap[p.x - 1][p.y]));
+					if (t.x > 0) {
+						echo1 = queue.add(new Tile(t.x - 1, t.y, testMap[t.x - 1][t.y]));
 					}
-					if (p.y > 0) {
-						echo3 = queue.add(new Tile(p.x, p.y - 1, testMap[p.x][p.y - 1]));
+					if (t.y > 0) {
+						echo3 = queue.add(new Tile(t.x, t.y - 1, testMap[t.x][t.y - 1]));
 					}
-					if (p.x < testMap.length - 1) {
-						echo2 = queue.add(new Tile(p.x + 1, p.y, testMap[p.x + 1][p.y]));
+					if (t.x < testMap.length - 1) {
+						echo2 = queue.add(new Tile(t.x + 1, t.y, testMap[t.x + 1][t.y]));
 					}
-					if (p.y < testMap.length - 1) {
-						echo4 = queue.add(new Tile(p.x, p.y + 1, testMap[p.x][p.y + 1]));
+					if (t.y < testMap.length - 1) {
+						echo4 = queue.add(new Tile(t.x, t.y + 1, testMap[t.x][t.y + 1]));
 					}
 					for (int coord : xCoordinates) {
 						avgXCoordinate += coord;
@@ -122,24 +122,24 @@ public class FloodFillAlgorithm implements Runnable {
 			queue.add(new Tile(x, y, testMap[x][y]));
 
 			while (!queue.isEmpty()) {
-				Tile p = queue.remove();
-				if (testMap[p.x][p.y] < upperBound && testMap[p.x][p.y] >= lowerBound) {
-					testMap[p.x][p.y] = upperBound;
+				Tile t = queue.remove();
+				if (testMap[t.x][t.y] < upperBound && testMap[t.x][t.y] >= lowerBound) {
+					testMap[t.x][t.y] = upperBound;
 					count = true;
 					xCoordinates.add(x);
 					yCoordinates.add(y);
 					tileCount++;
-					if (p.x > 0) {
-						echo1 = queue.add(new Tile(p.x - 1, p.y, testMap[p.x - 1][p.y]));
+					if (t.x > 0) {
+						echo1 = queue.add(new Tile(t.x - 1, t.y, testMap[t.x - 1][t.y]));
 					}
-					if (p.y > 0) {
-						echo3 = queue.add(new Tile(p.x, p.y - 1, testMap[p.x][p.y - 1]));
+					if (t.y > 0) {
+						echo3 = queue.add(new Tile(t.x, t.y - 1, testMap[t.x][t.y - 1]));
 					}
-					if (p.x < testMap.length - 1) {
-						echo2 = queue.add(new Tile(p.x + 1, p.y, testMap[p.x + 1][p.y]));
+					if (t.x < testMap.length - 1) {
+						echo2 = queue.add(new Tile(t.x + 1, t.y, testMap[t.x + 1][t.y]));
 					}
-					if (p.y < testMap.length - 1) {
-						echo4 = queue.add(new Tile(p.x, p.y + 1, testMap[p.x][p.y + 1]));
+					if (t.y < testMap.length - 1) {
+						echo4 = queue.add(new Tile(t.x, t.y + 1, testMap[t.x][t.y + 1]));
 					}
 					for (int coord : xCoordinates) {
 						avgXCoordinate += coord;

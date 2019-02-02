@@ -73,7 +73,7 @@ public class MapController extends Controller {
 	 *
 	 */
 	public void generateDiamondSquare(int oceanParam, int coastParam, int beachParam, int grassParam, int forestParam,
-			int snowParam, int mountainParam) {
+			int mountainParam, int snowParam) {
 		diamondSquare = new DiamondSquare(oceanParam, coastParam, beachParam, grassParam, forestParam, mountainParam,
 				snowParam);
 		int mapSize = getMainController().getControlsController().getMapSize();
