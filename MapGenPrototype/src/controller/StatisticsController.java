@@ -13,7 +13,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -22,6 +24,8 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -35,6 +39,7 @@ import logic.DiamondSquare;
 import logic.ProceduralAlgorithm;
 import model.MapContainer;
 import model.MapType;
+import util.CustomProgressBar;
 import util.HeatMap;
 import util.Triple;
 import util.Tuple;
@@ -54,7 +59,10 @@ public class StatisticsController extends Controller {
 	private TextField sampleSizeField;
 	private HashMap<ProceduralAlgorithm, int[][]> maps = new HashMap<ProceduralAlgorithm, int[][]>();
 	private BarChart<String, Double> expressivityBarChart;
-
+	private static String STATISTICS_PROGRESS = "/resources/statistics-progress.fxml";
+	@FXML
+	ProgressController progressController;
+	
 	/**
 	 * 
 	 * Fills the BarChart with the statistics of the currently loaded map of the
@@ -94,9 +102,11 @@ public class StatisticsController extends Controller {
 			// getMainController().getMapController().getParametersDiamondSquare();
 			HashMap<Integer, List<Double>> absPos = ((DiamondSquare) algorithmSelect.getSelectionModel()
 					.getSelectedItem()).calcAbsolutePositions();
-			List<Double> trace = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem()).calcDispersion();
-			//List<Double> areaCount = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
-			//		.calcNumberOfAreas();
+			List<Double> trace = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
+					.calcDispersion();
+			// List<Double> areaCount = ((DiamondSquare)
+			// algorithmSelect.getSelectionModel().getSelectedItem())
+			// .calcNumberOfAreas();
 			// List<Double> relPos = DiamondSquare.calcRelativePositions();
 
 			XYChart.Series<String, Double> series1 = new XYChart.Series<>();
@@ -253,7 +263,7 @@ public class StatisticsController extends Controller {
 			List<Integer> params = getMainController().getMapController().getParametersDiamondSquare();
 			DiamondSquare ds = new DiamondSquare(params.get(0), params.get(1), params.get(2), params.get(3),
 					params.get(4), params.get(5), params.get(6));
-			
+
 			double maximumAbsPos = 0;
 			double maximumDispersion = 0;
 
@@ -271,39 +281,39 @@ public class StatisticsController extends Controller {
 			series5.setName("Forest");
 			series6.setName("Mountain");
 			series7.setName("Snow");
-			
-			double size = Math.pow(2, 6) + 1;
-			int sampleSize = Integer.parseInt(sampleSizeField.getText());
-				for (int i = 0; i < sampleSize; i++) {
-					ds.generateMap((int) size);
-					List<Double> absPos = ds
-							.calcAbsolutePositionsAverage();
-					List<Double> dispersion = ds.calcDispersion();
-					double maxPos = Collections.max(absPos);
-					if (maxPos > maximumAbsPos) {
-						maximumAbsPos = maxPos;
-					}
-					
-					double maxDispersion = Collections.max(dispersion);
-					if (maxDispersion > maximumDispersion) {
-						maximumDispersion = maxDispersion;
-					}
-					/*
-					List<Double> areaCount = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
-							.calcNumberOfAreas();
-					double maxCount = Collections.max(areaCount);
-					if (maxCount > maximumAreaCount) {
-						maximumAreaCount = maxCount;
-					}*/
-					series1.getData().add(new XYChart.Data(absPos.get(0), dispersion.get(0)));
-					series2.getData().add(new XYChart.Data(absPos.get(1), dispersion.get(1)));
-					series3.getData().add(new XYChart.Data(absPos.get(2), dispersion.get(2)));
-					series4.getData().add(new XYChart.Data(absPos.get(3), dispersion.get(3)));
-					series5.getData().add(new XYChart.Data(absPos.get(4), dispersion.get(4)));
-					series6.getData().add(new XYChart.Data(absPos.get(5), dispersion.get(5)));
-					series7.getData().add(new XYChart.Data(absPos.get(6), dispersion.get(6)));
-			}
 
+			double size = getMainController().getControlsController().getMapSize();
+			int sampleSize = Integer.parseInt(sampleSizeField.getText());
+			//showRunningWindow();
+			//new Thread() {
+				//public void run() {
+					for (int i = 0; i < sampleSize; i++) {
+						//final double step = i;
+						//Platform.runLater(() -> progressController.getProgressBar().setProgress(step / sampleSize));
+
+						ds.generateMap((int) size);
+						List<Double> absPos = ds.calcAbsolutePositionsAverage();
+						List<Double> dispersion = ds.calcDispersion();
+						double maxPos = Collections.max(absPos);
+						System.out.println(maxPos);
+						if (maxPos > maximumAbsPos) {
+							maximumAbsPos = maxPos;
+						}
+
+						double maxDispersion = Collections.max(dispersion);
+						if (maxDispersion > maximumDispersion) {
+							maximumDispersion = maxDispersion;
+						}
+						series1.getData().add(new XYChart.Data(absPos.get(0), dispersion.get(0)));
+						series2.getData().add(new XYChart.Data(absPos.get(1), dispersion.get(1)));
+						series3.getData().add(new XYChart.Data(absPos.get(2), dispersion.get(2)));
+						series4.getData().add(new XYChart.Data(absPos.get(3), dispersion.get(3)));
+						series5.getData().add(new XYChart.Data(absPos.get(4), dispersion.get(4)));
+						series6.getData().add(new XYChart.Data(absPos.get(5), dispersion.get(5)));
+						series7.getData().add(new XYChart.Data(absPos.get(6), dispersion.get(6)));
+					}
+				//}
+			//}.start();
 			NumberAxis caXAxis = new NumberAxis(0, maximumAbsPos, 0);
 			caXAxis.setLabel("Absolute Positions");
 
@@ -314,7 +324,7 @@ public class StatisticsController extends Controller {
 
 			// Setting the data to scatter chart
 			scatterChart.getData().addAll(series1, series2, series3, series4, series5, series6, series7);
-			
+
 		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
 			CellularAutomaton ca = new CellularAutomaton(getMainController().getControlsController().getIterations(),
 					getMainController().getControlsController().getBirthRule(),
@@ -330,7 +340,7 @@ public class StatisticsController extends Controller {
 				double size = Math.pow(2, j) + 1;
 				for (int i = 0; i < 10; i++) {
 					ca.generateMap((int) size);
-					double relSpace = ca.calcRelativeOpenSpace(); 
+					double relSpace = ca.calcRelativeOpenSpace();
 					if (relSpace > maximumRelativeSpace) {
 						maximumRelativeSpace = relSpace;
 					}
@@ -341,7 +351,7 @@ public class StatisticsController extends Controller {
 					series.getData().add(new XYChart.Data(relSpace, areaCount));
 				}
 			}
-			
+
 			NumberAxis caXAxis = new NumberAxis("Relative Open Space", 0, maximumRelativeSpace, 0);
 
 			NumberAxis caYAxis = new NumberAxis(0, maximumNumberOfAreas, 0);
@@ -354,6 +364,13 @@ public class StatisticsController extends Controller {
 		}
 
 		return scatterChart;
+	}
+
+	private void showRunningWindow() {
+		Stage stage = Util.loadFxml(STATISTICS_PROGRESS, null, null, getMainController());
+		progressController.getProgressBar().prefWidthProperty().bind(getStage().widthProperty().
+				subtract(25));
+		Util.showStage(stage, "Progress", 420, 160);
 	}
 
 	private void createHeatMap() {
@@ -397,7 +414,7 @@ public class StatisticsController extends Controller {
 				Util.informationAlert("No Map available", "Please generate a map for the selected Algorithm first.");
 			}
 		});
-		
+
 		UnaryOperator<Change> filter = change -> {
 			String text = change.getText();
 
@@ -414,6 +431,7 @@ public class StatisticsController extends Controller {
 	@Override
 	public void initialize(Stage stage, HostServices hostServices, MainController mainController) {
 		super.initialize(stage, hostServices, mainController);
+		//progressController.initialize(stage, hostServices, mainController);
 		initComboBoxes();
 		initButtons();
 		if (getMainController().getMapController().getDiamondSquare().mapPresent()) {
@@ -425,5 +443,4 @@ public class StatisticsController extends Controller {
 					getMainController().getMapController().getCellularAutomaton().getMap());
 		}
 	}
-
 }

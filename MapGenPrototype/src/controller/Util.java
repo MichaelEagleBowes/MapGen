@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -24,8 +25,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -37,7 +40,7 @@ import javafx.stage.Window;
  * 
  */
 public class Util {
-
+	
 	/**
 	 * Converts a BufferedImage to a FXImage.
 	 * 

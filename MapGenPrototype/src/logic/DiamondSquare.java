@@ -102,7 +102,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		// TODO: Durchlaufe das 2D Array und ändere alle Zahlen
 		// im Bereich des Grass-Gebiets(von X bis Y) ab.
 		hasMap = true;
-
 		
 		DiamondSquareThread algo = new DiamondSquareThread(size);
 		Thread t = new Thread(algo);
