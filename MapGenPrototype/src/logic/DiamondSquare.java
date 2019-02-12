@@ -356,6 +356,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		double trace = 0;
 		int b = 0;
 		for (int a = 0; a < covarianceMatrix.length; a++) {
+			System.out.println("a: "+ a+"b: "+b);
 				trace += covarianceMatrix[a][b];
 				b++;
 		}
@@ -373,10 +374,11 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 */
 	private double[][] createCovarianceMatrix(int index, List<Double> xValues, List<Double> yValues) {
 		
-		int root = (int)Math.floor(Math.sqrt(xValues.size()));
+		int root = (int) Math.floor(Math.sqrt(xValues.size()));
 		double xMean = coordinateMeans.get(index).get(0);
 		double yMean = coordinateMeans.get(index).get(1);
 		double[][] covarianceMatrix = new double[root][root];
+		System.out.println(xMean + " " + yMean);
 		for (int a = 0; a < root; a++) {
 			for (int b = 0; b < root; b++) {
 				covarianceMatrix[a][b] = (xValues.get(a) - xMean) * (yValues.get(b) - yMean);
@@ -555,13 +557,13 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		xCoordinates.add(forestXValues);
 		xCoordinates.add(mountainXValues);
 		xCoordinates.add(snowXValues);
-		yCoordinates.add(oceanXValues);
-		yCoordinates.add(coastXValues);
-		yCoordinates.add(beachXValues);
-		yCoordinates.add(grassXValues);
-		yCoordinates.add(forestXValues);
-		yCoordinates.add(mountainXValues);
-		yCoordinates.add(snowXValues);
+		yCoordinates.add(oceanYValues);
+		yCoordinates.add(coastYValues);
+		yCoordinates.add(beachYValues);
+		yCoordinates.add(grassYValues);
+		yCoordinates.add(forestYValues);
+		yCoordinates.add(mountainYValues);
+		yCoordinates.add(snowYValues);
 
 		coordinateMeans = new HashMap<Integer, List<Double>>();
 		sumValues.put(0, oceanTuple);
@@ -580,7 +582,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			oceanY = (int) sumValues.get(0).getThirdValue() / (int) sumValues.get(0).getFirstValue();
 		}
 		oceanX = Math.round(oceanX);
-		oceanY = Math.round(oceanX);
+		oceanY = Math.round(oceanY);
 		oceanAvg.add(0, oceanX);
 		oceanAvg.add(1, oceanY);
 
@@ -592,7 +594,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			coastY = (int) sumValues.get(1).getThirdValue() / (int) sumValues.get(1).getFirstValue();
 		}
 		coastX = Math.round(coastX);
-		coastY = Math.round(coastX);
+		coastY = Math.round(coastY);
 		coastAvg.add(0, coastX);
 		coastAvg.add(1, coastY);
 
@@ -604,7 +606,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			beachY = (int) sumValues.get(2).getThirdValue() / (int) sumValues.get(2).getFirstValue();
 		}
 		beachX = Math.round(beachX);
-		beachY = Math.round(beachX);
+		beachY = Math.round(beachY);
 		beachAvg.add(0, beachX);
 		beachAvg.add(1, beachY);
 
@@ -616,7 +618,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			grassY = (int) sumValues.get(3).getThirdValue() / (int) sumValues.get(3).getFirstValue();
 		}
 		grassX = Math.round(grassX);
-		grassY = Math.round(grassX);
+		grassY = Math.round(grassY);
 		grassAvg.add(0, grassX);
 		grassAvg.add(1, grassY);
 
@@ -628,7 +630,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			forestY = (int) sumValues.get(4).getThirdValue() / (int) sumValues.get(4).getFirstValue();
 		}
 		forestX = Math.round(forestX);
-		forestY = Math.round(forestX);
+		forestY = Math.round(forestY);
 		forestAvg.add(0, forestX);
 		forestAvg.add(1, forestY);
 
@@ -640,7 +642,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			mountainY = (int) sumValues.get(5).getThirdValue() / (int) sumValues.get(5).getFirstValue();
 		}
 		mountainX = Math.round(mountainX);
-		mountainY = Math.round(mountainX);
+		mountainY = Math.round(mountainY);
 		mountainAvg.add(0, mountainX);
 		mountainAvg.add(1, mountainY);
 
@@ -652,7 +654,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 			snowY = (int) sumValues.get(6).getThirdValue() / (int) sumValues.get(6).getFirstValue();
 		}
 		snowX = Math.round(snowX);
-		snowY = Math.round(snowX);
+		snowY = Math.round(snowY);
 		snowAvg.add(0, snowX);
 		snowAvg.add(1, snowY);
 
