@@ -6,16 +6,23 @@
 	<artifactId>MapGenPrototype</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
+<properties>
+		<jdk.version>1.11</jdk.version>
+		<jodatime.version>2.5</jodatime.version>
+		<junit.version>4.11</junit.version>
+		<log4j.version>1.2.17</log4j.version>
+	</properties>
+
 	<dependencies>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-controls</artifactId>
-			<version>11.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-fxml</artifactId>
-			<version>11.0.1</version>
+         <dependency>
+		     <groupId>org.openjfx</groupId>
+		     <artifactId>javafx-controls</artifactId>
+		     <version>11.0.1</version>
+	    </dependency>
+	    <dependency>
+	    	<groupId>org.openjfx</groupId>
+	    	<artifactId>javafx-fxml</artifactId>
+	    	<version>11.0.1</version>
 		</dependency>
 	</dependencies>
 
@@ -23,12 +30,41 @@
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.0</version>
 				<configuration>
-					<release>11</release>
+				  <archive>
+					<manifest>
+						<addClasspath>true</addClasspath>
+						<mainClass>main.Main</mainClass>
+					</manifest>
+				  </archive>
 				</configuration>
 			</plugin>
+			
+ 			<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-shade-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>shade</goal>
+			            </goals>
+			            <configuration>
+			                <shadedArtifactAttached>true</shadedArtifactAttached>
+			                <transformers>
+			                    <transformer implementation=
+			                      "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+			                      <manifestEntries>
+			                        <mainClass>main.Main</mainClass>
+			                        </manifestEntries>
+			                </transformer>
+			            </transformers>
+			        </configuration>
+			        </execution>
+			    </executions>
+		    </plugin>
 		</plugins>
 	</build>
 </project>
