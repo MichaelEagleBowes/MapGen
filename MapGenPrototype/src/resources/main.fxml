@@ -25,14 +25,6 @@
       <VBox BorderPane.alignment="CENTER">
          <children>
             <Separator />
-            <HBox>
-               <children>
-                  <Label fx:id="stateInfo" text="Program state info" />
-               </children>
-               <padding>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </padding>
-            </HBox>
          </children>
       </VBox>
    </bottom>

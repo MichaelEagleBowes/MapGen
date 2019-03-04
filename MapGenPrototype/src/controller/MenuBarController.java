@@ -1,8 +1,6 @@
 package controller;
 
 import javafx.application.HostServices;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Hyperlink;
@@ -11,8 +9,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import model.Model;
 
 /**
  * 
@@ -23,18 +19,7 @@ import model.Model;
  */
 public class MenuBarController extends Controller {
 
-	private static String MENU_BAR_FXML = "/resources/fxml/menu-bar.fxml";
-	private static String MAP_FXML = "/resources/fxml/map.fxml";
 	private static String STATISTICS_FXML = "/resources/statistics.fxml";
-
-	@FXML
-	private MenuItem fileOpen;
-	@FXML
-	private MenuItem fileSave;
-	@FXML
-	private MenuItem fileSaveAs;
-	@FXML
-	private MenuItem fileQuit;
 
 	@FXML
 	private MenuItem statisticsExpressivity;
@@ -46,31 +31,8 @@ public class MenuBarController extends Controller {
 
 	@FXML
 	protected void initialize() {
-		initFileMenu();
 		initHelpMenu();
 		initStatisticsMenu();
-	}
-
-	private void initFileMenu() {
-
-		fileOpen.setOnAction(event -> {
-
-		});
-
-		EventHandler<ActionEvent> fileSaveAsAction = event -> {
-
-		};
-
-		fileSave.setOnAction(event -> {
-
-		});
-
-		fileSaveAs.setOnAction(fileSaveAsAction);
-
-		fileQuit.setOnAction(event -> {
-			getStage().getOnCloseRequest()
-					.handle(new WindowEvent(getStage().getScene().getWindow(), WindowEvent.WINDOW_CLOSE_REQUEST));
-		});
 	}
 
 	private void initHelpMenu() {
@@ -80,8 +42,8 @@ public class MenuBarController extends Controller {
 	}
 
 	private void initStatisticsMenu() {
-		statisticsExpressivity.setOnAction(
-				event -> openWindow(STATISTICS_FXML, "Statistics: Expressivity of Maps", 550, 520));
+		statisticsExpressivity
+				.setOnAction(event -> openWindow(STATISTICS_FXML, "Statistics: Expressivity of Maps", 550, 520));
 	}
 
 	private void openWindow(String fxmlPath, String title, int minWidth, int minHeight) {

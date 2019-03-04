@@ -1,6 +1,5 @@
 package controller;
 
-import java.text.DecimalFormat;
 import java.util.function.UnaryOperator;
 
 import javafx.application.HostServices;
@@ -15,12 +14,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-import logic.CellularAutomaton;
-import model.Model;
 
 /**
  * 
- * Controller for the user control elements at the side of the scene.
+ * Controller for the user control elements at the right-hand side of the scene.
  *
  * @author Michael Bowes
  *
@@ -59,6 +56,9 @@ public class ControlsController extends Controller {
 	@FXML
 	private Button generateButton;
 
+	/**
+	 * Initializes the user-input fields specific to the cellular automaton's tab at the start of the application.
+	 */
 	private void initCellularAutomatonParamFields() {
 		Label chooseLabel = new Label("Choose parameters:");
 		chooseLabel.setUnderline(true);
@@ -103,13 +103,9 @@ public class ControlsController extends Controller {
 		settingsContainer.add(survivalField, 1, 3);
 		settingsContainer.add(iterationsField, 1, 4);
 	}
-
-	private void initNoiseBasedParamFields() {
-		
-	}
 	
 	/**
-	 * 
+	 * Initializes the user-input fields specific to the diamond-square's tab at the start of the application.
 	 */
 	private void initDiamondSquareParamFields() {
 		Label chooseLabel = new Label("Choose terrain percentage:");
@@ -183,78 +179,50 @@ public class ControlsController extends Controller {
 		settingsContainer.add(deepWaterField, 1, 7);
 		settingsContainer.setPadding(new Insets(10, 10, 10, 10));
 	}
-
-	public void loadDiamondSquareTab() {
-		settingsContainer.getChildren().clear();
-		initDiamondSquareParamFields();
-		generateButton = new Button("Generate");
-		generateButton.setPrefWidth(120);
-		generateButton.setPrefHeight(120);
-		generateButton.setFont(new Font(20));
-		generateButton.setOnAction(event -> {
-			int snowParam = Integer.parseInt(snowField.getText());
-			int mountainParam = Integer.parseInt(mountainField.getText());
-			int forestParam = Integer.parseInt(forestField.getText());
-			int grassParam = Integer.parseInt(grassField.getText());
-			int beachParam = Integer.parseInt(beachField.getText());
-			int coastParam = Integer.parseInt(shallowWaterField.getText());
-			int oceanParam = Integer.parseInt(deepWaterField.getText());
-			getMainController().getMapController().generateDiamondSquare(oceanParam, coastParam, beachParam, grassParam,
-					forestParam, snowParam, mountainParam);
-		});
-		settingsContainer.add(generateButton, 0, 9);
-	}
-
-	public int getBirthRule() {
-		return Integer.parseInt(birthRuleField.getText());
-	}
-
-	public int getDeathRule() {
-		return Integer.parseInt(deathRuleField.getText());
-	}
-
-	public int getIterations() {
-		return Integer.parseInt(iterationsField.getText());
-	}
-
-	public float getSurvivalChance() {
-		return Float.parseFloat(survivalField.getText());
-	}
-
-	public void loadNoiseBasedTab() {
-		settingsContainer.getChildren().clear();
-		initNoiseBasedParamFields();
-		generateButton = new Button("Generate");
-		generateButton.setPrefWidth(120);
-		generateButton.setPrefHeight(120);
-		generateButton.setFont(new Font(20));
-		generateButton.setOnAction(event -> {
-			getMainController().getMapController().generateNoiseBased();
-		});
-		settingsContainer.add(generateButton, 0, 9);
-		settingsContainer.setPadding(new Insets(10, 10, 10, 10));
-	}
 	
-	public void loadCellularAutomatonTab() {
+	/**
+	 * Updates the content of the selected tab in the {@link TabPane} upon interaction.
+	 * 
+	 * @param tabIndex Index of the selected tab; 0 = DS, 1 = CA.
+	 */
+	public void loadTab(int tabIndex) {
 		settingsContainer.getChildren().clear();
-		initCellularAutomatonParamFields();
 		generateButton = new Button("Generate");
 		generateButton.setPrefWidth(120);
 		generateButton.setPrefHeight(120);
 		generateButton.setFont(new Font(20));
-		generateButton.setOnAction(event -> {
-			int iterations = Integer.parseInt(iterationsField.getText());
-			int birthRule = Integer.parseInt(birthRuleField.getText());
-			int deathRule = Integer.parseInt(deathRuleField.getText());
-			float survival = 0f;
-			try {
-				survival = Float.parseFloat(survivalField.getText());
-			} catch (NumberFormatException e) {
-				Util.informationAlert("Wrong Format", "Please enter a valid decimal for survivalChance.");
-			}
-			getMainController().getMapController().generateCellularAutomaton(iterations, birthRule, deathRule,
-					survival);
-		});
+		
+		if(tabIndex == 0) {
+			initDiamondSquareParamFields();
+			generateButton.setOnAction(event -> {
+				int snowParam = Integer.parseInt(snowField.getText());
+				int mountainParam = Integer.parseInt(mountainField.getText());
+				int forestParam = Integer.parseInt(forestField.getText());
+				int grassParam = Integer.parseInt(grassField.getText());
+				int beachParam = Integer.parseInt(beachField.getText());
+				int coastParam = Integer.parseInt(shallowWaterField.getText());
+				int oceanParam = Integer.parseInt(deepWaterField.getText());
+				getMainController().getMapController().generateDiamondSquare(oceanParam, coastParam, beachParam, grassParam,
+						forestParam, snowParam, mountainParam);
+			});
+		} else if (tabIndex == 1) {
+			initCellularAutomatonParamFields();
+			generateButton.setOnAction(event -> {
+				int iterations = Integer.parseInt(iterationsField.getText());
+				int birthRule = Integer.parseInt(birthRuleField.getText());
+				int deathRule = Integer.parseInt(deathRuleField.getText());
+				float survival = 0f;
+				try {
+					survival = Float.parseFloat(survivalField.getText());
+				} catch (NumberFormatException e) {
+					Util.informationAlert("Wrong Format", "Please enter a valid decimal for survivalChance.");
+				}
+				getMainController().getMapController().generateCellularAutomaton(iterations, birthRule, deathRule,
+						survival);
+			});
+		}
+		
+		
 		settingsContainer.add(generateButton, 0, 9);
 		settingsContainer.setPadding(new Insets(10, 10, 10, 10));
 	}
@@ -265,56 +233,10 @@ public class ControlsController extends Controller {
 		plus.setText("+");
 		minus.setText("-");
 		plus.setOnAction(event -> {
-			if (getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 0) {
-				if (getMainController().getMapController().getDiamondSquare().mapPresent()) {
-					Scale scale = new Scale();
-					scale.setX(1.5);
-					scale.setY(1.5);
-					getMainController().getMapController().getDiamondSquareView().getTransforms().add(scale);
-				}
-			} else if (getMainController().getMapController().getTabPane().getSelectionModel()
-					.getSelectedIndex() == 1) {
-				if (getMainController().getMapController().getCellularAutomaton().mapPresent()) {
-					Scale scale = new Scale();
-					scale.setX(1.5);
-					scale.setY(1.5);
-					getMainController().getMapController().getCellularAutomatonView().getTransforms().add(scale);
-				}
-			} else if(getMainController().getMapController().getTabPane().getSelectionModel()
-					.getSelectedIndex() == 2) {
-				if (getMainController().getMapController().getNoiseBased().mapPresent()) {
-					Scale scale = new Scale();
-					scale.setX(1.5);
-					scale.setY(1.5);
-					getMainController().getMapController().getNoiseBasedView().getTransforms().add(scale);
-				}
-			}
+			zoomMap(1.5f);
 		});
 		minus.setOnAction(event -> {
-			if (getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 0) {
-				if (getMainController().getMapController().getDiamondSquare().mapPresent()) {
-					Scale scale = new Scale();
-					scale.setX(0.5);
-					scale.setY(0.5);
-					getMainController().getMapController().getDiamondSquareView().getTransforms().add(scale);
-				}
-			} else if (getMainController().getMapController().getTabPane().getSelectionModel()
-					.getSelectedIndex() == 1) {
-				if (getMainController().getMapController().getCellularAutomaton().mapPresent()) {
-					Scale scale = new Scale();
-					scale.setX(0.5);
-					scale.setY(0.5);
-					getMainController().getMapController().getCellularAutomatonView().getTransforms().add(scale);
-				}
-			} else if(getMainController().getMapController().getTabPane().getSelectionModel()
-					.getSelectedIndex() == 2) {
-				if (getMainController().getMapController().getNoiseBased().mapPresent()) {
-					Scale scale = new Scale();
-					scale.setX(0.5);
-					scale.setY(0.5);
-					getMainController().getMapController().getNoiseBasedView().getTransforms().add(scale);
-				}
-			}
+			zoomMap(0.5f);
 		});
 		filter = change -> {
 			String text = change.getText();
@@ -339,7 +261,48 @@ public class ControlsController extends Controller {
 		imageWidth.setTextFormatter(imageWidthFormatter);
 		imageHeight.setTextFormatter(imageHeightFormatter);
 		mapSize.setTextFormatter(mapSizeFormatter);
-		loadDiamondSquareTab();
+		loadTab(0);
+	}
+	
+	/**
+	 * 
+	 * Applies a scaling transformation to the image of the current imageView.
+	 * 
+	 * @param scaleFactor The factor to scale the image.
+	 */
+	private void zoomMap(float scaleFactor) {
+		if (getMainController().getMapController().getTabPane().getSelectionModel().getSelectedIndex() == 0) {
+			if (getMainController().getMapController().getDiamondSquare().mapPresent()) {
+				Scale scale = new Scale();
+				scale.setX(scaleFactor);
+				scale.setY(scaleFactor);
+				getMainController().getMapController().getDiamondSquareView().getTransforms().add(scale);
+			}
+		} else if (getMainController().getMapController().getTabPane().getSelectionModel()
+				.getSelectedIndex() == 1) {
+			if (getMainController().getMapController().getCellularAutomaton().mapPresent()) {
+				Scale scale = new Scale();
+				scale.setX(scaleFactor);
+				scale.setY(scaleFactor);
+				getMainController().getMapController().getCellularAutomatonView().getTransforms().add(scale);
+			}
+		}
+	}
+	
+	public int getBirthRule() {
+		return Integer.parseInt(birthRuleField.getText());
+	}
+
+	public int getDeathRule() {
+		return Integer.parseInt(deathRuleField.getText());
+	}
+
+	public int getIterations() {
+		return Integer.parseInt(iterationsField.getText());
+	}
+
+	public float getSurvivalChance() {
+		return Float.parseFloat(survivalField.getText());
 	}
 
 	public int getImageWidth() {

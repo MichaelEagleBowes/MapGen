@@ -38,17 +38,12 @@ public class DiamondSquareThread implements Runnable {
 		
 		setCornerSeeds();
 		size -= 1;
-		/**
-		 * Rounds size down from 1025 to 512. Then iterates over the map and halves the
-		 * size with each iteration, until the entire map is filled.
-		 */
 		for (double x = size / 2; x >= 1; x /= 2) {
-			size /= 2; // how far the distance between each point is.
+			size /= 2;
 
-			diamond(size); // diamond Step
-			square(size); // square Step
-			noise *= .7; // noise is the same for each tile within the same iteration
-			// printMap(); remove comment "//" to see mapArray printed
+			diamond(size);
+			square(size);
+			noise *= .7;
 		}
 	}
 
@@ -58,8 +53,7 @@ public class DiamondSquareThread implements Runnable {
 	 * averaged value of each corner of the array to the corners of the smaller
 	 * sub-arrays.
 	 * 
-	 * @param size
-	 *            Size of the array in the current iteration of DiamondSquare.
+	 * @param size Size of the array in the current iteration of DiamondSquare.
 	 */
 	private void diamond(int size) {
 		for (int y = size; y < arraySize; y += size * 2) {
@@ -76,8 +70,7 @@ public class DiamondSquareThread implements Runnable {
 	 * 
 	 * @param y
 	 * @param x
-	 * @param size
-	 *            Size of the current sub-array.
+	 * @param size Size of the current sub-array.
 	 * @return Average of each corner of the given (sub-)array.
 	 */
 	private int calculateDiamondAverage(int y, int x, int size) {
@@ -92,20 +85,14 @@ public class DiamondSquareThread implements Runnable {
 	 * Creates the squares from the given diamond-midpoint and assigns an average of
 	 * their corners to the corners of the squares.
 	 * 
-	 * @param size
-	 *            Size of the current iteration's sub-arrays.
+	 * @param size Size of the current iteration's sub-arrays.
 	 */
 	private void square(int size) {
 		for (int y = size; y < arraySize; y += size * 2) {
 			for (int x = size; x < arraySize; x += size * 2) {
-				// e.g. at size=64:
-				// e.g. 0(),32(mid)
 				mapArray[y - size][x] = calculateSquareAverage(y - size, x, size);
-				// e.g. 64,32(mid)
 				mapArray[y + size][x] = calculateSquareAverage(y + size, x, size);
-				// e.g. 32,0(top)
 				mapArray[y][x - size] = calculateSquareAverage(y, x - size, size);
-				// e.g. 32,64(bottom)
 				mapArray[y][x + size] = calculateSquareAverage(y, x + size, size);
 			}
 		}
@@ -126,26 +113,16 @@ public class DiamondSquareThread implements Runnable {
 	/**
 	 * Generates the corners of the map at the start of the algorithm.<br>
 	 * The corner values can be adjusted here for control over the map generation on
-	 * the edges.<br>
+	 * the edges.
 	 */
 	private void setCornerSeeds() {
 		for (int i = 0; i <= arraySize; i += arraySize) {
 			for (int j = 0; j <= arraySize; j += arraySize) {
-				mapArray[i][j] = random.nextInt(80); // this is the
-				// random amount that each corner gets.
-				// corners: i,j
-				// corner1: 0,0 | top left
-				// corner2: 0,1024 | bottom left
-				// corner3: 1024,0 | top right
-				// corner4: 1024,1024 | bottom right
+				mapArray[i][j] = random.nextInt(80);
 			}
 		}
 	}
 
-	/**
-	 * 
-	 * @return The map as int[][].
-	 */
 	public int[][] getMap() {
 		return mapArray;
 	}

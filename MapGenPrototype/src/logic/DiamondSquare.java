@@ -20,11 +20,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	String name;
 	private int[][] map;
 	private boolean hasMap;
-	private int[][] testMap;
-
-	private List<Double> areaCount;
-	//private HashMap<Integer, List<Integer>> averageAreaXCoordinates;
-	//private HashMap<Integer, List<Integer>> averageAreaYCoordinates;
 	private double oceanSpectrum;
 	private double coastSpectrum;
 	private double beachSpectrum;
@@ -40,14 +35,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	private int forestParam;
 	private int snowParam;
 	private int mountainParam;
-
-	/**
-	 * 
-	 * Stores the sum of all X and Y coordinates for each terrain type for
-	 * calculation of the Bowes Distance. The terrain types are sorted in ascending
-	 * order by height values.
-	 */
-	// private HashMap<Integer, Triple<Integer, Integer, Integer>> sumValues;
 	
 	/**
 	 * The Average of the arithmetic mean values of each terrains' X and Y coordinates across the
@@ -66,14 +53,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 
 	public DiamondSquare() {
 		this.name = "DiamondSquare";
-		/*
-		averageAreaXCoordinates = new HashMap<>();
-		averageAreaYCoordinates = new HashMap<>();
-		for (int i = 0; i < 7; i++) {
-			averageAreaXCoordinates.put(i, new ArrayList<Integer>());
-			averageAreaYCoordinates.put(i, new ArrayList<Integer>());
-		}
-		*/
 	}
 
 	public DiamondSquare(int oceanParam, int coastParam, int beachParam, int grassParam, int forestParam, int snowParam,
@@ -99,8 +78,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 */
 	@Override
 	public int[][] generateMap(int size) {
-		// TODO: Durchlaufe das 2D Array und ändere alle Zahlen
-		// im Bereich des Grass-Gebiets(von X bis Y) ab.
 		hasMap = true;
 		
 		DiamondSquareThread algo = new DiamondSquareThread(size);
@@ -138,206 +115,21 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	}
 
 	/**
-	 * Calculates the number of separate areas for each terrain type and returns a
-	 * list of the area count per terrain in ascending order of height values, e.g.
-	 * index 0 is the number of water bodies on the map.
-	 * 
-	 * @return areaCount A list of the number of each terrain's separate areas
-	 */
-	public List<Double> calcNumberOfAreas() {
-		areaCount = new ArrayList<Double>();
-		double oceanCount = 0;
-		double coastCount = 0;
-		double beachCount = 0;
-		double grassCount = 0;
-		double forestCount = 0;
-		double mountainCount = 0;
-		double snowCount = 0;
-
-		testMap = new int[map.length][map.length];
-		for (int i = 0; i < testMap.length; i++) {
-			for (int j = 0; j < testMap.length; j++) {
-				testMap[i][j] = map[i][j];
-			}
-		}
-
-		for (int x = 0; x < testMap.length; x++) {
-			for (int y = 0; y < testMap.length; y++) {
-				double i = minimum + oceanSpectrum;
-				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int) Math.ceil(i));
-				Thread thread = new Thread(ff);
-				thread.start();
-				try {
-					thread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if (ff.getResult()) {
-					oceanCount++;
-				}
-				//averageAreaXCoordinates.get(0).add(ff.getAverageXCoordinate());
-				//averageAreaYCoordinates.get(0).add(ff.getAverageYCoordinate());
-			}
-		}
-
-		for (int x = 0; x < testMap.length; x++) {
-			for (int y = 0; y < testMap.length; y++) {
-				double upperBound = minimum + oceanSpectrum + coastSpectrum;
-				double lowerBound = minimum + oceanSpectrum;
-				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int) Math.ceil(lowerBound),
-						(int) Math.ceil(upperBound));
-				Thread thread = new Thread(ff);
-				thread.start();
-				try {
-					thread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if (ff.getResult()) {
-					coastCount++;
-				}
-				//averageAreaXCoordinates.get(1).add(ff.getAverageXCoordinate());
-				//averageAreaYCoordinates.get(1).add(ff.getAverageYCoordinate());
-			}
-		}
-
-		for (int x = 0; x < testMap.length; x++) {
-			for (int y = 0; y < testMap.length; y++) {
-				double lowerBound = minimum + oceanSpectrum + coastSpectrum;
-				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum;
-				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int) Math.ceil(lowerBound),
-						(int) Math.ceil(upperBound));
-				Thread thread = new Thread(ff);
-				thread.start();
-				try {
-					thread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if (ff.getResult()) {
-					beachCount++;
-				}
-				//averageAreaXCoordinates.get(2).add(ff.getAverageXCoordinate());
-				//averageAreaYCoordinates.get(2).add(ff.getAverageYCoordinate());
-			}
-		}
-
-		for (int x = 0; x < testMap.length; x++) {
-			for (int y = 0; y < testMap.length; y++) {
-				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum;
-				double lowerBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum;
-				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int) Math.ceil(lowerBound),
-						(int) Math.ceil(upperBound));
-				Thread thread = new Thread(ff);
-				thread.start();
-				try {
-					thread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if (ff.getResult()) {
-					grassCount++;
-				}
-				//averageAreaXCoordinates.get(3).add(ff.getAverageXCoordinate());
-				//averageAreaYCoordinates.get(3).add(ff.getAverageYCoordinate());
-			}
-		}
-
-		for (int x = 0; x < testMap.length; x++) {
-			for (int y = 0; y < testMap.length; y++) {
-				double lowerBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum;
-				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-						+ forestSpectrum;
-				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int) Math.ceil(lowerBound),
-						(int) Math.ceil(upperBound));
-				Thread thread = new Thread(ff);
-				thread.start();
-				try {
-					thread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if (ff.getResult()) {
-					forestCount++;
-				}
-				//averageAreaXCoordinates.get(4).add(ff.getAverageXCoordinate());
-				//averageAreaYCoordinates.get(4).add(ff.getAverageYCoordinate());
-			}
-		}
-
-		for (int x = 0; x < testMap.length; x++) {
-			for (int y = 0; y < testMap.length; y++) {
-				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-						+ forestSpectrum + mountainSpectrum;
-				double lowerBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-						+ forestSpectrum;
-				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int) Math.ceil(lowerBound),
-						(int) Math.ceil(upperBound));
-				Thread thread = new Thread(ff);
-				thread.start();
-				try {
-					thread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if (ff.getResult()) {
-					mountainCount++;
-				}
-				//averageAreaXCoordinates.get(5).add(ff.getAverageXCoordinate());
-				//averageAreaYCoordinates.get(5).add(ff.getAverageYCoordinate());
-			}
-		}
-
-		for (int x = 0; x < testMap.length; x++) {
-			for (int y = 0; y < testMap.length; y++) {
-				double lowerBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-						+ forestSpectrum + mountainSpectrum;
-				double upperBound = minimum + oceanSpectrum + coastSpectrum + beachSpectrum + grassSpectrum
-						+ forestSpectrum + mountainSpectrum + snowSpectrum;
-				FloodFillAlgorithm ff = new FloodFillAlgorithm(testMap, x, y, (int) Math.ceil(lowerBound),
-						(int) Math.ceil(upperBound));
-				Thread thread = new Thread(ff);
-				thread.start();
-				try {
-					thread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if (ff.getResult()) {
-					snowCount++;
-				}
-				//averageAreaXCoordinates.get(6).add(ff.getAverageXCoordinate());
-				//averageAreaYCoordinates.get(6).add(ff.getAverageYCoordinate());
-			}
-		}
-
-		areaCount.add(0, oceanCount);
-		areaCount.add(1, coastCount);
-		areaCount.add(2, beachCount);
-		areaCount.add(3, grassCount);
-		areaCount.add(4, forestCount);
-		areaCount.add(5, mountainCount);
-		areaCount.add(6, snowCount);
-
-		return areaCount;
-	}
-
-	/**
 	 * Calculates the trace of each terrain type's covariance matrix,
 	 * as a measurement of spatial dispersion.
 	 * 
 	 * @return A list of trace values for each terrain type.
 	 */
-	public List<Double> calcDispersion() {
+	public List<Double> calculateDispersion() {
 		List<Double> traceValues = new ArrayList<Double>();
 
-		traceValues.add(0, getTrace(createCovarianceMatrix(0, xCoordinates.get(0), yCoordinates.get(0))));
-		traceValues.add(1, getTrace(createCovarianceMatrix(1, xCoordinates.get(1), yCoordinates.get(1))));
-		traceValues.add(2, getTrace(createCovarianceMatrix(2, xCoordinates.get(2), yCoordinates.get(2))));
-		traceValues.add(3, getTrace(createCovarianceMatrix(3, xCoordinates.get(3), yCoordinates.get(3))));
-		traceValues.add(4, getTrace(createCovarianceMatrix(4, xCoordinates.get(4), yCoordinates.get(4))));
-		traceValues.add(5, getTrace(createCovarianceMatrix(5, xCoordinates.get(5), yCoordinates.get(5))));
-		traceValues.add(6, getTrace(createCovarianceMatrix(6, xCoordinates.get(6), yCoordinates.get(6))));
+		traceValues.add(0, calculateTrace(createCovarianceMatrix(0, xCoordinates.get(0), yCoordinates.get(0))));
+		traceValues.add(1, calculateTrace(createCovarianceMatrix(1, xCoordinates.get(1), yCoordinates.get(1))));
+		traceValues.add(2, calculateTrace(createCovarianceMatrix(2, xCoordinates.get(2), yCoordinates.get(2))));
+		traceValues.add(3, calculateTrace(createCovarianceMatrix(3, xCoordinates.get(3), yCoordinates.get(3))));
+		traceValues.add(4, calculateTrace(createCovarianceMatrix(4, xCoordinates.get(4), yCoordinates.get(4))));
+		traceValues.add(5, calculateTrace(createCovarianceMatrix(5, xCoordinates.get(5), yCoordinates.get(5))));
+		traceValues.add(6, calculateTrace(createCovarianceMatrix(6, xCoordinates.get(6), yCoordinates.get(6))));
 
 		return traceValues;
 	}
@@ -351,12 +143,11 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * @param covarianceMatrix
 	 * @return The trace, i.e. the sum of complex eigenvalues in the 2D array.
 	 */
-	private double getTrace(double[][] covarianceMatrix) {
+	private double calculateTrace(double[][] covarianceMatrix) {
 
 		double trace = 0;
 		int b = 0;
 		for (int a = 0; a < covarianceMatrix.length; a++) {
-			System.out.println("a: "+ a+"b: "+b);
 				trace += covarianceMatrix[a][b];
 				b++;
 		}
@@ -378,7 +169,6 @@ public class DiamondSquare implements ProceduralAlgorithm {
 		double xMean = coordinateMeans.get(index).get(0);
 		double yMean = coordinateMeans.get(index).get(1);
 		double[][] covarianceMatrix = new double[root][root];
-		System.out.println(xMean + " " + yMean);
 		for (int a = 0; a < root; a++) {
 			for (int b = 0; b < root; b++) {
 				covarianceMatrix[a][b] = (xValues.get(a) - xMean) * (yValues.get(b) - yMean);
@@ -396,9 +186,9 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * 
 	 * @return
 	 */
-	public List<Double> calcAbsolutePositionsAverage() {
+	public List<Double> calculateAbsolutePositionsAverage() {
 		averageMeans = new ArrayList<Double>();
-		calcSumValues();
+		calculateSums();
 		double oceanAvg = 0;
 		List<Double> oceanList = coordinateMeans.get(0);
 		oceanAvg = Math.sqrt(oceanList.get(0) * oceanList.get(1));
@@ -445,8 +235,8 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * 
 	 * @return
 	 */
-	public HashMap<Integer, List<Double>> calcAbsolutePositions() {
-		calcSumValues();
+	public HashMap<Integer, List<Double>> calculateAbsolutePositions() {
+		calculateSums();
 		
 		return coordinateMeans;
 	}
@@ -466,7 +256,7 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	 * @param snowSpectrum
 	 * @return
 	 */
-	private HashMap<Integer, Triple<Integer, Integer, Integer>> calcSumValues() {
+	private HashMap<Integer, Triple<Integer, Integer, Integer>> calculateSums() {
 		HashMap<Integer, Triple<Integer, Integer, Integer>> sumValues = new HashMap<Integer, Triple<Integer, Integer, Integer>>();
 		Triple<Integer, Integer, Integer> oceanTuple = new Triple<Integer, Integer, Integer>();
 		Triple<Integer, Integer, Integer> coastTuple = new Triple<Integer, Integer, Integer>();
@@ -688,7 +478,12 @@ public class DiamondSquare implements ProceduralAlgorithm {
 	public String toString() {
 		return name;
 	}
-
+	
+	public void setMap(int[][] map) {
+		this.map = map;
+		this.hasMap = true;
+	}
+	
 	public double getOceanSpectrum() {
 		return oceanSpectrum;
 	}

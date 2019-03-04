@@ -11,14 +11,6 @@
 
 <MenuBar BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuBarController">
     <menus>
-        <Menu mnemonicParsing="false" text="File">
-            <items>
-                <MenuItem fx:id="fileOpen" mnemonicParsing="false" text="Open" />
-                <MenuItem fx:id="fileSave" mnemonicParsing="false" text="Save" />
-                <MenuItem fx:id="fileSaveAs" mnemonicParsing="false" text="Save as" />	
-                <MenuItem fx:id="fileQuit" mnemonicParsing="false" text="Quit" />
-            </items>
-        </Menu>
 		        <Menu mnemonicParsing="false" text="Statistics">
             <items>
                 <MenuItem fx:id="statisticsExpressivity" mnemonicParsing="false" text="Expressivity" />

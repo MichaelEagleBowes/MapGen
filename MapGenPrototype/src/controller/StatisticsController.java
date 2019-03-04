@@ -1,22 +1,14 @@
 package controller;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import javafx.application.HostServices;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Orientation;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -24,26 +16,14 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import logic.CellularAutomaton;
 import logic.DiamondSquare;
 import logic.ProceduralAlgorithm;
-import model.MapContainer;
-import model.MapType;
-import util.CustomProgressBar;
-import util.HeatMap;
-import util.Triple;
-import util.Tuple;
-import javafx.scene.canvas.GraphicsContext;
 
 public class StatisticsController extends Controller {
 
@@ -59,19 +39,14 @@ public class StatisticsController extends Controller {
 	private TextField sampleSizeField;
 	private HashMap<ProceduralAlgorithm, int[][]> maps = new HashMap<ProceduralAlgorithm, int[][]>();
 	private BarChart<String, Double> expressivityBarChart;
-	private static String STATISTICS_PROGRESS = "/resources/statistics-progress.fxml";
-	@FXML
-	ProgressController progressController;
-	
+
 	/**
 	 * 
 	 * Fills the BarChart with the statistics of the currently loaded map of the
-	 * selected algorithm. The displayed statistics measure attributes of the map
-	 * that relate to the expressiveness of the generator. Each algorithm has its
-	 * own kinds of metrics shown in the chart. <br>
+	 * selected algorithm.<br>
 	 * <br>
-	 * For the specifics of the metrics, refer to the {@link DiamondSquare} and
-	 * {@link CellularAutomaton} documentation.
+	 * For the specifics of the metrics of each algorithm, refer to the
+	 * {@link DiamondSquare} and {@link CellularAutomaton} documentation.
 	 */
 	private BarChart<String, Double> fillBarChart(BarChart<String, Double> barChart, ProceduralAlgorithm algorithm) {
 		CategoryAxis xAxis = new CategoryAxis();
@@ -82,9 +57,10 @@ public class StatisticsController extends Controller {
 
 		int[][] selectedMap = maps.get(algorithmSelect.getSelectionModel().getSelectedItem());
 
+		// Initialize CA
 		if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
-			double spaceList = getMainController().getMapController().getCellularAutomaton().calcRelativeOpenSpace();
-			double areaList = getMainController().getMapController().getCellularAutomaton().calcNumberOfAreas();
+			double spaceList = getMainController().getMapController().getCellularAutomaton().calculateRelativeOpenSpace();
+			double areaList = getMainController().getMapController().getCellularAutomaton().calculateNumberOfAreas();
 
 			XYChart.Series<String, Double> series1 = new XYChart.Series<>();
 			series1.setName("Current CA");
@@ -97,17 +73,12 @@ public class StatisticsController extends Controller {
 
 			return barChart;
 
+			// Initialize DS
 		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof DiamondSquare) {
-			// List<Integer> params =
-			// getMainController().getMapController().getParametersDiamondSquare();
 			HashMap<Integer, List<Double>> absPos = ((DiamondSquare) algorithmSelect.getSelectionModel()
-					.getSelectedItem()).calcAbsolutePositions();
+					.getSelectedItem()).calculateAbsolutePositions();
 			List<Double> trace = ((DiamondSquare) algorithmSelect.getSelectionModel().getSelectedItem())
-					.calcDispersion();
-			// List<Double> areaCount = ((DiamondSquare)
-			// algorithmSelect.getSelectionModel().getSelectedItem())
-			// .calcNumberOfAreas();
-			// List<Double> relPos = DiamondSquare.calcRelativePositions();
+					.calculateDispersion();
 
 			XYChart.Series<String, Double> series1 = new XYChart.Series<>();
 			series1.setName("Snow");
@@ -162,7 +133,8 @@ public class StatisticsController extends Controller {
 	}
 
 	/**
-	 * Initializes the {@link ComboBox} with all available procedural algorithms.
+	 * Initializes the {@link ComboBox} for selection among all available
+	 * algorithms.
 	 */
 	private void initComboBoxes() {
 		ObservableList<ProceduralAlgorithm> algorithmList = FXCollections.observableArrayList();
@@ -172,7 +144,7 @@ public class StatisticsController extends Controller {
 	}
 
 	/**
-	 * Fills the statistics window with appropriate histogram of the currently
+	 * Fills the statistics window with an appropriate histogram of the currently
 	 * selected algorithm.
 	 * 
 	 * @param algorithm The algorithm with the current parameters to generate the
@@ -184,70 +156,13 @@ public class StatisticsController extends Controller {
 		centerBox.getChildren().add(expressivityBarChart);
 	}
 
-	@Deprecated
-	private HashMap<Tuple, MapContainer> createHeatMapSamples() {
-		List<MapContainer> mapSamples = new ArrayList<MapContainer>();
-		HashMap<Tuple, MapContainer> collectiveMapSamples = new HashMap();
-		CellularAutomaton ca = new CellularAutomaton(getMainController().getControlsController().getIterations(),
-				getMainController().getControlsController().getBirthRule(),
-				getMainController().getControlsController().getDeathRule(),
-				getMainController().getControlsController().getSurvivalChance());
-
-		MapContainer map = new MapContainer();
-
-		for (int j = 0; j < 10; j++) {
-			for (int i = 1; i < 11; i++) {
-				double size = Math.pow(2, i) + 1;
-				ca.generateMap((int) size);
-				map.setRelativeSpace(ca.calcRelativeOpenSpace());
-				map.setAreaCount(ca.calcNumberOfAreas());
-
-				int cap = 8193;
-				double previousM = 0;
-				for (double m = 1; m < cap; m = m + 1 * m) {
-					double previousN = 0;
-					for (double n = 1; n < cap; n = n + 1 * n) {
-						if (map.getRelativeSpace() >= Math.pow(2, 10) / m
-								&& map.getRelativeSpace() < Math.pow(2, 10) / (m - previousM)
-								&& map.getAreaCount() >= (Math.pow(2, 10) / 2) / n
-								&& map.getAreaCount() < (Math.pow(2, 10) / 2) / (n - previousN)) {
-							map.setX(j);
-							map.setY(i - 1);
-							if (mapSamples.contains(map)) {
-							} else {
-								mapSamples.add(map);
-							}
-						} else {
-						}
-						previousN = n;
-					}
-					previousM = m;
-				}
-			}
-		}
-
-		for (int j = 0; j < 10; j++) {
-			for (int i = 0; i < 10; i++) {
-				int count = 0;
-				MapContainer currentContainer = new MapContainer();
-				for (MapContainer container : mapSamples) {
-					if (container.getX() == j && container.getY() == i) {
-						count++;
-						currentContainer = container;
-					}
-				}
-				currentContainer.setMapCount(count);
-				currentContainer.setTotalMapCount(j * i);
-				collectiveMapSamples.put(new Tuple(j, i), currentContainer);
-			}
-		}
-
-		return collectiveMapSamples;
-	}
-
 	/**
 	 * Creates a {@link ScatterChart} for the selected algorithm, that is filled
-	 * with the statistical data of the respective algorithm for 100 map samples.
+	 * with the statistical data of the respective algorithm for the selected amount
+	 * of map samples.
+	 * 
+	 * The diamond-square algorithm creates the sample number for the currently selected map size.<br>
+	 * The cellular automaton creates (sample number)/10 samples of each map size starting from size 3.
 	 * 
 	 * @return The filled scatter chart that is to be displayed.
 	 */
@@ -284,45 +199,34 @@ public class StatisticsController extends Controller {
 
 			double size = getMainController().getControlsController().getMapSize();
 			int sampleSize = Integer.parseInt(sampleSizeField.getText());
-			//showRunningWindow();
-			//new Thread() {
-				//public void run() {
-					for (int i = 0; i < sampleSize; i++) {
-						//final double step = i;
-						//Platform.runLater(() -> progressController.getProgressBar().setProgress(step / sampleSize));
+			for (int i = 0; i < sampleSize; i++) {
 
-						ds.generateMap((int) size);
-						List<Double> absPos = ds.calcAbsolutePositionsAverage();
-						List<Double> dispersion = ds.calcDispersion();
-						double maxPos = Collections.max(absPos);
-						System.out.println(maxPos);
-						if (maxPos > maximumAbsPos) {
-							maximumAbsPos = maxPos;
-						}
+				ds.generateMap((int) size);
+				List<Double> absPos = ds.calculateAbsolutePositionsAverage();
+				List<Double> dispersion = ds.calculateDispersion();
+				double maxPos = Collections.max(absPos);
+				if (maxPos > maximumAbsPos) {
+					maximumAbsPos = maxPos;
+				}
 
-						double maxDispersion = Collections.max(dispersion);
-						if (maxDispersion > maximumDispersion) {
-							maximumDispersion = maxDispersion;
-						}
-						series1.getData().add(new XYChart.Data(absPos.get(0), dispersion.get(0)));
-						series2.getData().add(new XYChart.Data(absPos.get(1), dispersion.get(1)));
-						series3.getData().add(new XYChart.Data(absPos.get(2), dispersion.get(2)));
-						series4.getData().add(new XYChart.Data(absPos.get(3), dispersion.get(3)));
-						series5.getData().add(new XYChart.Data(absPos.get(4), dispersion.get(4)));
-						series6.getData().add(new XYChart.Data(absPos.get(5), dispersion.get(5)));
-						series7.getData().add(new XYChart.Data(absPos.get(6), dispersion.get(6)));
-					}
-				//}
-			//}.start();
+				double maxDispersion = Collections.max(dispersion);
+				if (maxDispersion > maximumDispersion) {
+					maximumDispersion = maxDispersion;
+				}
+				series1.getData().add(new XYChart.Data(absPos.get(0), dispersion.get(0)));
+				series2.getData().add(new XYChart.Data(absPos.get(1), dispersion.get(1)));
+				series3.getData().add(new XYChart.Data(absPos.get(2), dispersion.get(2)));
+				series4.getData().add(new XYChart.Data(absPos.get(3), dispersion.get(3)));
+				series5.getData().add(new XYChart.Data(absPos.get(4), dispersion.get(4)));
+				series6.getData().add(new XYChart.Data(absPos.get(5), dispersion.get(5)));
+				series7.getData().add(new XYChart.Data(absPos.get(6), dispersion.get(6)));
+			}
 			NumberAxis caXAxis = new NumberAxis(0, maximumAbsPos, 0);
 			caXAxis.setLabel("Absolute Positions");
-
 			NumberAxis caYAxis = new NumberAxis(0, maximumDispersion, 0);
 			caYAxis.setLabel("Dispersion");
 
 			scatterChart = new ScatterChart(caXAxis, caYAxis);
-
-			// Setting the data to scatter chart
 			scatterChart.getData().addAll(series1, series2, series3, series4, series5, series6, series7);
 
 		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
@@ -333,18 +237,18 @@ public class StatisticsController extends Controller {
 
 			double maximumRelativeSpace = 0;
 			double maximumNumberOfAreas = 0;
-
+			int sampleSize = Integer.parseInt(sampleSizeField.getText())/10;
 			XYChart.Series series = new XYChart.Series();
 			series.setName("Caves");
-			for (int j = 1; j < 11; j++) {
+			for (int j = 1; j < sampleSize+1; j++) {
 				double size = Math.pow(2, j) + 1;
-				for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < sampleSize; i++) {
 					ca.generateMap((int) size);
-					double relSpace = ca.calcRelativeOpenSpace();
+					double relSpace = ca.calculateRelativeOpenSpace();
 					if (relSpace > maximumRelativeSpace) {
 						maximumRelativeSpace = relSpace;
 					}
-					double areaCount = ca.calcNumberOfAreas();
+					double areaCount = ca.calculateNumberOfAreas();
 					if (areaCount > maximumNumberOfAreas) {
 						maximumNumberOfAreas = areaCount;
 					}
@@ -353,52 +257,47 @@ public class StatisticsController extends Controller {
 			}
 
 			NumberAxis caXAxis = new NumberAxis("Relative Open Space", 0, maximumRelativeSpace, 0);
-
 			NumberAxis caYAxis = new NumberAxis(0, maximumNumberOfAreas, 0);
 			caYAxis.setLabel("Number of Areas");
-
+			
 			scatterChart = new ScatterChart(caXAxis, caYAxis);
-
-			// Setting the data to scatter chart
 			scatterChart.getData().addAll(series);
 		}
 
 		return scatterChart;
 	}
 
-	private void showRunningWindow() {
-		Stage stage = Util.loadFxml(STATISTICS_PROGRESS, null, null, getMainController());
-		progressController.getProgressBar().prefWidthProperty().bind(getStage().widthProperty().
-				subtract(25));
-		Util.showStage(stage, "Progress", 420, 160);
-	}
-
-	private void createHeatMap() {
+	/**
+	 * Updates the content of the statistics window with the scatter chart content.
+	 */
+	private void addScatterPlot() {
 		centerBox.getChildren().clear();
-		// HashMap<Tuple, MapContainer> newTuples = createHeatMapSamples();
-		// HeatMap heatMap = new HeatMap(400, 400);
-		// GraphicsContext gc = heatMap.getGraphicsContext2D();
-		// ImageView colorScale = heatMap.createColorScale();
-		// ImageView heatmapImg = heatMap.drawHeatMap(gc, newTuples);
-
 		centerBox.getChildren().add(createScatterPlot());
-		// centerBox.getChildren().add(colorScale);
 	}
 
+	/**
+	 * Updates the content of the statistics window with the histogram to the currently selected map.
+	 */
 	private void createCurrentMapStatistics() {
 		createHistogram(algorithmSelect.getSelectionModel().getSelectedItem());
 	}
 
+	/**
+	 * Creates the scatter charts to display the expressive range of the procedural map generators.
+	 */
 	private void createExpressiveRangeChart() {
 		if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof DiamondSquare) {
-			createHeatMap();
+			addScatterPlot();
 		} else if (algorithmSelect.getSelectionModel().getSelectedItem() instanceof CellularAutomaton) {
-			createHeatMap();
+			addScatterPlot();
 		} else {
 			Util.informationAlert("No Algorithm selected", "Please make sure to select an Algorithm first.");
 		}
 	}
 
+	/**
+	 * Initializes the interactive buttons upon opening the window.
+	 */
 	private void initButtons() {
 		currentMapStatisticsBtn.setOnAction(event -> {
 			if (algorithmSelect.getSelectionModel().getSelectedItem().mapPresent()) {
@@ -431,7 +330,6 @@ public class StatisticsController extends Controller {
 	@Override
 	public void initialize(Stage stage, HostServices hostServices, MainController mainController) {
 		super.initialize(stage, hostServices, mainController);
-		//progressController.initialize(stage, hostServices, mainController);
 		initComboBoxes();
 		initButtons();
 		if (getMainController().getMapController().getDiamondSquare().mapPresent()) {

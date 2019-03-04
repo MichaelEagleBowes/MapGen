@@ -20,9 +20,5 @@ fx:controller="controller.MapController">
       <content>
       </content>
     </Tab>
-    <Tab text="Voronoi">
-      <content>
-      </content>
-    </Tab>
   </tabs>
 </TabPane>

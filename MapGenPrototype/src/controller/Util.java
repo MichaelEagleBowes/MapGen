@@ -1,19 +1,19 @@
 package controller;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.nio.ByteBuffer;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -25,10 +25,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -40,44 +38,25 @@ import javafx.stage.Window;
  * 
  */
 public class Util {
-	
+
 	/**
 	 * Converts a BufferedImage to a FXImage.
 	 * 
-	 * @param bi
+	 * @param bufferedImage BufferedImage to convert.
 	 * @return
 	 */
-	public Image convertBufferedImage(BufferedImage bi) {
+	static Image convertBufferedImage(BufferedImage bufferedImage) {
 		WritableImage wr = null;
-		if (bi != null) {
-			wr = new WritableImage(bi.getWidth(), bi.getHeight());
+		if (bufferedImage != null) {
+			wr = new WritableImage(bufferedImage.getWidth(), bufferedImage.getHeight());
 			PixelWriter pw = wr.getPixelWriter();
-			for (int x = 0; x < bi.getWidth(); x++) {
-				for (int y = 0; y < bi.getHeight(); y++) {
-					pw.setArgb(x, y, bi.getRGB(x, y));
+			for (int x = 0; x < bufferedImage.getWidth(); x++) {
+				for (int y = 0; y < bufferedImage.getHeight(); y++) {
+					pw.setArgb(x, y, bufferedImage.getRGB(x, y));
 				}
 			}
 		}
 		return wr;
-	}
-
-	/**
-	 * Scales a {@link BufferedImage} to the specified width and height.
-	 * 
-	 * @param Img    the image in question
-	 * @param width  the width of the output
-	 * @param height the height of the output
-	 * @return the scaled BufferedImage
-	 */
-	public static BufferedImage scaleImage(BufferedImage Img, int width, int height) {
-		BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = resizedImg.createGraphics();
-
-		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g2.drawImage(Img, 0, 0, width, height, null);
-		g2.dispose();
-
-		return resizedImg;
 	}
 
 	static void exceptionAlert(Throwable ex) {
@@ -136,32 +115,6 @@ public class Util {
 		alert.showAndWait();
 	}
 
-	public static double round(double value, int places) {
-		if (places < 0)
-			throw new IllegalArgumentException();
-
-		BigDecimal bd = new BigDecimal(value);
-		bd = bd.setScale(places, RoundingMode.HALF_UP);
-		return bd.doubleValue();
-	}
-
-	static Optional<File> chooseFileToOpenDialog(Window owner) {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML files", "*.xml"),
-				new FileChooser.ExtensionFilter("All files", "*"));
-		return Optional.ofNullable(fileChooser.showOpenDialog(owner));
-	}
-
-	static Optional<File> chooseFileToSaveDialog(Window owner, String fileExtension) {
-		FileChooser fileChooser = new FileChooser();
-		if (fileExtension != null) {
-			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-					fileExtension.toUpperCase() + " files", "*." + fileExtension.toLowerCase()));
-		}
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files", "*"));
-		return Optional.ofNullable(fileChooser.showSaveDialog(owner));
-	}
-
 	static Optional<String> textInputDialog(String initial, String title, String header, String contentText) {
 		TextInputDialog dialog = new TextInputDialog(initial);
 		dialog.setTitle(title);
@@ -170,8 +123,7 @@ public class Util {
 		return dialog.showAndWait();
 	}
 
-	static Stage loadFxml(String fxmlPath, Controller controller, Stage stage,
-			MainController mainController) {
+	static Stage loadFxml(String fxmlPath, Controller controller, Stage stage, MainController mainController) {
 		FXMLLoader loader = new FXMLLoader(Util.class.getResource(fxmlPath));
 		if (controller != null) {
 			loader.setController(controller);
@@ -188,12 +140,10 @@ public class Util {
 			}
 			actualStage.setScene(scene);
 			Controller assignedController = loader.getController();
-			assignedController.initialize(actualStage,
-				mainController.getHostServices(), mainController);
+			assignedController.initialize(actualStage, mainController.getHostServices(), mainController);
 			return actualStage;
 		} catch (IOException e) {
-			throw new RuntimeException("Could not load '" + fxmlPath +
-					"'", e);
+			throw new RuntimeException("Could not load '" + fxmlPath + "'", e);
 		}
 	}
 
@@ -204,5 +154,132 @@ public class Util {
 		stage.show();
 		stage.sizeToScene();
 		stage.requestFocus();
+	}
+	
+
+	/**
+	 * Converts a byte array into the 2D int array format.
+	 * 
+	 * @return
+	 */
+	static int[][] convertByteArray(byte[] map) {
+		int mapSize = (int) Math.sqrt(map.length);
+		int[][] convertedMap = new int[mapSize][mapSize];
+		
+		for (int i = 0; i < mapSize; i++) {
+			for (int j = 0; j < mapSize; j++) {
+				byte b = ByteBuffer.wrap(map).get();
+				String s = Byte.toString(b);
+				int integer = Integer.parseInt(s);
+				convertedMap[i][j] = integer;
+			}
+		}
+
+		return convertedMap;
+	}
+	
+	/**
+	 * 
+	 * Returns false if diamond-square map is loaded, otherwise returns true.
+	 * 
+	 * @param map The byte array of the map to check for the map's type
+	 * @return
+	 */
+	static boolean getLoadedMapType(byte[] map) {
+		if(ByteBuffer.wrap(map).get()==0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * 
+	 * Takes a 2D Array and saves each tile as byte.
+	 * 
+	 * @param map The 2D map to save.
+	 * @param loadedFile The file to save the map in.
+	 * @param mapType The type of map to save. 0 = DS, 1 = CA.
+	 */
+	static void saveMap(int[][] map, File loadedFile, int mapType) {
+		File file = loadedFile;
+		try (FileOutputStream fop = new FileOutputStream(file)) {
+
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			if(mapType == 0) {
+				byte y = 0;
+				fop.write(y);
+			} else {
+				byte y = 1;
+				fop.write(y);
+			}
+			
+			
+			for (int i = 0; i < map.length; i++) {
+				for (int j = 0; j < map[i].length; j++) {
+					byte b = 0;
+					String s = Integer.toString(map[i][j]);
+					b = Byte.parseByte(s);
+					fop.write(b);
+
+				}
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 
+	 * Loads a map file from the given path with the given name and returns it as
+	 * byte array.
+	 * 
+	 * @param loadPath where the map file is located.
+	 * @return
+	 * @throws IOException
+	 */
+	static byte[] loadMap(Optional<File> loadedFile) throws IOException, NoSuchElementException {
+
+		File file = loadedFile.get();
+
+		try (FileInputStream fis = new FileInputStream(file)) {
+			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+			int nRead;
+			byte[] data = new byte[1089];
+
+			while ((nRead = fis.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+			}
+
+			buffer.flush();
+
+			return buffer.toByteArray();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NoSuchElementException e2) {
+			e2.printStackTrace();
+		}
+		return null;
+	}
+
+	static Optional<File> chooseFileToSaveDialog(Window owner) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("MapGen file", "*.mapgen"),
+				new FileChooser.ExtensionFilter("All files", "*"));
+		return Optional.ofNullable(fileChooser.showSaveDialog(owner));
+	}
+
+	static Optional<File> chooseFileToOpenDialog(Window owner) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("MapGen file", "*.mapgen"),
+				new FileChooser.ExtensionFilter("XML files", "*.xml"),
+				new FileChooser.ExtensionFilter("All files", "*"));
+		return Optional.ofNullable(fileChooser.showOpenDialog(owner));
 	}
 }

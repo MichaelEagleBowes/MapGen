@@ -2,7 +2,6 @@ package controller;
 
 import javafx.application.HostServices;
 import javafx.stage.Stage;
-import model.Model;
 
 /**
  * 
